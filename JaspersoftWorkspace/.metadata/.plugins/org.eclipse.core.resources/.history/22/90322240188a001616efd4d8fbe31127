@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-09-29T01:32:33 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ItemMasterFullReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f94de4cc-7e26-4c27-8ae3-c1d84e2e4084">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="d2luZV9zdG9yZXMubWFpbl9jYXRlZ29yeSBBUyAsMzk3LDk4LDA4Y2FiOTMyLTJjOGEtNGRhZC1h&#xA;YTA2LThjNWIyYThiYmYyMjt3aW5lX3N0b3Jlcy5pdGVtIEFTICwxOTUsMTU5LDkxYzZkZjY1LTQ2&#xA;YjgtNDNmNy1iOWE5LWEyNDVhYzg5MTk5ZDt3aW5lX3N0b3Jlcy5tYWluX3N1Yl9pdGVtIEFTICwx&#xA;NSw0MSw3MTJlNTA0MC0wOTgxLTQwMTEtYWVkOS05ZjI1ZjVjMTFjNDU7d2luZV9zdG9yZXMubWFp&#xA;bl9zdWJfY2F0ZWdvcnkgQVMgLDE5NSwxNSw5NDE0Y2UyMS0xZjIwLTRhYmItYjQ0ZS1mMWJhOGY5&#xA;NmFjNmM7d2luZV9zdG9yZXMuc3ViX2NhdGVnb3J5IEFTICw1NDUsMjksZjA4OTU1MWYtYmMzMy00&#xA;ZjU2LThmNzctZmVkYTg4OTk5MDg0Ow=="/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<queryString>
+		<![CDATA[SELECT wine_stores.main_category.category_name,
+	wine_stores.sub_category.sub_category_name,
+	wine_stores.item.item_name,
+	wine_stores.main_sub_item.item_code
+FROM wine_stores.main_sub_item
+	INNER JOIN wine_stores.main_sub_category ON 
+	 wine_stores.main_sub_item.main_sub_id = wine_stores.main_sub_category.main_sub_category_id 
+	INNER JOIN wine_stores.main_category ON 
+	 wine_stores.main_sub_category.main_cat_id = wine_stores.main_category.main_cat_id 
+	INNER JOIN wine_stores.sub_category ON 
+	 wine_stores.main_sub_category.sub_category_id = wine_stores.sub_category.sub_category_id 
+	INNER JOIN wine_stores.item ON 
+	 wine_stores.main_sub_item.item_id = wine_stores.item.item_id]]>
+	</queryString>
+	<field name="category_name" class="java.lang.String"/>
+	<field name="sub_category_name" class="java.lang.String"/>
+	<field name="item_name" class="java.lang.String"/>
+	<field name="item_code" class="java.lang.String"/>
+	<group name="category_name">
+		<groupExpression><![CDATA[$F{category_name}]]></groupExpression>
+		<groupHeader>
+			<band height="39">
+				<textField>
+					<reportElement mode="Opaque" x="-20" y="0" width="595" height="30" forecolor="#FFFFFF" backcolor="#489EE7" uuid="e6f62254-2bb5-4652-ad87-5da0722bdfef"/>
+					<box topPadding="0" leftPadding="20" bottomPadding="0" rightPadding="0"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Open Sans" size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{category_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="sub_category_name">
+		<groupExpression><![CDATA[$F{sub_category_name}]]></groupExpression>
+		<groupHeader>
+			<band height="82">
+				<textField>
+					<reportElement x="0" y="0" width="555" height="29" uuid="0f5d6c3d-a705-43af-9c22-42ad13901df7"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Open Sans" size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sub_category_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="40" width="180" height="31" uuid="7fa0475d-6c39-41cf-99ba-653e51130052"/>
+					<box leftPadding="10"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Open Sans" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Item Code]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="180" y="40" width="375" height="30" uuid="e7a1602d-4b52-4cc2-8eed-85bbc4c02615"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Open Sans" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Item Name]]></text>
+				</staticText>
+				<frame>
+					<reportElement x="0" y="38" width="555" height="43" uuid="e4aeddb9-7bee-4d48-b1c4-4f79a7bbcd4b"/>
+					<box>
+						<topPen lineWidth="1.0" lineColor="#E9ECF2"/>
+						<leftPen lineWidth="1.0" lineColor="#E9ECF2"/>
+						<bottomPen lineColor="#E9ECF2"/>
+						<rightPen lineWidth="1.0" lineColor="#E9ECF2"/>
+					</box>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="8"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="141" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="40" uuid="e7e0e6e0-879b-49b4-8926-7571ab002f15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAMPELLA WINE STORES
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="30" uuid="accae575-4ce1-47f6-987e-bf97d4bc4487"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No: 05, Ganehemulla, Dewalapola.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="555" height="31" forecolor="#8C8C8C" uuid="d952684d-b994-49e9-8133-c3a7a3981fd8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="18" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Tel: 011-29997817]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="555" height="29" uuid="8465692c-9553-430f-8235-9dc6abaf60fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="14"/>
+				</textElement>
+				<text><![CDATA[(Open from 09.00 hrs to 21.00 hrs)]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="180" height="30" uuid="8d0d38a4-8a6d-41bf-8d25-1de01eb5a4a9"/>
+				<box leftPadding="10"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="0" width="375" height="30" uuid="c157ff2c-9969-4e1e-9ff7-31f80e52c185"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_name}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="0" width="555" height="30" uuid="aec34e43-cdec-48f9-9ec2-939adfc8867e"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#E9ECF2"/>
+					<leftPen lineWidth="1.0" lineColor="#E9ECF2"/>
+					<bottomPen lineWidth="1.0" lineColor="#E9ECF2"/>
+					<rightPen lineWidth="1.0" lineColor="#E9ECF2"/>
+				</box>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

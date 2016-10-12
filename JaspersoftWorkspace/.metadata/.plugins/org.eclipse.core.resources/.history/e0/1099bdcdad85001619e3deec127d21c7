@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-09-29T00:30:20 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="jr1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0ee43f49-6753-4729-b449-0ee88e4fdd96">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<parameter name="main_cateogry_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA[main_category_name]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT wine_stores.main_category.category_name, wine_stores.sub_category.sub_category_name FROM wine_stores.main_sub_category INNER JOIN wine_stores.main_category ON wine_stores.main_sub_category.main_cat_id = wine_stores.main_category.main_cat_id INNER JOIN wine_stores.sub_category ON wine_stores.main_sub_category.sub_category_id = wine_stores.sub_category.sub_category_id WHERE wine_stores.main_category.category_name= $P{main_category_name} ORDER BY wine_stores.main_category.category_name, wine_stores.sub_category.sub_category_name]]>
+	</queryString>
+	<field name="category_name" class="java.lang.String"/>
+	<field name="sub_category_name" class="java.lang.String"/>
+	<field name="Field_1" class="java.lang.String"/>
+	<group name="category_name">
+		<groupExpression><![CDATA[$F{category_name}]]></groupExpression>
+	</group>
+	<group name="Main Category Group">
+		<groupExpression><![CDATA[$F{category_name}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<textField>
+					<reportElement x="0" y="10" width="555" height="30" uuid="9839bfc7-873b-4f7d-babe-f5dfeb730b56"/>
+					<textElement>
+						<font fontName="Open Sans" size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{category_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79" uuid="28c4c6e4-c85f-4597-976b-ac3630abebbd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Main Categories and Sub Categories]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="43" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="30" uuid="1e7cf9d4-a9fe-4210-b6e3-347a7401815b"/>
+				<textElement>
+					<font fontName="Open Sans" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sub_category_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

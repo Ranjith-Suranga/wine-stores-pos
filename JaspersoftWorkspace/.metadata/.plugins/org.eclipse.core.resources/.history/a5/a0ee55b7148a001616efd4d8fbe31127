@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-10-04T14:54:50 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InitialStockTakingReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cdf1275c-7876-4966-bf11-b110e274feb3">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<subDataset name="Dataset1" uuid="a38e5ebd-47a0-4a74-8ea3-4b2b3ec0ef22">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<queryString>
+		<![CDATA[SELECT wine_stores.item_details.item_code,
+	wine_stores.item.item_name,
+	wine_stores.main_sub_item.barcode,
+	wine_stores.item_details.selling_price,
+	wine_stores.item_details.buying_price
+FROM wine_stores.main_sub_item
+	INNER JOIN wine_stores.item ON 
+	 wine_stores.main_sub_item.item_id = wine_stores.item.item_id 
+	LEFT OUTER JOIN wine_stores.item_details ON 
+	 wine_stores.item_details.item_code = wine_stores.main_sub_item.item_code]]>
+	</queryString>
+	<field name="item_code" class="java.lang.String"/>
+	<field name="item_name" class="java.lang.String"/>
+	<field name="barcode" class="java.lang.String"/>
+	<field name="selling_price" class="java.math.BigDecimal"/>
+	<field name="buying_price" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="30" uuid="d9d4b10f-2b98-463e-9369-f08c6016c3a0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No: 05, Ganehemulla, Dewalapola.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="40" uuid="2d9f57a5-7803-43f8-90fd-564b3cbe9a02"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAMPELLA WINE STORES
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="555" height="30" uuid="df097a40-333a-4ca2-b94b-86772d4a2b09"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Initial Stock Taking Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="4da07422-bda4-4449-a6b6-5b21d90b0dd6"/>
+				<text><![CDATA[Item Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="30" uuid="1db8ce1c-9d5f-4bc3-8563-c558ab187044"/>
+				<text><![CDATA[Item Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="30" uuid="32d70283-673a-40e4-93bc-7b834353133b"/>
+				<text><![CDATA[Barcode]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="100" height="30" uuid="af10f90c-3973-4427-8f7f-b06ad1983f76"/>
+				<text><![CDATA[Cost Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="100" height="30" uuid="7c01d7b2-e9af-4580-b6ca-5b0845dffba7"/>
+				<text><![CDATA[Selling Price]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="30" uuid="ec60b14c-725d-4cc4-8625-30982b9622af"/>
+				<textFieldExpression><![CDATA[$F{item_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="30" uuid="debf034c-bc8b-4198-bc42-21e0e85d8345"/>
+				<textFieldExpression><![CDATA[$F{item_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="30" uuid="2d90d50f-4a13-4913-9860-2c83a485b851"/>
+				<textFieldExpression><![CDATA[$F{barcode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="100" height="30" uuid="6a7f9ace-1923-4691-9926-356afeb3c6ec"/>
+				<textFieldExpression><![CDATA[($F{selling_price}==null)? "0.00" : $F{selling_price}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="300" y="0" width="100" height="30" uuid="5ac88338-78c3-4d69-a28f-42909d397b33"/>
+				<textFieldExpression><![CDATA[ ($F{buying_price}==null)? "0.00" : $F{buying_price}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

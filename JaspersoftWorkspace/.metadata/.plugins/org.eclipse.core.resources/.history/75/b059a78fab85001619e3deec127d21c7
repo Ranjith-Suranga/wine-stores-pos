@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-09-28T23:34:49 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="jr1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0ee43f49-6753-4729-b449-0ee88e4fdd96">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="d2luZV9zdG9yZXMubWFpbl9jYXRlZ29yeSBBUyAsNDAsNDcsOGExMmM0YWQtZjMyMy00OWU2LTgx&#xA;YjAtNjc3OTRjYmY5NTRmO3dpbmVfc3RvcmVzLnN1Yl9jYXRlZ29yeSBBUyAsMTg3LDQ5LDAxYzYx&#xA;YzRhLTExMGMtNDQ0Yy04YmYxLWI5ZDQ3MWIzNWUwODs="/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<queryString>
+		<![CDATA[SELECT wine_stores.main_category.category_name,
+	wine_stores.sub_category.sub_category_name
+FROM wine_stores.main_category,
+	wine_stores.sub_category]]>
+	</queryString>
+	<field name="category_name" class="java.lang.String"/>
+	<field name="sub_category_name" class="java.lang.String"/>
+	<group name="category_name">
+		<groupExpression><![CDATA[$F{category_name}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
