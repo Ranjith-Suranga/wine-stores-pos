@@ -89,9 +89,10 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     }
 
     @Override
-    public boolean removeSubCategory(String categoryId) throws ClassNotFoundException, SQLException {
+    public boolean removeSubCategory(String majorCategoryName, String subCategoryId) throws ClassNotFoundException, SQLException {
         SubCategoryDAO subDAO = (SubCategoryDAO) DAOFactory.getInstance().getDAO(SuperDAO.DAOType.SUB_CATEGORY);
-        return subDAO.deleteSubCategory(categoryId);
+        MajorCategoryDAO majorDAO = (MajorCategoryDAO) DAOFactory.getInstance().getDAO(SuperDAO.DAOType.MAJOR_CATEGORY);
+        return subDAO.deleteSubCategory(majorDAO.readMajorCategoryByName(majorCategoryName).getMainCatId(), subCategoryId);
     }
 
 }

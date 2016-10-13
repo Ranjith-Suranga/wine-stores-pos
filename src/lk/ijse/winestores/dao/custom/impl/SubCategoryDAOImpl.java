@@ -75,30 +75,43 @@ public class SubCategoryDAOImpl implements SubCategoryDAO {
     }
 
     @Override
-    public boolean deleteSubCategory(String categoryId) throws ClassNotFoundException, SQLException {
+    public boolean deleteSubCategory(String majorCategoryId, String subCategoryId) throws ClassNotFoundException, SQLException {
         DatabaseResourceConnection dbCon = (DatabaseResourceConnection) ResourceFactory.getInstance().getResourceConnection(ResourceConnection.ResourceConnectionType.DATABSE);
         Connection con = dbCon.getConnection();
         // Starting transaction
         con.setAutoCommit(false);
-        PreparedStatement pstm = con.prepareStatement("DELETE FROM main_sub_category WHERE sub_category_id=?");
-        pstm.setObject(1, categoryId);
+        PreparedStatement pstm = con.prepareStatement("DELETE FROM main_sub_category WHERE sub_category_id=? AND main_cat_id=?");
+        pstm.setObject(1, subCategoryId);
+        pstm.setObject(2, majorCategoryId);
         int affectedRows = pstm.executeUpdate();
-        if (affectedRows !=0){
-            pstm = con.prepareStatement(SUB_CATEGORY_DELETION_SQL);
-            pstm.setObject(1, categoryId);    
-            affectedRows = pstm.executeUpdate();
-            if (affectedRows !=0){
-                IdPoolDAO dao = (IdPoolDAO) DAOFactory.getInstance().getDAO(DAOType.ID_POOL);
-                IdPoolDTO dto = new IdPoolDTO(categoryId, "sub_category");
-                affectedRows = dao.createID(con, dto);
-                if (affectedRows !=0){
-                    con.commit();
-                }else{
+        if (affectedRows != 0) {
+
+            // Now we need to find out whether this sub category is used by another main category
+            pstm = con.prepareStatement("SELECT * FROM main_sub_category WHERE sub_category_id=?");
+            pstm.setString(1, subCategoryId);
+            ResultSet rst = pstm.executeQuery();
+
+            if (rst.next()) {
+                // So, yep, there are other main categories which use this sub cateogry
+                con.commit();
+            } else {
+                pstm = con.prepareStatement(SUB_CATEGORY_DELETION_SQL);
+                pstm.setObject(1, subCategoryId);
+                affectedRows = pstm.executeUpdate();
+                if (affectedRows != 0) {
+                    IdPoolDAO dao = (IdPoolDAO) DAOFactory.getInstance().getDAO(DAOType.ID_POOL);
+                    IdPoolDTO dto = new IdPoolDTO(subCategoryId, "sub_category");
+                    affectedRows = dao.createID(con, dto);
+                    if (affectedRows != 0) {
+                        con.commit();
+                    } else {
+                        con.rollback();
+                    }
+                } else {
                     con.rollback();
                 }
-            }else{
-                con.rollback();
             }
+
         }
         con.setAutoCommit(true);
         con.close();

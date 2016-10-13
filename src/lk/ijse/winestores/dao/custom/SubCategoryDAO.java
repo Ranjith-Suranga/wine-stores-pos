@@ -28,7 +28,7 @@ public interface SubCategoryDAO extends SuperDAO {
 
     public int updateSubCategory(SubCategoryDTO dto) throws ClassNotFoundException, SQLException;
 
-    public boolean deleteSubCategory(String subCategoryId) throws ClassNotFoundException, SQLException;
+    public boolean deleteSubCategory(String majorCategoryId, String subCategoryId) throws ClassNotFoundException, SQLException;
     
     public SubCategoryDTO readSubCategoryByName(String subCateogryName) throws ClassNotFoundException, SQLException;
     

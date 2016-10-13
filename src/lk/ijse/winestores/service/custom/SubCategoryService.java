@@ -24,6 +24,6 @@ public interface SubCategoryService extends SuperService{
     
     public ArrayList<SubCategoryDTO> getAllSubCategories()throws ClassNotFoundException, SQLException;
     
-    public boolean removeSubCategory(String categoryId) throws ClassNotFoundException, SQLException;
+    public boolean removeSubCategory(String majorCategoryName, String subCategoryId) throws ClassNotFoundException, SQLException;
     
 }

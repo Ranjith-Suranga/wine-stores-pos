@@ -576,7 +576,8 @@ public class SubCategory extends javax.swing.JPanel {
                 ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/stop.png"));
                 try {
                     
-                    boolean success = ctrl.removeSubCategory(categoryId);
+                    String majorCateogryName = cmbMajorCategory.getSelectedItem().toString();
+                    boolean success = ctrl.removeSubCategory(majorCateogryName, categoryId);
                     
                     if (!success){
                         JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),

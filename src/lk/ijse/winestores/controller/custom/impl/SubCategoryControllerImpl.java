@@ -72,9 +72,9 @@ public class SubCategoryControllerImpl implements SubCategoryController {
     }
 
     @Override
-    public boolean removeSubCategory(String categoryId) throws ClassNotFoundException, SQLException {
+    public boolean removeSubCategory(String majorCategoryName, String subCategoryId) throws ClassNotFoundException, SQLException {
         SubCategoryService service = (SubCategoryService) ServiceFactory.getInstance().getService(SuperService.ServiceType.SUB_CATEGORY);
-        return service.removeSubCategory(categoryId);
+        return service.removeSubCategory(majorCategoryName,subCategoryId);
     }
 
 }

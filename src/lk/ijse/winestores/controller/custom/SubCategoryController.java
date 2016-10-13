@@ -23,7 +23,7 @@ public interface SubCategoryController extends SuperController {
 
     public int changeSubCategory(String subCategoryId, String subCategoryNewName) throws ClassNotFoundException, SQLException;
 
-    public boolean removeSubCategory(String categoryId) throws ClassNotFoundException, SQLException;
+    public boolean removeSubCategory(String majorCategoryName, String subCategoryId) throws ClassNotFoundException, SQLException;
 
     public class SubCategoryModel {
 
