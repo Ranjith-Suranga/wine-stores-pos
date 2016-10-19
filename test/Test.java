@@ -1,5 +1,7 @@
 
 import java.awt.Color;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -25,25 +27,17 @@ public class Test extends javax.swing.JFrame {
      */
     public Test() {
         initComponents();
-   
-        jTextField1.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                System.out.println(jTextField1.getText() + "Update");
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
+        
+//        double a = 0.3;
+//        double b = 0.4;
+//        
+//        System.out.println(b-a);
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                System.out.println(jTextField1.getText() + "Removed");
-                //hrow new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                System.out.println(jTextField1.getText() + "Changed");
-            }
-        });
+        BigDecimal a = new BigDecimal("0.3");
+        BigDecimal b = new BigDecimal("0.457");
+        
+        BigDecimal result = b.subtract(a).setScale(2,RoundingMode.HALF_UP);
+        System.out.println(result.toPlainString());
     }
 
     /**
@@ -118,7 +112,7 @@ public class Test extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1CaretPositionChanged
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        System.out.println(jTextField1.getText());
+        //System.out.println(jTextField1.getText());
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextField1PropertyChange

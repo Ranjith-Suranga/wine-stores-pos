@@ -6,10 +6,8 @@
 package lk.ijse.winestores.views;
 
 import com.sun.glass.events.KeyEvent;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Insets;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
 import java.math.BigDecimal;
@@ -20,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
 import javax.swing.FocusManager;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -28,9 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -215,8 +209,10 @@ public class CashSales extends javax.swing.JPanel {
             }
 
             for (CustomItemDetailsDTO item : items) {
-                Object[] rowData = {item.getItemCode(), item.getItemName(), String.valueOf(item.getQty()), this.formatPrice(item.getSellingPrice())};
-                dtmSearchItems.addRow(rowData);
+                if (item.getQty() > 0) {
+                    Object[] rowData = {item.getItemCode(), item.getItemName(), String.valueOf(item.getQty()), this.formatPrice(item.getSellingPrice())};
+                    dtmSearchItems.addRow(rowData);
+                }
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
