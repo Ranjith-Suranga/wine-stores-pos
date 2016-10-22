@@ -218,6 +218,7 @@ create table custom_order(
         made_by varchar(100) NOT NULL,
         total decimal(10,2) NOT NULL,
         payment_id varchar(100) not null,
+        tendered_cash decimal(10,2) NOT NULL,
 	constraint primary key(order_id),
         constraint foreign key(payment_id) references payment(payment_id)
 );
@@ -268,6 +269,7 @@ create table credit_order(
         made_by varchar(100) NOT NULL,
         total decimal(10,2) NOT NULL,
         customer_id int not null,
+        tendered_cash decimal(10,2) NOT NULL,
 	constraint primary key(order_id),
         constraint foreign key(customer_id) references customer(customer_id)
 );

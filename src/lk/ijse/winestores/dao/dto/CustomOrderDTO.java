@@ -5,6 +5,8 @@
  */
 package lk.ijse.winestores.dao.dto;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author Ranjith Suranga
@@ -15,16 +17,18 @@ public class CustomOrderDTO {
     private String orderDate;
     private String madeBy;
     private double total;
+    private BigDecimal tenderedCash;
     private String paymentId;
 
     public CustomOrderDTO() {
     }
 
-    public CustomOrderDTO(String orderId, String orderDate, String madeBy, double total, String paymentId) {
+    public CustomOrderDTO(String orderId, String orderDate, String madeBy, double total, BigDecimal tenderedCash, String paymentId) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.madeBy = madeBy;
         this.total = total;
+        this.tenderedCash = tenderedCash;
         this.paymentId = paymentId;
     }
     
@@ -96,6 +100,20 @@ public class CustomOrderDTO {
      */
     public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
+    }
+
+    /**
+     * @return the tenderedCash
+     */
+    public BigDecimal getTenderedCash() {
+        return tenderedCash;
+    }
+
+    /**
+     * @param tenderedCash the tenderedCash to set
+     */
+    public void setTenderedCash(BigDecimal tenderedCash) {
+        this.tenderedCash = tenderedCash;
     }
 
 }

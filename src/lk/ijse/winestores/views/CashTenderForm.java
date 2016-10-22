@@ -10,7 +10,12 @@ import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import lk.ijse.winestores.views.util.CashTendered;
 
 /**
  *
@@ -18,15 +23,26 @@ import javax.swing.SwingUtilities;
  */
 public class CashTenderForm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form CashTenderForm
-     */
-    public CashTenderForm() {
+    private SuraButton sbtn;
+    private BigDecimal total;
+    
+    private CashTendered owner;
+    
+    public CashTenderForm(CashTendered owner, BigDecimal total) {
         initForm();
+        
+        this.owner = owner;
+        this.setTotal(total);
     }
 
     private void initForm() {
         initComponents();
+        
+        sbtn = new SuraButton(pnlContainer);
+        sbtn.convertAllJButtonsToSuraButtons();
+        
+        lblBalance.setText("-");
+        btnPlaceOrder.setEnabled(false);
 
         pnlContainer.setVisible(false);
         setExtendedState(MAXIMIZED_BOTH);
@@ -40,8 +56,15 @@ public class CashTenderForm extends javax.swing.JFrame {
                 p.x = (CashTenderForm.this.getWidth() - pnlContainer.getWidth()) / 2;
                 p.y = (CashTenderForm.this.getHeight() - pnlContainer.getHeight()) / 2;
                 pnlContainer.setLocation(p);
+                
+                p.x = p.x + pnlContainer.getWidth() - lblClose.getWidth() -10;
+                p.y -= 20;
+                lblClose.setLocation(p);
+                
                 pnlContainer.setVisible(true);
-
+                
+                txtCashTendered.requestFocusInWindow();
+                
             }
         });
     }
@@ -55,6 +78,7 @@ public class CashTenderForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblClose = new javax.swing.JLabel();
         pnlContainer = new javax.swing.JPanel(){
             public void paintComponent(Graphics g) {
                 //To change body of generated methods, choose Tools | Templates.
@@ -63,7 +87,13 @@ public class CashTenderForm extends javax.swing.JFrame {
                 gd.fillRoundRect(0, 0, pnlContainer.getWidth(), pnlContainer.getHeight(), 10, 10);
             }
         };
+        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
+        txtCashTendered = new javax.swing.JTextField();
+        lblBalance = new javax.swing.JLabel();
+        btnPlaceOrder = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -74,25 +104,102 @@ public class CashTenderForm extends javax.swing.JFrame {
         });
         getContentPane().setLayout(null);
 
+        lblClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/icons/close.png"))); // NOI18N
+        lblClose.setToolTipText("Close");
+        lblClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblClose.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCloseMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lblClose);
+        lblClose.setBounds(570, 10, 50, 40);
+
         pnlContainer.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Open Sans", 0, 36)); // NOI18N
+        jLabel1.setText("Total :");
+
+        jLabel2.setFont(new java.awt.Font("Open Sans", 0, 36)); // NOI18N
+        jLabel2.setText("Cash Tendered :");
+
+        jLabel3.setFont(new java.awt.Font("Open Sans", 0, 36)); // NOI18N
+        jLabel3.setText("Balance :");
+
+        lblTotal.setFont(new java.awt.Font("Open Sans", 0, 36)); // NOI18N
+        lblTotal.setForeground(new java.awt.Color(0, 204, 0));
+        lblTotal.setText("123.12");
+
+        txtCashTendered.setFont(new java.awt.Font("Open Sans", 0, 36)); // NOI18N
+        txtCashTendered.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCashTenderedKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCashTenderedKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCashTenderedKeyTyped(evt);
+            }
+        });
+
+        lblBalance.setFont(new java.awt.Font("Open Sans", 0, 36)); // NOI18N
+        lblBalance.setForeground(new java.awt.Color(255, 0, 0));
+        lblBalance.setText("123.12");
+
+        btnPlaceOrder.setBackground(new java.awt.Color(72, 158, 231));
+        btnPlaceOrder.setFont(new java.awt.Font("Open Sans", 0, 36)); // NOI18N
+        btnPlaceOrder.setForeground(new java.awt.Color(255, 255, 255));
+        btnPlaceOrder.setText("Place Order");
+        btnPlaceOrder.setToolTipText("Click to fnish the order");
+        btnPlaceOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlaceOrderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlContainerLayout = new javax.swing.GroupLayout(pnlContainer);
         pnlContainer.setLayout(pnlContainerLayout);
         pnlContainerLayout.setHorizontalGroup(
             pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 421, Short.MAX_VALUE)
+            .addGroup(pnlContainerLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtCashTendered)
+                    .addComponent(lblBalance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlContainerLayout.createSequentialGroup()
+                        .addComponent(btnPlaceOrder)
+                        .addGap(0, 104, Short.MAX_VALUE)))
+                .addGap(20, 20, 20))
         );
         pnlContainerLayout.setVerticalGroup(
             pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 318, Short.MAX_VALUE)
+            .addGroup(pnlContainerLayout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addGroup(pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtCashTendered, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(lblBalance))
+                .addGap(18, 18, 18)
+                .addComponent(btnPlaceOrder)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnlContainer);
-        pnlContainer.setBounds(10, 30, 421, 318);
-
-        jLabel2.setText("jLabel2");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(520, 160, 34, 14);
+        pnlContainer.setBounds(10, 30, 650, 330);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -101,43 +208,90 @@ public class CashTenderForm extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_formMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+    private void lblCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCloseMouseClicked
+        this.dispose();
+    }//GEN-LAST:event_lblCloseMouseClicked
+
+    private void txtCashTenderedKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCashTenderedKeyTyped
+        
+        if (!(Character.isDigit(evt.getKeyChar())
+                || evt.getKeyChar() == KeyEvent.VK_DELETE
+                || evt.getKeyChar() == KeyEvent.VK_BACK_SPACE
+                || evt.getKeyChar() == KeyEvent.VK_PERIOD)) {
+
+            evt.consume();
+            
+        } else {
+
+            String currentPrice = txtCashTendered.getText();
+
+            if (currentPrice.contains(".") && evt.getKeyChar() == KeyEvent.VK_PERIOD) {
+                if (txtCashTendered.getSelectedText() == null) {
+                    evt.consume();
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CashTenderForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CashTenderForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CashTenderForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CashTenderForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CashTenderForm().setVisible(true);
-            }
-        });
-    }
+        }
+    }//GEN-LAST:event_txtCashTenderedKeyTyped
+
+    private void txtCashTenderedKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCashTenderedKeyReleased
+       
+       if (txtCashTendered.getText().isEmpty()){
+           btnPlaceOrder.setEnabled(false);
+           return;
+       }
+       
+       BigDecimal tenderedCash = new BigDecimal(txtCashTendered.getText());
+       BigDecimal balance = tenderedCash.subtract(total).setScale(2,RoundingMode.HALF_UP);
+       
+       if (balance.compareTo(BigDecimal.ZERO) > 0 ){
+           lblBalance.setText(balance.toPlainString());
+           btnPlaceOrder.setEnabled(true);
+       }else{
+           lblBalance.setText("-");
+           btnPlaceOrder.setEnabled(false);           
+       }
+       
+    }//GEN-LAST:event_txtCashTenderedKeyReleased
+
+    private void btnPlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlaceOrderActionPerformed
+        
+        BigDecimal cashTendered = new BigDecimal(txtCashTendered.getText());
+        owner.processOrder(cashTendered.setScale(2,RoundingMode.HALF_UP));
+        this.dispose();
+        
+    }//GEN-LAST:event_btnPlaceOrderActionPerformed
+
+    private void txtCashTenderedKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCashTenderedKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+            btnPlaceOrder.doClick();
+        }
+    }//GEN-LAST:event_txtCashTenderedKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnPlaceOrder;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel lblBalance;
+    private javax.swing.JLabel lblClose;
+    private javax.swing.JLabel lblTotal;
     private javax.swing.JPanel pnlContainer;
+    private javax.swing.JTextField txtCashTendered;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the total
+     */
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    /**
+     * @param total the total to set
+     */
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+        lblTotal.setText(total.setScale(2).toPlainString());
+    }
 }
