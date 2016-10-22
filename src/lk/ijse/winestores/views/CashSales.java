@@ -7,7 +7,6 @@ package lk.ijse.winestores.views;
 
 import com.sun.glass.events.KeyEvent;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
 import java.math.BigDecimal;
@@ -34,7 +33,6 @@ import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.GRNController;
 import lk.ijse.winestores.controller.custom.ItemController;
-import lk.ijse.winestores.controller.custom.SalesController;
 import lk.ijse.winestores.dao.custom.CustomDAO;
 import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
 import lk.ijse.winestores.dao.dto.CustomItemDetailsDTO;
@@ -51,6 +49,7 @@ import lk.ijse.winestores.views.util.SuraBoyTextComponenets;
 public class CashSales extends javax.swing.JPanel {
 
     private ArrayList<EmptyBottleDTO> emptyBottleTypes;
+    private CashTenderForm cashTenderForm;
 
     private DefaultTableModel dtmSearchItems;               // Holds the table model of the tblSearchItems
     private DefaultTableModel dtmItems;                     // Holds the table model of the tblItems
@@ -1361,77 +1360,86 @@ public class CashSales extends javax.swing.JPanel {
     }//GEN-LAST:event_tblItemsKeyPressed
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
-
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-        // Filling the cutomer order
-        customOrder = new CustomOrderDTO(null,
-                formatDate(new Date()),
-                "Admin",
-                finalTotal.doubleValue(),
-                (chkChequeDetails.isSelected()) ? "02" : "01");
-
-        // Filling the order item details
-        orderItemDetails = new ArrayList<>();
-        for (int i = 0; i < dtmItems.getRowCount(); i++) {
-            OrderItemDetailsDTO dto = new OrderItemDetailsDTO(
-                    null,
-                    null,
-                    dtmItems.getValueAt(i, 1).toString(),
-                    Integer.parseInt(dtmItems.getValueAt(i, 3).toString()),
-                    Double.valueOf(dtmItems.getValueAt(i, 4).toString()));
-            orderItemDetails.add(dto);
+        
+        if (cashTenderForm == null){
+            cashTenderForm = new CashTenderForm();
         }
-        // Filling cheque details
-        if (chkChequeDetails.isSelected()) {
-            chequeDetails = new ChequeDetailsDTO(null,
-                    null,
-                    txtChequeNumber.getText().trim(),
-                    txtBank.getText().trim(),
-                    txtBranch.getText().trim());
+        if (!cashTenderForm.isVisible()){
+            cashTenderForm.setVisible(true);
         }
-
-        // Sending data to the controller
-        SalesController controller = (SalesController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SALES);
-        try {
-            boolean success = controller.saveCashSale(customOrder, orderItemDetails, orderEmptyBottleDetails, chequeDetails);
-            if (success) {
-                // Resetting
-                resetTextFields(null);
-                dtmSearchItems.setRowCount(0);
-                dtmItems.setRowCount(0);
-                if (cmbEmptyBottle.getItemCount() > 0) {
-                    cmbEmptyBottle.setSelectedIndex(0);
-                }
-                txtEmptyBottleQty.setText("0");
-                chkChequeDetails.setSelected(false);
-                txtChequeNumber.setText("");
-                txtBank.setText("");
-                txtBranch.setText("");
-                txtBarcode.requestFocusInWindow();
-                enableQty();
-                enablePay();
-                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
-                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((this)),
-                        "Order has been successfully saved.",
-                        "Order Success",
-                        JOptionPane.INFORMATION_MESSAGE,
-                        icon);
-            } else {
-                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
-                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
-                        "Sorry, this order can not be saved right now due to some unexpected reason. Please try again.",
-                        "Order Failed",
-                        JOptionPane.INFORMATION_MESSAGE,
-                        icon);
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            this.setCursor(Cursor.getDefaultCursor());
-        }
+        
+        
+//        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//
+//        // Filling the cutomer order
+//        customOrder = new CustomOrderDTO(null,
+//                formatDate(new Date()),
+//                "Admin",
+//                finalTotal.doubleValue(),
+//                (chkChequeDetails.isSelected()) ? "02" : "01");
+//
+//        // Filling the order item details
+//        orderItemDetails = new ArrayList<>();
+//        for (int i = 0; i < dtmItems.getRowCount(); i++) {
+//            OrderItemDetailsDTO dto = new OrderItemDetailsDTO(
+//                    null,
+//                    null,
+//                    dtmItems.getValueAt(i, 1).toString(),
+//                    Integer.parseInt(dtmItems.getValueAt(i, 3).toString()),
+//                    Double.valueOf(dtmItems.getValueAt(i, 4).toString()));
+//            orderItemDetails.add(dto);
+//        }
+//        // Filling cheque details
+//        if (chkChequeDetails.isSelected()) {
+//            chequeDetails = new ChequeDetailsDTO(null,
+//                    null,
+//                    txtChequeNumber.getText().trim(),
+//                    txtBank.getText().trim(),
+//                    txtBranch.getText().trim());
+//        }
+//
+//        // Sending data to the controller
+//        SalesController controller = (SalesController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SALES);
+//        try {
+//            boolean success = controller.saveCashSale(customOrder, orderItemDetails, orderEmptyBottleDetails, chequeDetails);
+//            if (success) {
+//                // Resetting
+//                resetTextFields(null);
+//                dtmSearchItems.setRowCount(0);
+//                dtmItems.setRowCount(0);
+//                if (cmbEmptyBottle.getItemCount() > 0) {
+//                    cmbEmptyBottle.setSelectedIndex(0);
+//                }
+//                txtEmptyBottleQty.setText("0");
+//                chkChequeDetails.setSelected(false);
+//                txtChequeNumber.setText("");
+//                txtBank.setText("");
+//                txtBranch.setText("");
+//                txtBarcode.requestFocusInWindow();
+//                enableQty();
+//                enablePay();
+//                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
+//                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((this)),
+//                        "Order has been successfully saved.",
+//                        "Order Success",
+//                        JOptionPane.INFORMATION_MESSAGE,
+//                        icon);
+//            } else {
+//                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+//                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+//                        "Sorry, this order can not be saved right now due to some unexpected reason. Please try again.",
+//                        "Order Failed",
+//                        JOptionPane.INFORMATION_MESSAGE,
+//                        icon);
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            this.setCursor(Cursor.getDefaultCursor());
+//        }
+        
     }//GEN-LAST:event_btnPayActionPerformed
 
     private void tblItemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemsMouseClicked
