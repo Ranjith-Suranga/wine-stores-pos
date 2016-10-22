@@ -257,6 +257,7 @@ public class CashTenderForm extends javax.swing.JFrame {
     private void btnPlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlaceOrderActionPerformed
         
         BigDecimal cashTendered = new BigDecimal(txtCashTendered.getText());
+        this.setVisible(false);
         owner.processOrder(cashTendered.setScale(2,RoundingMode.HALF_UP));
         this.dispose();
         
