@@ -8,6 +8,7 @@ package lk.ijse.winestores.service.custom.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lk.ijse.winestores.dao.DAOFactory;
@@ -32,6 +33,12 @@ import lk.ijse.winestores.dao.dto.OrderItemDetailsDTO;
 import lk.ijse.winestores.resource.ResourceConnection;
 import lk.ijse.winestores.resource.ResourceFactory;
 import lk.ijse.winestores.service.custom.SalesService;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -133,6 +140,19 @@ public class SalesServiceImpl implements SalesService {
         connection.commit();
         // Ending the transaction
         connection.setAutoCommit(true);
+        
+        try {
+            JasperReport compiledReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/winestores/reports/CashSaleBill.jasper"));
+            
+            HashMap<String, Object> parms = new HashMap<>();
+            parms.put("orderId", orderID);
+            
+            JasperPrint filledReport = JasperFillManager.fillReport(compiledReport, parms, connection);
+            JasperViewer.viewReport(filledReport);
+        } catch (JRException ex) {
+            Logger.getLogger(SalesServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         // And returns our success :)
         return true;
     }
