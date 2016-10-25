@@ -65,7 +65,7 @@
                   <Component id="pnlHeader" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jScrollPane1" max="32767" attributes="0"/>
-                      <Component id="pnlMenu" pref="668" max="32767" attributes="0"/>
+                      <Component id="pnlMenu" pref="691" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -170,11 +170,12 @@
                   <Component id="lblSupplierOrders" alignment="0" max="32767" attributes="0"/>
                   <Component id="lblGRN" alignment="0" max="32767" attributes="0"/>
                   <Component id="lblViews" alignment="0" max="32767" attributes="0"/>
-                  <Component id="lblSystemSettings" alignment="0" pref="224" max="32767" attributes="0"/>
+                  <Component id="lblCustomers" alignment="0" pref="224" max="32767" attributes="0"/>
                   <Component id="lblLogOut" alignment="0" max="32767" attributes="0"/>
                   <Component id="lblCreditSale" alignment="0" max="32767" attributes="0"/>
                   <Component id="lblMinimize" alignment="0" max="32767" attributes="0"/>
                   <Component id="lblExitSystem" alignment="0" max="32767" attributes="0"/>
+                  <Component id="lblSystemSettings" alignment="0" pref="224" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -199,8 +200,10 @@
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="lblViews" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                      <Component id="lblCustomers" min="-2" pref="45" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="lblSystemSettings" min="-2" pref="45" max="-2" attributes="0"/>
-                      <EmptySpace pref="50" max="32767" attributes="0"/>
+                      <EmptySpace pref="27" max="32767" attributes="0"/>
                       <Component id="lblMinimize" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="lblLogOut" min="-2" pref="45" max="-2" attributes="0"/>
@@ -461,7 +464,7 @@
                 <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblViewsMouseExited"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblSystemSettings">
+            <Component class="javax.swing.JLabel" name="lblCustomers">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="0" red="ff" type="rgb"/>
@@ -473,9 +476,9 @@
                   <Color blue="a7" green="9a" red="96" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/lk/ijse/winestores/icons/System Settings.png"/>
+                  <Image iconType="3" name="/lk/ijse/winestores/icons/Customers.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="[F10] - System Settings"/>
+                <Property name="text" type="java.lang.String" value="[F10] - Customers"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                     <EmptyBorder bottom="0" left="15" right="0" top="0"/>
@@ -484,9 +487,9 @@
                 <Property name="iconTextGap" type="int" value="15"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblSystemSettingsMouseClicked"/>
-                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblSystemSettingsMouseEntered"/>
-                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblSystemSettingsMouseExited"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCustomersMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCustomersMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCustomersMouseExited"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lblMinimize">
@@ -571,6 +574,34 @@
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblExitSystemMouseClicked"/>
                 <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblExitSystemMouseEntered"/>
                 <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblExitSystemMouseExited"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblSystemSettings">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="0" red="ff" type="rgb"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Open Sans" size="14" style="0"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="a7" green="9a" red="96" type="rgb"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/lk/ijse/winestores/icons/System Settings.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="[F11] - System Settings"/>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                    <EmptyBorder bottom="0" left="15" right="0" top="0"/>
+                  </Border>
+                </Property>
+                <Property name="iconTextGap" type="int" value="15"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblSystemSettingsMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblSystemSettingsMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblSystemSettingsMouseExited"/>
               </Events>
             </Component>
           </SubComponents>

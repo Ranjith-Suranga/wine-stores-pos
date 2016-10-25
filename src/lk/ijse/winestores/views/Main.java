@@ -49,7 +49,7 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     public Main() {
-        initComponents();
+        initComponents();        
         initMe();
     }
 
@@ -98,6 +98,9 @@ public class Main extends javax.swing.JFrame {
                         setSeletctedMenuItem(MenuItems.VIEWS);
                         break;
                     case KeyEvent.VK_F10:
+                        setSeletctedMenuItem(MenuItems.CUSTOMERS);
+                        break;
+                    case KeyEvent.VK_F11:
                         setSeletctedMenuItem(MenuItems.SYSTEM_SETTINGS);
                         break;
                 }
@@ -189,6 +192,8 @@ public class Main extends javax.swing.JFrame {
                             setSeletctedMenuItem(MenuItems.MINIMIZE);
                         } else if (e.getComponent() == lblLogOut) {
                             setSeletctedMenuItem(MenuItems.LOGOUT);
+                        }else if (e.getComponent() == lblCustomers){
+                            setSeletctedMenuItem(MenuItems.CUSTOMERS);
                         } else {
                             setSeletctedMenuItem(MenuItems.EXIT_SYSTEM);
                         }
@@ -364,6 +369,11 @@ public class Main extends javax.swing.JFrame {
                 case EXIT_SYSTEM:
                     System.exit(0);
                     break;
+                case CUSTOMERS:
+                    Customers customers = new Customers();
+                    pnlContainer.add(customers);
+                    break;                    
+                
             }
             pnlContainer.updateUI();
             this.setCursor(Cursor.getDefaultCursor());
@@ -387,21 +397,23 @@ public class Main extends javax.swing.JFrame {
 //            }
 //        }   
 //        
-//        0 [F1] - Dashboard
-//        1 [F2] - Cash Sales
-//        2 [F4] - Items
-//        3 [F5] - Item Master
-//        4 [F6] - Supplier Master
-//        5 [F7] - Supplier Orders
-//        6 [F8] - GRN
-//        7 [F9] - Views
-//        8 [F10] - System Settings
-//        9 Log out
-//        10 [F3] - Credit Sales
-//        11 Minimize
-//        12 Exit System        
+//0 [F1] - Dashboard
+//1 [F2] - Cash Sales
+//2 [F4] - Item Search
+//3 [F5] - Item Master
+//4 [F6] - Supplier Master
+//5 [F7] - Supplier Orders
+//6 [F8] - GRN
+//7 [F9] - Views
+//8 [F10] - Customers
+//9 Log out
+//10 [F3] - Credit Issue
+//11 Minimize
+//12 Exit System
+//13 [F11] - System Settings   
+        
         DASHBOARD(0), CASH_SALES(1), CREDIT_SALE(10), ITEMS(2), ITEM_MASTER(3), SUPPLIER_MASTER(4),
-        SUPPLIER_ORDER(5), GRN(6), VIEWS(7), SYSTEM_SETTINGS(8), MINIMIZE(11), LOGOUT(9), EXIT_SYSTEM(12);
+        SUPPLIER_ORDER(5), GRN(6), VIEWS(7), SYSTEM_SETTINGS(13), MINIMIZE(11), LOGOUT(9), EXIT_SYSTEM(12), CUSTOMERS(8);
 
         private final int index;
 
@@ -439,10 +451,11 @@ public class Main extends javax.swing.JFrame {
         lblSupplierOrders = new javax.swing.JLabel();
         lblGRN = new javax.swing.JLabel();
         lblViews = new javax.swing.JLabel();
-        lblSystemSettings = new javax.swing.JLabel();
+        lblCustomers = new javax.swing.JLabel();
         lblMinimize = new javax.swing.JLabel();
         lblLogOut = new javax.swing.JLabel();
         lblExitSystem = new javax.swing.JLabel();
+        lblSystemSettings = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         pnlContainer = new javax.swing.JPanel();
 
@@ -663,22 +676,22 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        lblSystemSettings.setBackground(new java.awt.Color(255, 0, 255));
-        lblSystemSettings.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        lblSystemSettings.setForeground(new java.awt.Color(150, 154, 167));
-        lblSystemSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/icons/System Settings.png"))); // NOI18N
-        lblSystemSettings.setText("[F10] - System Settings");
-        lblSystemSettings.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 15, 0, 0));
-        lblSystemSettings.setIconTextGap(15);
-        lblSystemSettings.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblCustomers.setBackground(new java.awt.Color(255, 0, 255));
+        lblCustomers.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        lblCustomers.setForeground(new java.awt.Color(150, 154, 167));
+        lblCustomers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/icons/Customers.png"))); // NOI18N
+        lblCustomers.setText("[F10] - Customers");
+        lblCustomers.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 15, 0, 0));
+        lblCustomers.setIconTextGap(15);
+        lblCustomers.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblSystemSettingsMouseClicked(evt);
+                lblCustomersMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblSystemSettingsMouseEntered(evt);
+                lblCustomersMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblSystemSettingsMouseExited(evt);
+                lblCustomersMouseExited(evt);
             }
         });
 
@@ -739,6 +752,25 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        lblSystemSettings.setBackground(new java.awt.Color(255, 0, 255));
+        lblSystemSettings.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        lblSystemSettings.setForeground(new java.awt.Color(150, 154, 167));
+        lblSystemSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/icons/System Settings.png"))); // NOI18N
+        lblSystemSettings.setText("[F11] - System Settings");
+        lblSystemSettings.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 15, 0, 0));
+        lblSystemSettings.setIconTextGap(15);
+        lblSystemSettings.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblSystemSettingsMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblSystemSettingsMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblSystemSettingsMouseExited(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(pnlMenu);
         pnlMenu.setLayout(pnlMenuLayout);
         pnlMenuLayout.setHorizontalGroup(
@@ -751,11 +783,12 @@ public class Main extends javax.swing.JFrame {
             .addComponent(lblSupplierOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblGRN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblViews, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblSystemSettings, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+            .addComponent(lblCustomers, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
             .addComponent(lblLogOut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblCreditSale, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblMinimize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblExitSystem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblSystemSettings, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
         );
         pnlMenuLayout.setVerticalGroup(
             pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -779,8 +812,10 @@ public class Main extends javax.swing.JFrame {
                 .addGap(1, 1, 1)
                 .addComponent(lblViews, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
+                .addComponent(lblCustomers, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
                 .addComponent(lblSystemSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(lblMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(lblLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -812,7 +847,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(pnlMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE)))
+                    .addComponent(pnlMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -914,17 +949,17 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lblViewsMouseExited
 
-    private void lblSystemSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSystemSettingsMouseClicked
+    private void lblCustomersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCustomersMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_lblSystemSettingsMouseClicked
+    }//GEN-LAST:event_lblCustomersMouseClicked
 
-    private void lblSystemSettingsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSystemSettingsMouseEntered
+    private void lblCustomersMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCustomersMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_lblSystemSettingsMouseEntered
+    }//GEN-LAST:event_lblCustomersMouseEntered
 
-    private void lblSystemSettingsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSystemSettingsMouseExited
+    private void lblCustomersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCustomersMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_lblSystemSettingsMouseExited
+    }//GEN-LAST:event_lblCustomersMouseExited
 
     private void lblLogOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogOutMouseClicked
     }//GEN-LAST:event_lblLogOutMouseClicked
@@ -981,6 +1016,18 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lblExitSystemMouseExited
 
+    private void lblSystemSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSystemSettingsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblSystemSettingsMouseClicked
+
+    private void lblSystemSettingsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSystemSettingsMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblSystemSettingsMouseEntered
+
+    private void lblSystemSettingsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSystemSettingsMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblSystemSettingsMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -1033,6 +1080,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCashSale;
     private javax.swing.JLabel lblCreditSale;
+    private javax.swing.JLabel lblCustomers;
     private javax.swing.JLabel lblDashboard;
     private javax.swing.JLabel lblExitSystem;
     private javax.swing.JLabel lblGRN;
