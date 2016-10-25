@@ -1563,7 +1563,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered{
         customOrder = new CustomOrderDTO(null,
                 formatDate(new Date()),
                 "Admin",
-                finalTotal.doubleValue(),
+                billTotal.doubleValue(),
                 cashTendered,
                 (chkChequeDetails.isSelected()) ? "02" : "01");
 
