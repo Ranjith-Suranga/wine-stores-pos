@@ -5,19 +5,22 @@
  */
 package lk.ijse.winestores.views;
 
-import java.awt.Component;
+import lk.ijse.winestores.views.util.Extension;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class ReportContainer extends javax.swing.JPanel {
+public class ReportContainer extends javax.swing.JPanel implements Extension{
+    
+    private String extenstionName;
 
     /**
      * Creates new form ReportContainer
      */
-    public ReportContainer() {
+    public ReportContainer(String extenstionName) {
         initComponents();
+        this.extenstionName = extenstionName;
     }
 
 //    @Override
@@ -39,6 +42,16 @@ public class ReportContainer extends javax.swing.JPanel {
 
         setLayout(new java.awt.CardLayout());
     }// </editor-fold>//GEN-END:initComponents
+
+    @Override
+    public boolean exit() {
+        return true;
+    }
+
+    @Override
+    public String getExtensionName() {
+        return this.extenstionName;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -27,12 +27,28 @@ import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
+import lk.ijse.winestores.views.util.Extension;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
 public class Main extends javax.swing.JFrame {
+
+    // Menus
+    private DashBoard pnlDashBoard;
+    private CashSales pnlCashSales;
+    private CreditSales pnlCreditIssue;
+    private Items pnlItemSearch;
+    private ItemMaster pnlItemMaster;
+    private Suppliers pnlSupplierMaster;
+    private SupplierOrders pnlSupplierOrders;
+    private GRNMaster pnlGRNMaster;
+    private Views pnlViews;
+    private SystemSettings pnlSystemSettings;
+
+    private Extension extension;
 
     private MenuItems SelectedMenuItem;
 
@@ -54,6 +70,12 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void initMe() {
+
+        lblfslash1.setVisible(false);
+        lblMenuItem.setVisible(false);
+        lblfslash2.setVisible(false);
+        lblExtension.setVisible(false);
+
         setExtendedState(MAXIMIZED_BOTH);
 //        initMenuItems();  Because it is also called inside setSelectedMenuItem() method
         initDateTime();
@@ -296,50 +318,20 @@ public class Main extends javax.swing.JFrame {
             MenuItems oldMenuItem = SelectedMenuItem;
             SelectedMenuItem = menuItem;
 
-            if (menuItem != MenuItems.MINIMIZE) {
-                pnlContainer.removeAll();
-            }
             lbl.setCursor(this.getCursor());
+
             switch (menuItem) {
                 case DASHBOARD:
-                    DashBoard dashBoard = new DashBoard();
-                    pnlContainer.add(dashBoard);
-                    break;
                 case CASH_SALES:
-                    CashSales cashSales = new CashSales();
-                    pnlContainer.add(cashSales);
-                    break;
                 case CREDIT_SALE:
-                    CreditSales creditSales = new CreditSales();
-                    pnlContainer.add(creditSales);
-                    break;                    
                 case ITEMS:
-                    Items items = new Items();
-                    pnlContainer.add(items);
-                    break;
                 case ITEM_MASTER:
-                    ItemMaster im = new ItemMaster();
-                    pnlContainer.add(im);
-                    break;
                 case SUPPLIER_MASTER:
-                    Suppliers suppliers = new Suppliers();
-                    pnlContainer.add(suppliers);
-                    break;
                 case SUPPLIER_ORDER:
-                    SupplierOrders so = new SupplierOrders();
-                    pnlContainer.add(so);
-                    break;
                 case GRN:
-                    GRNMaster grn = new GRNMaster();
-                    pnlContainer.add(grn);
-                    break;
                 case VIEWS:
-                    Views views = new Views();
-                    pnlContainer.add(views);
-                    break;
                 case SYSTEM_SETTINGS:
-                    SystemSettings systemSettings = new SystemSettings();
-                    pnlContainer.add(systemSettings);
+                    handleNavigation(menuItem, null);
                     break;
                 case MINIMIZE:
                     this.setState(JFrame.ICONIFIED);
@@ -365,13 +357,14 @@ public class Main extends javax.swing.JFrame {
                     System.exit(0);
                     break;
             }
+            
             pnlContainer.updateUI();
             this.setCursor(Cursor.getDefaultCursor());
             lbl.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
         }
     }
 
-    private enum MenuItems {
+    public enum MenuItems {
 
         /*
          * I have messed it up totally here, Now, rather than going back, I used a tricky case.
@@ -400,7 +393,7 @@ public class Main extends javax.swing.JFrame {
 //        10 [F3] - Credit Sales
 //        11 Minimize
 //        12 Exit System        
-        DASHBOARD(0), CASH_SALES(1), CREDIT_SALE(10), ITEMS(2), ITEM_MASTER(3), SUPPLIER_MASTER(4),
+        NOTHING(-1), DASHBOARD(0), CASH_SALES(1), CREDIT_SALE(10), ITEMS(2), ITEM_MASTER(3), SUPPLIER_MASTER(4),
         SUPPLIER_ORDER(5), GRN(6), VIEWS(7), SYSTEM_SETTINGS(8), MINIMIZE(11), LOGOUT(9), EXIT_SYSTEM(12);
 
         private final int index;
@@ -413,6 +406,169 @@ public class Main extends javax.swing.JFrame {
             return index;
         }
 
+    }
+
+    private void handleNavigation(MenuItems menuItem, Extension extension) {
+
+        if (this.extension != null) {
+            if (!this.extension.exit()) {
+                return;
+            }
+        }
+
+        this.extension = extension;
+
+        if (menuItem != MenuItems.MINIMIZE) {
+            pnlContainer.removeAll();
+        }
+
+        if (extension == null) {
+
+            lblExtension.setVisible(false);
+            lblfslash2.setVisible(false);
+
+            if (menuItem != MenuItems.DASHBOARD) {
+                lblfslash1.setVisible(true);
+                lblMenuItem.setVisible(true);
+                lblMenuItem.setFont(lblMenuItem.getFont().deriveFont(Font.BOLD));
+                lblHome.setFont(lblHome.getFont().deriveFont(Font.PLAIN));
+            } else {
+                lblfslash1.setVisible(false);
+                lblMenuItem.setVisible(false);
+                lblHome.setFont(lblHome.getFont().deriveFont(Font.BOLD));
+            }
+
+            switch (menuItem) {
+                case DASHBOARD:
+                    if (pnlDashBoard == null) {
+                        pnlDashBoard = new DashBoard();
+                    }
+                    pnlContainer.add(pnlDashBoard);
+                    break;
+                case CASH_SALES:
+                    if (pnlCashSales == null) {
+                        pnlCashSales = new CashSales();
+                    }
+                    lblMenuItem.setText("Cash Sales");
+                    pnlContainer.add(pnlCashSales);
+                    break;
+                case CREDIT_SALE:
+                    if (pnlCreditIssue == null) {
+                        pnlCreditIssue = new CreditSales();
+                    }
+                    lblMenuItem.setText("Credit Sales");
+                    pnlContainer.add(pnlCreditIssue);
+                    break;
+                case ITEMS:
+                    if (pnlItemSearch == null) {
+                        pnlItemSearch = new Items();
+                    }
+                    lblMenuItem.setText("Item Search");
+                    pnlContainer.add(pnlItemSearch);
+                    break;
+                case ITEM_MASTER:
+                    if (pnlItemMaster == null) {
+                        pnlItemMaster = new ItemMaster();
+                    }
+                    lblMenuItem.setText("Item Master");
+                    pnlContainer.add(pnlItemMaster);
+                    break;
+                case SUPPLIER_MASTER:
+                    if (pnlSupplierMaster == null) {
+                        pnlSupplierMaster = new Suppliers();
+                    }
+                    lblMenuItem.setText("Supplier Master");
+                    pnlContainer.add(pnlSupplierMaster);
+                    break;
+                case SUPPLIER_ORDER:
+                    if (pnlSupplierOrders == null) {
+                        pnlSupplierOrders = new SupplierOrders();
+                    }
+                    lblMenuItem.setText("Supplier Orders");
+                    pnlContainer.add(pnlSupplierOrders);
+                    break;
+                case GRN:
+                    if (pnlGRNMaster == null) {
+                        pnlGRNMaster = new GRNMaster();
+                    }
+                    lblMenuItem.setText("GRN");
+                    pnlContainer.add(pnlGRNMaster);
+                    break;
+                case VIEWS:
+                    if (pnlViews == null) {
+                        pnlViews = new Views();
+                    }
+                    lblMenuItem.setText("Views");
+                    pnlContainer.add(pnlViews);
+                    break;
+                case SYSTEM_SETTINGS:
+                    if (pnlSystemSettings == null) {
+                        pnlSystemSettings = new SystemSettings();
+                    }
+                    lblMenuItem.setText("System Settings");
+                    pnlContainer.add(pnlSystemSettings);
+                    break;
+            }
+            
+            if (pnlContainer.getComponent(0) instanceof FocusHandler){
+                FocusHandler fh = (FocusHandler) pnlContainer.getComponent(0);
+                fh.initFoucs();
+            }
+
+        } else {
+
+            lblfslash2.setVisible(true);
+            lblExtension.setText(extension.getExtensionName());
+            lblExtension.setVisible(true);
+
+            lblMenuItem.setFont(lblMenuItem.getFont().deriveFont(Font.PLAIN));
+            lblExtension.setFont(lblExtension.getFont().deriveFont(Font.BOLD));
+
+        }
+
+    }
+
+    public void setExtenstion(Extension extension) {
+        handleNavigation(SelectedMenuItem, extension);
+    }
+
+    public void resetMenu(MenuItems menuItem) {
+        switch (menuItem) {
+            case DASHBOARD:
+                pnlDashBoard = new DashBoard();
+                break;
+            case CASH_SALES:
+                pnlCashSales = new CashSales();
+                break;
+            case CREDIT_SALE:
+                pnlCreditIssue = new CreditSales();
+                break;
+            case ITEMS:
+                pnlItemSearch = new Items();
+                break;
+            case ITEM_MASTER:
+                pnlItemMaster = new ItemMaster();
+                break;
+            case SUPPLIER_MASTER:
+                pnlSupplierMaster = new Suppliers();
+                break;
+            case SUPPLIER_ORDER:
+                pnlSupplierOrders = new SupplierOrders();
+                break;
+            case GRN:
+                pnlGRNMaster = new GRNMaster();
+                break;
+            case VIEWS:
+                pnlViews = new Views();
+                break;
+            case SYSTEM_SETTINGS:
+                pnlSystemSettings = new SystemSettings();
+                break;
+        }
+        this.extension = null;
+        // A little hack
+        SelectedMenuItem = MenuItems.NOTHING;
+        setSeletctedMenuItem(menuItem);
     }
 
     /**
@@ -429,6 +585,13 @@ public class Main extends javax.swing.JFrame {
         lblUser = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lblTime = new javax.swing.JLabel();
+        lblHome = new javax.swing.JLabel();
+        lblfslash1 = new javax.swing.JLabel();
+        lblMenuItem = new javax.swing.JLabel();
+        lblfslash2 = new javax.swing.JLabel();
+        lblExtension = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         pnlMenu = new javax.swing.JPanel();
         lblDashboard = new javax.swing.JLabel();
         lblCashSale = new javax.swing.JLabel();
@@ -474,6 +637,48 @@ public class Main extends javax.swing.JFrame {
         lblTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTime.setText("jLabel1");
 
+        lblHome.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
+        lblHome.setForeground(new java.awt.Color(255, 255, 255));
+        lblHome.setText("Dashboard");
+        lblHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblHome.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblHomeMouseClicked(evt);
+            }
+        });
+
+        lblfslash1.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        lblfslash1.setForeground(new java.awt.Color(255, 255, 255));
+        lblfslash1.setText("/");
+
+        lblMenuItem.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        lblMenuItem.setForeground(new java.awt.Color(255, 255, 255));
+        lblMenuItem.setText("Supplier Orders");
+        lblMenuItem.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblMenuItemMouseClicked(evt);
+            }
+        });
+
+        lblfslash2.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        lblfslash2.setForeground(new java.awt.Color(255, 255, 255));
+        lblfslash2.setText("/");
+
+        lblExtension.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
+        lblExtension.setForeground(new java.awt.Color(255, 255, 255));
+        lblExtension.setText("New Supplier Order");
+        lblExtension.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jLabel1.setFont(new java.awt.Font("Open Sans", 1, 16)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel1.setText("[");
+
+        jLabel3.setFont(new java.awt.Font("Open Sans", 1, 16)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("]");
+
         javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(pnlHeader);
         pnlHeader.setLayout(pnlHeaderLayout);
         pnlHeaderLayout.setHorizontalGroup(
@@ -481,7 +686,21 @@ public class Main extends javax.swing.JFrame {
             .addGroup(pnlHeaderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 312, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblHome)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblfslash1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblMenuItem)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblfslash2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblExtension)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(lblTime)
                 .addGap(22, 22, 22)
                 .addComponent(lblUser)
@@ -494,7 +713,14 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUser)
                     .addComponent(lblTime)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel2)
+                    .addComponent(lblHome)
+                    .addComponent(lblfslash1)
+                    .addComponent(lblMenuItem)
+                    .addComponent(lblfslash2)
+                    .addComponent(lblExtension)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -981,6 +1207,17 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lblExitSystemMouseExited
 
+    private void lblMenuItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMenuItemMouseClicked
+        // A little hack
+        MenuItems currentSelectedMenuItem = SelectedMenuItem;
+        SelectedMenuItem = MenuItems.NOTHING;
+        setSeletctedMenuItem(currentSelectedMenuItem);
+    }//GEN-LAST:event_lblMenuItemMouseClicked
+
+    private void lblHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHomeMouseClicked
+        setSeletctedMenuItem(MenuItems.DASHBOARD);
+    }//GEN-LAST:event_lblHomeMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -995,9 +1232,9 @@ public class Main extends javax.swing.JFrame {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     UIManager.put("ToolTip.background", new Color(0, 0, 0, 200));
-                    UIManager.put("ToolTip.border",new EmptyBorder(5,5,5,5));
+                    UIManager.put("ToolTip.border", new EmptyBorder(5, 5, 5, 5));
 //                    UIManager.put("ToolTip.size", new Di);
-                    UIManager.put("ToolTip.foreground", new Color(255,255,255));
+                    UIManager.put("ToolTip.foreground", new Color(255, 255, 255));
                     break;
 
                 }
@@ -1029,16 +1266,21 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCashSale;
     private javax.swing.JLabel lblCreditSale;
     private javax.swing.JLabel lblDashboard;
     private javax.swing.JLabel lblExitSystem;
+    private javax.swing.JLabel lblExtension;
     private javax.swing.JLabel lblGRN;
+    private javax.swing.JLabel lblHome;
     private javax.swing.JLabel lblItemMaster;
     private javax.swing.JLabel lblItems;
     private javax.swing.JLabel lblLogOut;
+    private javax.swing.JLabel lblMenuItem;
     private javax.swing.JLabel lblMinimize;
     private javax.swing.JLabel lblSupplierOrders;
     private javax.swing.JLabel lblSuppliers;
@@ -1046,6 +1288,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lblTime;
     private javax.swing.JLabel lblUser;
     private javax.swing.JLabel lblViews;
+    private javax.swing.JLabel lblfslash1;
+    private javax.swing.JLabel lblfslash2;
     javax.swing.JPanel pnlContainer;
     private javax.swing.JPanel pnlHeader;
     private javax.swing.JPanel pnlMain;

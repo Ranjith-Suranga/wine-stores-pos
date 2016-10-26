@@ -37,13 +37,14 @@ import lk.ijse.winestores.controller.custom.MajorCategoryController;
 import lk.ijse.winestores.controller.custom.SubCategoryController;
 import lk.ijse.winestores.controller.custom.SupplierController;
 import lk.ijse.winestores.controller.custom.impl.MajorCategoryControllerImpl;
+import lk.ijse.winestores.views.util.Extension;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class GRN extends javax.swing.JPanel {
+public class GRN extends javax.swing.JPanel implements Extension{
 
     private SuraButton sbtn;                                                    // Holds the SuraButton Instance
     private SuraTable stbl;                                                     // Holds the SuraTable Instance
@@ -1749,6 +1750,16 @@ public class GRN extends javax.swing.JPanel {
 
     public Date getInvoiceDate() {
         return txtInvoiceDate.getDate();
+    }
+
+    @Override
+    public boolean exit() {
+        return true;
+    }
+
+    @Override
+    public String getExtensionName() {
+        return (addNewGrn) ? "New GRN" : "Edit/View GRN";
     }
 
 }

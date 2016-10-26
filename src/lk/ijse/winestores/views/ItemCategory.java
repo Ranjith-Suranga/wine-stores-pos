@@ -28,12 +28,13 @@ import lk.ijse.winestores.controller.custom.ItemController;
 import lk.ijse.winestores.controller.custom.MajorCategoryController;
 import lk.ijse.winestores.controller.custom.SubCategoryController;
 import lk.ijse.winestores.controller.custom.impl.MajorCategoryControllerImpl;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class ItemCategory extends javax.swing.JPanel {
+public class ItemCategory extends javax.swing.JPanel implements FocusHandler{
 
     private SuraTable st;               // Holds the table
     private SuraButton sb;
@@ -798,5 +799,15 @@ public class ItemCategory extends javax.swing.JPanel {
     private javax.swing.JTable tblItemCategory;
     private javax.swing.JTextField txtBarcode;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                cmbMajorCategory.requestFocusInWindow();
+            }
+        });
+    }
 
 }

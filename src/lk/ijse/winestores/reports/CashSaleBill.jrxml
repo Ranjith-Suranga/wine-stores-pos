@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
-<!-- 2016-10-25T23:59:25 -->
+<!-- 2016-10-26T10:11:20 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CashSaleBill" pageWidth="226" pageHeight="792" whenNoDataType="BlankPage" columnWidth="198" leftMargin="14" rightMargin="14" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="73c88906-3dd1-4b8e-a8df-09685069782d">
 	<property name="com.jaspersoft.studio.data.sql.tables" value="d2luZV9zdG9yZXMubWFpbl9zdWJfaXRlbSAsMTUsMTM1LGY2Y2NhMGQ0LTJmZDQtNGEyZS1iMmE2&#xA;LTIwY2Y5OTVmNzMwZjt3aW5lX3N0b3Jlcy5jdXN0b21fb3JkZXIgLDM5MSwxNSxjYTZiMGQ4OS1l&#xA;ODI4LTRlZDItOWJiZi0xZWFhYTU0MWViNzA7d2luZV9zdG9yZXMub3JkZXJfaXRlbV9kZXRhaWxz&#xA;ICwxOTUsNDAsZWVlMjFjOTYtMDUyZi00YTExLThhZWItNmE5YTlmYTBmOGI2O3dpbmVfc3RvcmVz&#xA;Lml0ZW0gLDUzOCwxODgsOGYwM2ZmZDQtOTk4MC00MmQ5LWEwMTUtMmUyYTk4YjNlMjk0Ow=="/>
 	<property name="com.jaspersoft.studio.unit." value="mm"/>
@@ -249,9 +249,9 @@ WHERE
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="14" splitType="Stretch">
+		<band height="28" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="198" height="14" uuid="c42c405a-1cf6-40a4-8db3-8f58a51ab3d1"/>
+				<reportElement x="0" y="14" width="198" height="14" uuid="c42c405a-1cf6-40a4-8db3-8f58a51ab3d1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Iskoola Pota" size="9"/>
 				</textElement>

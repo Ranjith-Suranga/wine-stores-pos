@@ -43,13 +43,14 @@ import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
 import lk.ijse.winestores.dao.dto.OrderEmptyBottleDetailsDTO;
 import lk.ijse.winestores.dao.dto.OrderItemDetailsDTO;
 import lk.ijse.winestores.views.util.CashTendered;
+import lk.ijse.winestores.views.util.FocusHandler;
 import lk.ijse.winestores.views.util.SuraBoyTextComponenets;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class CashSales extends javax.swing.JPanel implements CashTendered{
+public class CashSales extends javax.swing.JPanel implements CashTendered, FocusHandler{
 
     private ArrayList<EmptyBottleDTO> emptyBottleTypes;
     private CashTenderForm cashTenderForm;
@@ -1629,5 +1630,15 @@ public class CashSales extends javax.swing.JPanel implements CashTendered{
             this.setCursor(Cursor.getDefaultCursor());
         }
         
+    }
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtBarcode.requestFocusInWindow();
+            }
+        });
     }
 }

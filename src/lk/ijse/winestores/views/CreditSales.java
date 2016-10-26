@@ -40,13 +40,14 @@ import lk.ijse.winestores.dao.dto.CreditOrderItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.CustomItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
+import lk.ijse.winestores.views.util.FocusHandler;
 import lk.ijse.winestores.views.util.SuraBoyTextComponenets;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class CreditSales extends javax.swing.JPanel {
+public class CreditSales extends javax.swing.JPanel implements FocusHandler{
 
     private ArrayList<EmptyBottleDTO> emptyBottleTypes;
 
@@ -1559,4 +1560,14 @@ public class CreditSales extends javax.swing.JPanel {
     private javax.swing.JTextField txtQty;
     private javax.swing.JTextField txtSellingPrice;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtBarcode.requestFocusInWindow();
+            }
+        });
+    }
 }
