@@ -5,12 +5,15 @@
  */
 package lk.ijse.winestores.service.custom.impl;
 
+import java.awt.KeyboardFocusManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import lk.ijse.winestores.dao.DAOFactory;
 import lk.ijse.winestores.dao.SuperDAO;
 import lk.ijse.winestores.dao.custom.ChequeDetailsDAO;
@@ -36,9 +39,9 @@ import lk.ijse.winestores.service.custom.SalesService;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -141,6 +144,7 @@ public class SalesServiceImpl implements SalesService {
         // Ending the transaction
         connection.setAutoCommit(true);
         
+        // Everything is good, so let's print the bill
         try {
             JasperReport compiledReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/winestores/reports/CashSaleBill.jasper"));
             
@@ -148,9 +152,18 @@ public class SalesServiceImpl implements SalesService {
             parms.put("orderId", orderID);
             
             JasperPrint filledReport = JasperFillManager.fillReport(compiledReport, parms, connection);
-            JasperViewer.viewReport(filledReport);
+            JasperPrintManager.printReport(filledReport, false);
+            
         } catch (JRException ex) {
             Logger.getLogger(SalesServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            
+            ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+            JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
+                    "Sorry, order can not be printed, please check the printer.",
+                    "Printing Failed",
+                    JOptionPane.ERROR_MESSAGE,
+                    icon);            
+            
         }
         
         // And returns our success :)
