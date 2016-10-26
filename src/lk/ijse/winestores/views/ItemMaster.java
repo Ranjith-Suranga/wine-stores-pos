@@ -11,17 +11,18 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class ItemMaster extends javax.swing.JPanel {
+public class ItemMaster extends javax.swing.JPanel implements FocusHandler {
 
     private JPanel selectedPanel;
 
@@ -297,4 +298,15 @@ public class ItemMaster extends javax.swing.JPanel {
     private javax.swing.JPanel pnlMajorCatogeries;
     private javax.swing.JPanel pnlSubCatogeries;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater( new Runnable() {
+            @Override
+            public void run() {
+                FocusHandler fh = (FocusHandler) pnlContainer.getComponent(0);
+                fh.initFoucs();
+            }
+        });
+    }
 }

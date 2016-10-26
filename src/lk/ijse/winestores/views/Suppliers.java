@@ -23,12 +23,13 @@ import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.SupplierController;
 import lk.ijse.winestores.dao.dto.SupplierDTO;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class Suppliers extends javax.swing.JPanel {
+public class Suppliers extends javax.swing.JPanel implements FocusHandler{
 
     private SuraButton sb;                          // Holds the SuraButton instance
     private SuraTable st;                           // Holds the SuraTable instance
@@ -76,6 +77,8 @@ public class Suppliers extends javax.swing.JPanel {
         tblSuppliers.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                
+                btnEdit.setEnabled(false);
 
                 if (tblSuppliers.getSelectedRow() == -1) {
                     return;
@@ -381,6 +384,7 @@ public class Suppliers extends javax.swing.JPanel {
         Main m = (Main) SwingUtilities.getWindowAncestor(this);
         m.pnlContainer.removeAll();
         SaveSupplier s = new SaveSupplier();
+        m.setExtenstion(s);
         m.pnlContainer.add(s);
         m.pnlContainer.updateUI();
     }//GEN-LAST:event_btnNewActionPerformed
@@ -404,16 +408,16 @@ public class Suppliers extends javax.swing.JPanel {
                 dtm.setValueAt(!currentStatus, tblSuppliers.getSelectedRow(), 0);
                 evt.consume();
             }
-        }else if (evt.getKeyCode() == KeyEvent.VK_ENTER){
-            
-            if (dtm.getRowCount() > 0){
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            if (dtm.getRowCount() > 0) {
                 int selectedIndex = tblSuppliers.getSelectedRow();
-                
-                if (selectedIndex != -1 && btnEdit.isEnabled()){
+
+                if (selectedIndex != -1 && btnEdit.isEnabled()) {
                     btnEdit.doClick();
                 }
             }
-            
+
         }
     }//GEN-LAST:event_tblSuppliersKeyPressed
 
@@ -454,6 +458,7 @@ public class Suppliers extends javax.swing.JPanel {
         Main m = (Main) SwingUtilities.getWindowAncestor(this);
         m.pnlContainer.removeAll();
         SaveSupplier s = new SaveSupplier(suppliers.get(tblSuppliers.getSelectedRow()));
+        m.setExtenstion(s);
         m.pnlContainer.add(s);
         m.pnlContainer.updateUI();
 
@@ -480,4 +485,14 @@ public class Suppliers extends javax.swing.JPanel {
     private javax.swing.JTable tblSuppliers;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtSearch.requestFocusInWindow();
+            }
+        });
+    }
 }

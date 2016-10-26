@@ -28,12 +28,13 @@ import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.MajorCategoryController;
 import lk.ijse.winestores.controller.custom.SubCategoryController;
 import lk.ijse.winestores.controller.custom.impl.MajorCategoryControllerImpl;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class SubCategory extends javax.swing.JPanel {
+public class SubCategory extends javax.swing.JPanel implements FocusHandler{
 
     private ComboBoxModel<String> cbm;              // Holds the combo box model
     private DefaultTableModel dtm;                  // Holds the default table model
@@ -626,4 +627,14 @@ public class SubCategory extends javax.swing.JPanel {
     private javax.swing.JScrollPane scrPaneOfTable;
     private javax.swing.JTable tblSubCategory;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                cmbMajorCategory.requestFocusInWindow();
+            }
+        });        
+    }
 }

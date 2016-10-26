@@ -21,12 +21,13 @@ import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.ItemController;
 import lk.ijse.winestores.dao.custom.ItemDetailsDAO;
 import lk.ijse.winestores.dao.dto.ItemDetailsDTO;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class Items extends javax.swing.JPanel {
+public class Items extends javax.swing.JPanel implements FocusHandler{
 
     private DefaultTableModel dtmAllItems;
     private DefaultTableModel dtm;          // Holds the table model
@@ -457,4 +458,14 @@ public class Items extends javax.swing.JPanel {
     private javax.swing.JTable tblItems;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtSearch.requestFocusInWindow();
+            }
+        });
+    }
 }

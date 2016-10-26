@@ -17,19 +17,18 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.MajorCategoryController;
 import lk.ijse.winestores.controller.custom.impl.MajorCategoryControllerImpl;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class MajorCategory extends javax.swing.JPanel {
+public class MajorCategory extends javax.swing.JPanel implements FocusHandler{
 
     private DefaultTableModel dtm;
     private SuraButton sb;
@@ -200,10 +199,10 @@ public class MajorCategory extends javax.swing.JPanel {
             }
         });
         txtMajorCategory.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-            }
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
                 txtMajorCategoryCaretPositionChanged(evt);
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
             }
         });
         txtMajorCategory.addActionListener(new java.awt.event.ActionListener() {
@@ -543,6 +542,16 @@ public class MajorCategory extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane scrPaneOfTable;
     private javax.swing.JTable tblMajorCatogeries;
-    javax.swing.JTextField txtMajorCategory;
+    public javax.swing.JTextField txtMajorCategory;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtMajorCategory.requestFocusInWindow();
+            }
+        });
+    }
 }

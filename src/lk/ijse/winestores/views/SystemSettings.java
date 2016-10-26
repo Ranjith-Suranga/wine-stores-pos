@@ -95,6 +95,7 @@ public class SystemSettings extends javax.swing.JPanel {
         Main m = (Main) SwingUtilities.getWindowAncestor(this);
         m.pnlContainer.removeAll();
         InitialStockTransfer stock = new InitialStockTransfer();
+        m.setExtenstion(stock);
         m.pnlContainer.add(stock);
         m.pnlContainer.updateUI();
         this.setCursor(Cursor.getDefaultCursor());

@@ -25,12 +25,13 @@ import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.NewItemController;
 import lk.ijse.winestores.dao.dto.CustomItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.ItemDetailsDTO;
+import lk.ijse.winestores.views.util.Extension;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class InitialStockTransfer extends javax.swing.JPanel {
+public class InitialStockTransfer extends javax.swing.JPanel implements Extension{
 
     private NewItemController itemCtrl;
 
@@ -541,4 +542,14 @@ public class InitialStockTransfer extends javax.swing.JPanel {
     private javax.swing.JTable tblItems;
     private javax.swing.JTextField txtEditor;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public boolean exit() {
+        return true;
+    }
+
+    @Override
+    public String getExtensionName() {
+        return "Initial Stock Transfer";
+    }
 }

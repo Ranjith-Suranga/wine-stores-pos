@@ -128,7 +128,8 @@ public class Views extends javax.swing.JPanel {
 
             Main m = (Main) SwingUtilities.getWindowAncestor(this);
             m.pnlContainer.removeAll();
-            ReportContainer reportContainer = new ReportContainer();
+            ReportContainer reportContainer = new ReportContainer("Item Master Full Report");
+            m.setExtenstion(reportContainer);
             reportContainer.add(pnlReport);
             reportContainer.updateUI();
             m.pnlContainer.add(reportContainer);
@@ -170,7 +171,8 @@ public class Views extends javax.swing.JPanel {
 
             Main m = (Main) SwingUtilities.getWindowAncestor(this);
             m.pnlContainer.removeAll();
-            ReportContainer reportContainer = new ReportContainer();
+            ReportContainer reportContainer = new ReportContainer("Initial Stock Taking Report");
+            m.setExtenstion(reportContainer);
             reportContainer.add(pnlReport);
             reportContainer.updateUI();
             m.pnlContainer.add(reportContainer);

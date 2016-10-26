@@ -19,22 +19,46 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.SupplierController;
 import lk.ijse.winestores.dao.dto.SupplierDTO;
+import lk.ijse.winestores.views.util.Extension;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class SaveSupplier extends javax.swing.JPanel {
+public class SaveSupplier extends javax.swing.JPanel implements Extension{
     
     private SuraButton sb;          // Holds the SuraButton Instance
+    
+    private boolean changed;            // Holds whether new changes have been made
 
     private SupplierDTO supplier;       // Holds the current supplier object
     private Status status;              // Holds the current status, whether to update or add
+
+    @Override
+    public boolean exit() {
+        if (changed){
+            ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/question.png"));
+            int result = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(this),
+                    "Some changes have been made. Do you want to exit without saving them ?",
+                    "Exit Confirmation",
+                    JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,icon);
+            return result == JOptionPane.YES_OPTION;
+        }else{
+            return true;
+        }
+    }
+
+    @Override
+    public String getExtensionName() {
+        return (this.status == Status.ADD) ? "New Supplier" : "Edit Supplier";
+    }
 
     private enum Status {
         ADD, EDIT
@@ -49,6 +73,8 @@ public class SaveSupplier extends javax.swing.JPanel {
         
         this.supplier = new SupplierDTO();
         this.status = Status.ADD;
+        
+        addDocumentListeners();
     }
     
     public SaveSupplier(SupplierDTO supplier) {
@@ -79,6 +105,32 @@ public class SaveSupplier extends javax.swing.JPanel {
         
         this.status = Status.EDIT;
         
+        addDocumentListeners();
+    }
+    
+    private void addDocumentListeners(){
+        
+        for (Component cmp : pnlMainContainer.getComponents()) {
+            if (cmp instanceof JTextComponent){
+                JTextComponent txt = (JTextComponent) cmp;
+                txt.getDocument().addDocumentListener(new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        changed = true;
+                    }
+
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        changed = true;
+                    }
+
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        changed = true;
+                    }
+                });
+            }
+        }        
     }
     
     public void init() {
@@ -134,6 +186,8 @@ public class SaveSupplier extends javax.swing.JPanel {
                 }
             }
         });
+        
+        
     }
     
     private String formatDate(Date date) {
@@ -286,6 +340,11 @@ public class SaveSupplier extends javax.swing.JPanel {
                 txtNameActionPerformed(evt);
             }
         });
+        txtName.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txtNamePropertyChange(evt);
+            }
+        });
         txtName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtNameKeyPressed(evt);
@@ -337,6 +396,11 @@ public class SaveSupplier extends javax.swing.JPanel {
         txtDate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtDateFocusGained(evt);
+            }
+        });
+        txtDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDateActionPerformed(evt);
             }
         });
         txtDate.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -566,10 +630,11 @@ public class SaveSupplier extends javax.swing.JPanel {
             
             if (result > 0) {
                 Main m = (Main) SwingUtilities.getWindowAncestor(this);
-                m.pnlContainer.removeAll();
-                Suppliers s = new Suppliers();
-                m.pnlContainer.add(s);
-                m.pnlContainer.updateUI();
+//                m.pnlContainer.removeAll();
+//                Suppliers s = new Suppliers();
+//                m.pnlContainer.add(s);
+//                m.pnlContainer.updateUI();
+                m.resetMenu(Main.MenuItems.SUPPLIER_MASTER);
             }
             
         } catch (ClassNotFoundException ex) {
@@ -698,6 +763,14 @@ public class SaveSupplier extends javax.swing.JPanel {
             txtAgentName.requestFocusInWindow();
         }
     }//GEN-LAST:event_txtCoordinatorPhoneNumberKeyTyped
+
+    private void txtNamePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtNamePropertyChange
+
+    }//GEN-LAST:event_txtNamePropertyChange
+
+    private void txtDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDateActionPerformed
+        changed = true;
+    }//GEN-LAST:event_txtDateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

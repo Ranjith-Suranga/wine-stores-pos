@@ -41,17 +41,22 @@ import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDetailDTO;
+import lk.ijse.winestores.views.util.Extension;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class SaveSupplierOrder extends javax.swing.JPanel {
+public class SaveSupplierOrder extends javax.swing.JPanel implements Extension{
 
     private SuraButton sbtn;                                                    // Holds the SuraButton Instance
     private SuraTable stbl;                                                     // Holds the SuraTable Instance
     private DefaultTableModel dtm;
 
+    private String extensionName;
+    
+    private boolean changed;
+    
     // Dependencies
     private SupplierController supplierCtrl;
     private SupplierOrderController supplierOrderCtrl;
@@ -66,6 +71,8 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
     public SaveSupplierOrder() {
         init();
         pnlProtectedView.setVisible(false);
+        
+        extensionName = "New Supplier Order";
 
         try {
 
@@ -94,11 +101,13 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
                 cmbSupplier.requestFocusInWindow();
             }
         });
-
+        
     }
 
     public SaveSupplierOrder(int supplierOrderId) {
         init();
+        
+        extensionName = "Edit Supplier Order";
 
         // Setting supplier order id
         this.supplierOrderId = supplierOrderId;
@@ -949,11 +958,11 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
 
     private void cmbSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSupplierActionPerformed
 
-
     }//GEN-LAST:event_cmbSupplierActionPerformed
 
     private void cmbSubCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSubCategoryItemStateChanged
 
+        changed = true;
         enableAddItem();
         cmbItem.removeAllItems();
 
@@ -985,6 +994,7 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
 
     private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
 
+        changed = true;
         String currentItemCode = getCurrentItemCode();
 
         BigDecimal bdTotal = null;
@@ -1063,6 +1073,7 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
 
     private void cmbItemItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbItemItemStateChanged
 
+        changed = true;
         enableAddItem();
         if (cmbItem.getSelectedIndex() == -1) {
             txtStockQty.setText("");
@@ -1116,6 +1127,7 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
 
+        changed = true;
         // A little hack
         tblItems.editingCanceled(null);
 
@@ -1191,10 +1203,11 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
                             icon);
 
                     Main m = (Main) SwingUtilities.getWindowAncestor(this);
-                    m.pnlContainer.removeAll();
-                    SupplierOrders supplierOrders = new SupplierOrders();
-                    m.pnlContainer.add(supplierOrders);
-                    m.pnlContainer.updateUI();
+                    m.resetMenu(Main.MenuItems.SUPPLIER_ORDER);
+//                    m.pnlContainer.removeAll();
+//                    SupplierOrders supplierOrders = new SupplierOrders();
+//                    m.pnlContainer.add(supplierOrders);
+//                    m.pnlContainer.updateUI();
 
                 } else {
 
@@ -1239,6 +1252,8 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
 
     private void cmbSupplierItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSupplierItemStateChanged
 
+        changed = true;
+        
         if (cmbSupplier.getSelectedIndex() == -1) {
             txtMajorCategory.setText("");
             cmbSubCategory.removeAllItems();
@@ -1344,10 +1359,12 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
     }//GEN-LAST:event_txtBuyingPriceFocusLost
 
     private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
+        changed = true;
         enableAddItem();
     }//GEN-LAST:event_txtQtyKeyReleased
 
     private void txtBuyingPriceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuyingPriceKeyReleased
+        changed = true;
         enableAddItem();
     }//GEN-LAST:event_txtBuyingPriceKeyReleased
 
@@ -1395,5 +1412,24 @@ public class SaveSupplierOrder extends javax.swing.JPanel {
     private javax.swing.JTextField txtQty;
     private javax.swing.JTextField txtStockQty;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public boolean exit() {
+        if (changed && !pnlProtectedView.isVisible()){
+            ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/question.png"));
+            int result = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(this),
+                    "Some changes have been made. Do you want to exit without saving them ?",
+                    "Exit Confirmation",
+                    JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,icon);
+            return result == JOptionPane.YES_OPTION;
+        }else{
+            return true;
+        }
+    }
+
+    @Override
+    public String getExtensionName() {
+        return extensionName;
+    }
 
 }

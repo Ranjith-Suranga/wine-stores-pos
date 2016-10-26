@@ -30,12 +30,13 @@ import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.SupplierController;
 import lk.ijse.winestores.controller.custom.SupplierOrderController;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class SupplierOrders extends javax.swing.JPanel {
+public class SupplierOrders extends javax.swing.JPanel implements FocusHandler{
 
     private SuraButton sbtn;                                                    // Holds the SuraButton Instance
     private SuraTable stbl;                                                     // Holds the SuraTable Instance
@@ -618,6 +619,7 @@ public class SupplierOrders extends javax.swing.JPanel {
         Main m = (Main) SwingUtilities.getWindowAncestor(this);
         m.pnlContainer.removeAll();
         SaveSupplierOrder saveSupplierOrder = new SaveSupplierOrder();
+        m.setExtenstion(saveSupplierOrder);
         m.pnlContainer.add(saveSupplierOrder);
         m.pnlContainer.updateUI();
         this.setCursor(Cursor.getDefaultCursor());
@@ -688,6 +690,7 @@ public class SupplierOrders extends javax.swing.JPanel {
         
         int OrderId = Integer.parseInt(tblSupplierOrder.getValueAt(tblSupplierOrder.getSelectedRow(), 1).toString());
         SaveSupplierOrder saveSupplierOrder = new SaveSupplierOrder(OrderId);
+        m.setExtenstion(saveSupplierOrder);
         
         m.pnlContainer.add(saveSupplierOrder);
         m.pnlContainer.updateUI();
@@ -791,4 +794,14 @@ public class SupplierOrders extends javax.swing.JPanel {
     private javax.swing.JTable tblSupplierOrder;
     private javax.swing.JFormattedTextField txtSearch;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtSearch.requestFocusInWindow();
+            }
+        });
+    }
 }

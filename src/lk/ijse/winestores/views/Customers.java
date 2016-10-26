@@ -5,10 +5,8 @@
  */
 package lk.ijse.winestores.views;
 
-import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -23,11 +21,11 @@ public class Customers extends javax.swing.JPanel {
         
         initForm();
         
-        Object[] rowData = {false, "01", "D M R Suranga","0772048857","Earth"};
-        DefaultTableModel model = (DefaultTableModel) tblCustomers.getModel();
-        model.addRow(rowData);
-        model.addRow(rowData);
-        model.addRow(rowData);
+//        Object[] rowData = {"01", "D M R Suranga","0772048857","Earth"};
+//        DefaultTableModel model = (DefaultTableModel) tblCustomers.getModel();
+//        model.addRow(rowData);
+//        model.addRow(rowData);
+//        model.addRow(rowData);
         
     }
     
@@ -42,6 +40,7 @@ public class Customers extends javax.swing.JPanel {
                
         
         for (int i = 0; i < tblCustomers.getColumnCount(); i++) {
+            if (i==1 || i== 3)continue;
             stbl.setHeaderAlignment(i, SwingConstants.CENTER);
         }
 
@@ -69,15 +68,15 @@ public class Customers extends javax.swing.JPanel {
         pnlHeader = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtCustomerName = new javax.swing.JTextField();
-        btnDelete = new javax.swing.JButton();
-        btnEdit = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane(){
             {
-                getViewport().setBackground(new Color(0xE9ECF2));
+                //getViewport().setBackground(Color.WHITE);
             }
         };
         tblCustomers = new javax.swing.JTable();
@@ -91,17 +90,22 @@ public class Customers extends javax.swing.JPanel {
         jLabel1.setToolTipText("");
 
         txtCustomerName.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        txtCustomerName.setBorder(
+            javax.swing.BorderFactory.createCompoundBorder(
+                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 225, 234)),
+                javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5))
+        );
+        txtCustomerName.setMargin(new java.awt.Insets(3, 5, 3, 3));
 
-        btnDelete.setBackground(new java.awt.Color(251, 93, 93));
-        btnDelete.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnDelete.setMnemonic('e');
-        btnDelete.setText("Delete");
-        btnDelete.setToolTipText("Check one or more customer(s) to delete");
-        btnDelete.setEnabled(false);
-        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+        btnAdd.setBackground(new java.awt.Color(72, 158, 231));
+        btnAdd.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(255, 255, 255));
+        btnAdd.setMnemonic('A');
+        btnAdd.setText("Add");
+        btnAdd.setToolTipText("Click to add new customer");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
+                btnAddActionPerformed(evt);
             }
         });
 
@@ -118,21 +122,20 @@ public class Customers extends javax.swing.JPanel {
             }
         });
 
-        btnAdd.setBackground(new java.awt.Color(72, 158, 231));
-        btnAdd.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnAdd.setForeground(new java.awt.Color(255, 255, 255));
-        btnAdd.setMnemonic('A');
-        btnAdd.setText("Add");
-        btnAdd.setToolTipText("Click to add new customer");
-        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setBackground(new java.awt.Color(251, 93, 93));
+        btnDelete.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
+        btnDelete.setMnemonic('e');
+        btnDelete.setText("Delete");
+        btnDelete.setToolTipText("Click to delete selected customer");
+        btnDelete.setEnabled(false);
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
-        jLabel2.setDisplayedMnemonic('L');
         jLabel2.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        jLabel2.setLabelFor(tblCustomers);
         jLabel2.setText("List of Customers");
 
         javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(pnlHeader);
@@ -166,21 +169,22 @@ public class Customers extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        jPanel2.setBackground(new java.awt.Color(233, 236, 242));
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel3.setBackground(new java.awt.Color(153, 0, 51));
-        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 225, 234), 2));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 225, 234)));
 
         jScrollPane1.setBackground(new java.awt.Color(255, 102, 0));
+        jScrollPane1.setBorder(null);
         jScrollPane1.setOpaque(false);
 
         tblCustomers.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
@@ -189,19 +193,12 @@ public class Customers extends javax.swing.JPanel {
 
             },
             new String [] {
-                "", "Customer ID", "Customer Name", "Contact Number(s)", "Address"
+                "Customer ID", "Customer Name", "Contact Number(s)", "Address"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false
+                false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -217,12 +214,9 @@ public class Customers extends javax.swing.JPanel {
         tblCustomers.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblCustomers);
         if (tblCustomers.getColumnModel().getColumnCount() > 0) {
-            tblCustomers.getColumnModel().getColumn(0).setMinWidth(40);
-            tblCustomers.getColumnModel().getColumn(0).setPreferredWidth(40);
-            tblCustomers.getColumnModel().getColumn(0).setMaxWidth(40);
-            tblCustomers.getColumnModel().getColumn(1).setMinWidth(100);
-            tblCustomers.getColumnModel().getColumn(1).setPreferredWidth(100);
-            tblCustomers.getColumnModel().getColumn(1).setMaxWidth(100);
+            tblCustomers.getColumnModel().getColumn(0).setMinWidth(130);
+            tblCustomers.getColumnModel().getColumn(0).setPreferredWidth(130);
+            tblCustomers.getColumnModel().getColumn(0).setMaxWidth(130);
         }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -231,14 +225,14 @@ public class Customers extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -254,7 +248,7 @@ public class Customers extends javax.swing.JPanel {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -263,19 +257,15 @@ public class Customers extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pnlHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -288,7 +278,6 @@ public class Customers extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        
 
     }//GEN-LAST:event_btnDeleteActionPerformed
 
