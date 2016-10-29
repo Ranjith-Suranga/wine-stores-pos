@@ -13,7 +13,6 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import lk.ijse.winestores.views.util.CashTendered;
 
@@ -244,7 +243,7 @@ public class CashTenderForm extends javax.swing.JFrame {
        BigDecimal tenderedCash = new BigDecimal(txtCashTendered.getText());
        BigDecimal balance = tenderedCash.subtract(total).setScale(2,RoundingMode.HALF_UP);
        
-       if (balance.compareTo(BigDecimal.ZERO) > 0 ){
+       if (balance.compareTo(BigDecimal.ZERO) >= 0 ){
            lblBalance.setText(balance.toPlainString());
            btnPlaceOrder.setEnabled(true);
        }else{
