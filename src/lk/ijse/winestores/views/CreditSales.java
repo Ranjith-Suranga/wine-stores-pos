@@ -5,10 +5,12 @@
  */
 package lk.ijse.winestores.views;
 
+import com.jidesoft.swing.AutoCompletion;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyAdapter;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -17,12 +19,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -30,16 +35,17 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
-import lk.ijse.winestores.controller.custom.GRNController;
 import lk.ijse.winestores.controller.custom.ItemController;
+import lk.ijse.winestores.controller.custom.QueryController;
 import lk.ijse.winestores.controller.custom.SalesController;
 import lk.ijse.winestores.dao.custom.CustomDAO;
 import lk.ijse.winestores.dao.dto.CreditOrderDTO;
-import lk.ijse.winestores.dao.dto.CreditOrderEmptyBottleDetailsDTO;
 import lk.ijse.winestores.dao.dto.CreditOrderItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.CustomItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
+import lk.ijse.winestores.views.util.CashTendered;
+import lk.ijse.winestores.views.util.Customer;
 import lk.ijse.winestores.views.util.FocusHandler;
 import lk.ijse.winestores.views.util.SuraBoyTextComponenets;
 
@@ -47,10 +53,10 @@ import lk.ijse.winestores.views.util.SuraBoyTextComponenets;
  *
  * @author Ranjith Suranga
  */
-public class CreditSales extends javax.swing.JPanel implements FocusHandler{
-
+public class CreditSales extends javax.swing.JPanel implements FocusHandler, Customer, CashTendered {
+    
     private ArrayList<EmptyBottleDTO> emptyBottleTypes;
-
+    
     private DefaultTableModel dtmSearchItems;               // Holds the table model of the tblSearchItems
     private DefaultTableModel dtmItems;                     // Holds the table model of the tblItems
 
@@ -58,28 +64,39 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
     private SuraTable stblForSearchItems;                   // Holds the sura table instance of "tblSearchItems"
     private SuraTable stblItems;                            // Holds the sura table instance of "tblItems"
     private SuraBoyTextComponenets sbtcmp;
-
+    
     private KeyEventPostProcessor pstProcessor;
+    
+    private ArrayList<CustomerDTO> alCustomers;
+    
+    private QueryController ctrlQuery;
+    
+    private DefaultComboBoxModel dcbm;
+    
+    private CashTenderForm cashTenderForm;
 
-    private BigDecimal emptyBottleTotal = BigDecimal.ZERO;
-    private BigDecimal billTotal = BigDecimal.ZERO;
+    //private BigDecimal emptyBottleTotal = BigDecimal.ZERO;
+//    private BigDecimal billTotal = BigDecimal.ZERO;
     private BigDecimal finalTotal = BigDecimal.ZERO;
-
+    
     private CreditOrderDTO creditOrder;
     private CustomerDTO customerDTO;
     private ArrayList<CreditOrderItemDetailsDTO> creditOrderItemDetails;
-    private ArrayList<CreditOrderEmptyBottleDetailsDTO> creditOrderEmptyBottleDetails;
+    //private ArrayList<CreditOrderEmptyBottleDetailsDTO> creditOrderEmptyBottleDetails;
 
     /**
      * Creates new form CashSales
      */
     public CreditSales() {
         initComponents();
-
+        
         sbtn = new SuraButton(this);
         sbtn.convertAllJButtonsToSuraButtons();
         sbtcmp = new SuraBoyTextComponenets(this);
 
+        // Init Controllers
+        ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+        
         stblForSearchItems = new SuraTable(tblSearchItems);
         // Item Code
         stblForSearchItems.setHeaderAlignment(0, SwingConstants.CENTER);
@@ -90,7 +107,7 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         // Selling Price
         stblForSearchItems.setHeaderAlignment(3, SwingConstants.RIGHT);
         stblForSearchItems.setColumnAlignment(3, SwingConstants.RIGHT);
-
+        
         stblItems = new SuraTable(tblItems);
         // Item Code
         stblItems.setHeaderAlignment(1, SwingConstants.CENTER);
@@ -104,54 +121,118 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         // Total
         stblItems.setHeaderAlignment(5, SwingConstants.RIGHT);
         stblItems.setColumnAlignment(4, SwingConstants.RIGHT);
-
+        
         dtmSearchItems = (DefaultTableModel) tblSearchItems.getModel();
         dtmItems = (DefaultTableModel) tblItems.getModel();
-        cmbEmptyBottle.removeAllItems();
-
-        GRNController ctrl = (GRNController) ControllerFactory.getInstance().getController(SuperController.ControllerType.GRN);
+        
+        AutoCompletion ac = new AutoCompletion(cmbCustomerName);
+        ac.setStrict(false);
+        cmbCustomerName.removeAllItems();
+        
+        dcbm = (DefaultComboBoxModel) cmbCustomerName.getModel();
+        
         try {
-            emptyBottleTypes = ctrl.getAllEmptyBottleTypes();
-            if (emptyBottleTypes != null) {
-                creditOrderEmptyBottleDetails = new ArrayList<>();
-                for (EmptyBottleDTO emptyBottleType : emptyBottleTypes) {
-                    cmbEmptyBottle.addItem(emptyBottleType.getBottleType());
-                    CreditOrderEmptyBottleDetailsDTO dto = new CreditOrderEmptyBottleDetailsDTO(null,
-                            null,
-                            emptyBottleType.getBottleType(),
-                            0,
-                            0);
-                    creditOrderEmptyBottleDetails.add(dto);
+            alCustomers = ctrlQuery.getAllCustomers();
+            
+            if (alCustomers != null) {
+                for (CustomerDTO customer : alCustomers) {
+                    dcbm.addElement(customer);
                 }
             }
+            
+            cmbCustomerName.setSelectedIndex(-1);
+            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        txtEmptyBottleQty.setEnabled((emptyBottleTypes != null) && (emptyBottleTypes.size() != 0));
+        // A little hack
+        JTextField txt = (JTextField) cmbCustomerName.getEditor().getEditorComponent();
+        
+        txt.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent e) {
+                super.keyTyped(e);
+                if (e.getKeyChar() == KeyEvent.VK_ENTER){
+                    btnPay.doClick();
+                }
+            }
+        });
+        
+        txt.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                listenToChanges();
+                
+            }
+            
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                listenToChanges();
+            }
+            
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                listenToChanges();
+            }
+            
+            private void listenToChanges() {
+                enablePay();
+                if (cmbCustomerName.getSelectedIndex() != -1) {
+                    if (!txt.getText().equals(cmbCustomerName.getSelectedItem().toString())) {
+                        resetCustomer(false);
+                    } else {
+                        cmbCustomerNameItemStateChanged(null);
+                    }
+                }
+            }
+        });
 
+//        cmbEmptyBottle.removeAllItems();
+//        GRNController ctrl = (GRNController) ControllerFactory.getInstance().getController(SuperController.ControllerType.GRN);
+//        try {
+//            emptyBottleTypes = ctrl.getAllEmptyBottleTypes();
+//            if (emptyBottleTypes != null) {
+//                creditOrderEmptyBottleDetails = new ArrayList<>();
+//                for (EmptyBottleDTO emptyBottleType : emptyBottleTypes) {
+//                    cmbEmptyBottle.addItem(emptyBottleType.getBottleType());
+//                    CreditOrderEmptyBottleDetailsDTO dto = new CreditOrderEmptyBottleDetailsDTO(null,
+//                            null,
+//                            emptyBottleType.getBottleType(),
+//                            0,
+//                            0);
+//                    creditOrderEmptyBottleDetails.add(dto);
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        txtEmptyBottleQty.setEnabled((emptyBottleTypes != null) && (emptyBottleTypes.size() != 0));
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 txtBarcode.requestFocusInWindow();
             }
         });
-
+        
         tblSearchItems.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-
+                
                 if (tblSearchItems.getSelectedRow() == -1) {
                     enableQty();
                     return;
                 }
-
+                
                 txtItemCode.setText((String) dtmSearchItems.getValueAt(tblSearchItems.getSelectedRow(), 0));
                 txtItemName.setText((String) dtmSearchItems.getValueAt(tblSearchItems.getSelectedRow(), 1));
                 txtSellingPrice.setText((String) dtmSearchItems.getValueAt(tblSearchItems.getSelectedRow(), 3));
-
+                
                 try {
                     ItemController ctrl = (ItemController) ControllerFactory.getInstance().getController(SuperController.ControllerType.ITEM);
                     String barCode = ctrl.getBarCodeByItemCode(txtItemCode.getText().trim());
@@ -163,50 +244,50 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
                 } catch (SQLException ex) {
                     Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                
             }
         });
-
+        
         dtmItems.addTableModelListener(new TableModelListener() {
-
+            
             @Override
             public void tableChanged(TableModelEvent e) {
-
+                
                 calculateTotals();
                 enablePay();
 
                 // Delete Section
                 btnDelete.setEnabled(false);
-
+                
                 for (int i = 0; i < dtmItems.getRowCount(); i++) {
-
+                    
                     if ((boolean) dtmItems.getValueAt(i, 0) == true) {
                         btnDelete.setEnabled(true);
                         break;
                     }
-
+                    
                 }
             }
         });
-
+        
     }
-
+    
     private void searchItems(CustomDAO.ItemQueryType queryType, String queryWord) {
-
+        
         ItemController ctrl = (ItemController) ControllerFactory.getInstance().getController(SuperController.ControllerType.ITEM);
         dtmSearchItems.setRowCount(0);
-
+        
         if (queryWord.trim().isEmpty()) {
             return;
         }
-
+        
         try {
             ArrayList<CustomItemDetailsDTO> items = ctrl.getItems(queryType, queryWord);
-
+            
             if (items == null) {
                 return;
             }
-
+            
             for (CustomItemDetailsDTO item : items) {
                 Object[] rowData = {item.getItemCode(), item.getItemName(), String.valueOf(item.getQty()), this.formatPrice(item.getSellingPrice())};
                 dtmSearchItems.addRow(rowData);
@@ -216,9 +297,9 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         } catch (SQLException ex) {
             Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
     private void resetTextFields(JTextField avoidTxt) {
         if (avoidTxt != txtBarcode) {
             txtBarcode.setText("");
@@ -234,7 +315,7 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         }
         txtQty.setText("");
     }
-
+    
     private String formatPrice(Object price) {
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMinimumFractionDigits(2);
@@ -242,7 +323,7 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         nf.setGroupingUsed(false);
         return nf.format(price);
     }
-
+    
     private String formatPrice(Object price, boolean enableGrouping) {
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMinimumFractionDigits(2);
@@ -250,14 +331,14 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         nf.setGroupingUsed(enableGrouping);
         return nf.format(price);
     }
-
+    
     private void enableQty() {
         int qty;
-
+        
         txtQty.setText("");
         txtQty.setEnabled(false);
         btnSave.setText("Add Item");
-
+        
         if (tblSearchItems.getSelectedRow() == -1) {
             return;
         }
@@ -268,23 +349,22 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
             txtQty.setEnabled(true);
             txtQty.requestFocusInWindow();
         }
-
+        
     }
-
+    
     private void enablePay() {
-
+        
         btnPay.setEnabled(false);
         if (dtmItems.getRowCount() > 0) {
-            if (!txtCustomerName.getText().trim().isEmpty()
-                    && !txtContactNumbers.getText().trim().isEmpty()
-                    && !txtAddress.getText().trim().isEmpty()) {
-                btnPay.setEnabled(true);
+            if (cmbCustomerName.getSelectedIndex() != -1) {
+                if (cmbCustomerName.getSelectedItem().toString().equals(cmbCustomerName.getEditor().getItem().toString())) {
+                    btnPay.setEnabled(true);
+                }
             }
-
         }
-
+        
     }
-
+    
     private int getItemRowIndex(String itemCode) {
         for (int i = 0; i < dtmItems.getRowCount(); i++) {
             String code = (String) dtmItems.getValueAt(i, 1);
@@ -294,71 +374,78 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         }
         return -1;
     }
-
+    
     private void initUpdate() {
         int selectedRow = tblItems.getSelectedRow();
-
+        
         txtItemCode.setText((String) dtmItems.getValueAt(selectedRow, 1));
         resetTextFields(txtItemCode);
         searchItems(CustomDAO.ItemQueryType.ITEM_CODE, txtItemCode.getText());
-
+        
         tblSearchItems.getSelectionModel().setSelectionInterval(0, 0);
         enableQty();
         txtQty.setText((String) dtmItems.getValueAt(selectedRow, 3));
-
+        
         btnSave.setText("Update");
         btnSave.setEnabled(true);
     }
 
-    private void calculateEmptyBottleCost() {
-        BigDecimal total = BigDecimal.valueOf(0);
-        lblEmptyBottleCost.setText("-");
-
-        for (CreditOrderEmptyBottleDetailsDTO dto : creditOrderEmptyBottleDetails) {
-            total = total.add(BigDecimal.valueOf(dto.getTotal()));
-        }
-
-        if (total.compareTo(BigDecimal.ZERO) == 0) {
-            lblEmptyBottleCost.setText("-");
-        } else {
-            String formattedTotal = this.formatPrice(total, true);
-            lblEmptyBottleCost.setText(formattedTotal);
-        }
-        emptyBottleTotal = total;
-
-        calculateTotals();
-    }
-
+//    private void calculateEmptyBottleCost() {
+//        BigDecimal total = BigDecimal.valueOf(0);
+//        lblEmptyBottleCost.setText("-");
+//
+//        for (CreditOrderEmptyBottleDetailsDTO dto : creditOrderEmptyBottleDetails) {
+//            total = total.add(BigDecimal.valueOf(dto.getTotal()));
+//        }
+//
+//        if (total.compareTo(BigDecimal.ZERO) == 0) {
+//            lblEmptyBottleCost.setText("-");
+//        } else {
+//            String formattedTotal = this.formatPrice(total, true);
+//            lblEmptyBottleCost.setText(formattedTotal);
+//        }
+//        emptyBottleTotal = total;
+//
+//        calculateTotals();
+//    }
     private void calculateTotals() {
         BigDecimal total = BigDecimal.ZERO;
-
+        
         for (int i = 0; i < dtmItems.getRowCount(); i++) {
             String t = (String) dtmItems.getValueAt(i, 5);
             total = total.add(new BigDecimal(t));
         }
+        
+        finalTotal = total;
+        //finalTotal = billTotal.add(emptyBottleTotal);
 
-        billTotal = total;
-        finalTotal = billTotal.add(emptyBottleTotal);
-
-        if (billTotal.compareTo(BigDecimal.ZERO) == 0) {
-            lblBillTotal.setText("-");
-        } else {
-            String formattedTotal = this.formatPrice(billTotal, true);
-            lblBillTotal.setText(formattedTotal);
-        }
-
+//        if (billTotal.compareTo(BigDecimal.ZERO) == 0) {
+//            //lblBillTotal.setText("-");
+//        } else {
+//            String formattedTotal = this.formatPrice(billTotal, true);
+//           // lblBillTotal.setText(formattedTotal);
+//        }
         if (finalTotal.compareTo(BigDecimal.ZERO) == 0) {
             lblFinalTotal.setText("-");
         } else {
             String formattedTotal = this.formatPrice(finalTotal, true);
             lblFinalTotal.setText(formattedTotal);
         }
-
+        
     }
-
+    
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return sdf.format(date);
+    }
+    
+    private void resetCustomer(boolean all) {
+        txtCustomerId.setText(null);
+        txtContactNumbers.setText(null);
+        txtAddress.setText(null);
+        if (all) {
+            cmbCustomerName.setSelectedIndex(-1);
+        }
     }
 
     /**
@@ -392,33 +479,24 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         jScrollPane3 = new javax.swing.JScrollPane();
         tblItems = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        cmbEmptyBottle = new javax.swing.JComboBox<>();
-        jLabel11 = new javax.swing.JLabel();
-        txtEmptyBottleQty = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtQty = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         btnSave = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JSeparator();
-        jSeparator3 = new javax.swing.JSeparator();
         jLabel16 = new javax.swing.JLabel();
         btnPay = new javax.swing.JButton();
         pnlCheque = new javax.swing.JPanel();
-        txtAddress = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        lbl = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         txtContactNumbers = new javax.swing.JTextField();
-        lbl = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        txtCustomerName = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        lblEmptyBottleCost = new javax.swing.JLabel();
-        lblBillTotal = new javax.swing.JLabel();
+        txtAddress = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtCustomerId = new javax.swing.JTextField();
+        cmbCustomerName = new javax.swing.JComboBox<>();
+        btnAddNewCustomer = new javax.swing.JButton();
         lblFinalTotal = new javax.swing.JLabel();
-        jSeparator4 = new javax.swing.JSeparator();
-        jLabel13 = new javax.swing.JLabel();
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -789,50 +867,6 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, new java.awt.Color(224, 219, 221)));
 
-        jLabel8.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
-        jLabel8.setText("Empty Bottles Details");
-
-        jLabel9.setDisplayedMnemonic('o');
-        jLabel9.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        jLabel9.setLabelFor(cmbEmptyBottle);
-        jLabel9.setText("Bottle Type");
-
-        cmbEmptyBottle.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        cmbEmptyBottle.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbEmptyBottle.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbEmptyBottleItemStateChanged(evt);
-            }
-        });
-        cmbEmptyBottle.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                cmbEmptyBottleKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                cmbEmptyBottleKeyTyped(evt);
-            }
-        });
-
-        jLabel11.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        jLabel11.setText("Qty.");
-
-        txtEmptyBottleQty.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        txtEmptyBottleQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtEmptyBottleQty.setText("0");
-        txtEmptyBottleQty.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtEmptyBottleQtyFocusGained(evt);
-            }
-        });
-        txtEmptyBottleQty.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtEmptyBottleQtyKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtEmptyBottleQtyKeyTyped(evt);
-            }
-        });
-
         jLabel7.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         jLabel7.setText("Enter Qty.");
 
@@ -874,10 +908,6 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
             }
         });
 
-        jSeparator2.setForeground(new java.awt.Color(224, 219, 221));
-
-        jSeparator3.setForeground(new java.awt.Color(224, 219, 221));
-
         jLabel16.setFont(new java.awt.Font("Open Sans", 1, 22)); // NOI18N
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Total :");
@@ -895,21 +925,18 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
 
         pnlCheque.setBackground(new java.awt.Color(255, 255, 255));
 
-        txtAddress.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        txtAddress.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtAddressFocusGained(evt);
-            }
-        });
-        txtAddress.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtAddressKeyReleased(evt);
-            }
-        });
+        jLabel13.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
+        jLabel13.setText("Customer Details");
+
+        lbl.setDisplayedMnemonic('C');
+        lbl.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        lbl.setLabelFor(cmbCustomerName);
+        lbl.setText("Customer Name");
 
         jLabel14.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         jLabel14.setText("Contact Numbers");
 
+        txtContactNumbers.setEditable(false);
         txtContactNumbers.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         txtContactNumbers.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -922,23 +949,55 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
             }
         });
 
-        lbl.setDisplayedMnemonic('C');
-        lbl.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        lbl.setLabelFor(txtCustomerName);
-        lbl.setText("Customer Name");
-
         jLabel15.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         jLabel15.setText("Address");
 
-        txtCustomerName.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        txtCustomerName.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtAddress.setEditable(false);
+        txtAddress.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        txtAddress.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                txtCustomerNameFocusGained(evt);
+                txtAddressFocusGained(evt);
             }
         });
-        txtCustomerName.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtAddress.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCustomerNameKeyReleased(evt);
+                txtAddressKeyReleased(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        jLabel8.setText("Customer ID");
+
+        txtCustomerId.setEditable(false);
+        txtCustomerId.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        txtCustomerId.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCustomerIdFocusGained(evt);
+            }
+        });
+
+        cmbCustomerName.setEditable(true);
+        cmbCustomerName.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        cmbCustomerName.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbCustomerNameItemStateChanged(evt);
+            }
+        });
+        cmbCustomerName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCustomerNameActionPerformed(evt);
+            }
+        });
+
+        btnAddNewCustomer.setBackground(new java.awt.Color(72, 158, 231));
+        btnAddNewCustomer.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnAddNewCustomer.setMnemonic('A');
+        btnAddNewCustomer.setText("+ Add New Customer");
+        btnAddNewCustomer.setToolTipText("Click to add new Customer");
+        btnAddNewCustomer.setPreferredSize(new java.awt.Dimension(89, 42));
+        btnAddNewCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddNewCustomerActionPerformed(evt);
             }
         });
 
@@ -948,25 +1007,34 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
             pnlChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlChequeLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addGroup(pnlChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtCustomerName, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtContactNumbers, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtAddress, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlChequeLayout.createSequentialGroup()
+                .addGroup(pnlChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAddress)
+                    .addComponent(txtContactNumbers)
+                    .addComponent(txtCustomerId)
+                    .addComponent(cmbCustomerName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlChequeLayout.createSequentialGroup()
                         .addGroup(pnlChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel15)
                             .addComponent(jLabel14)
-                            .addComponent(jLabel15))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(0, 0, 0))
+                            .addComponent(jLabel13)
+                            .addComponent(lbl))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btnAddNewCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         pnlChequeLayout.setVerticalGroup(
             pnlChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlChequeLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
+                .addComponent(jLabel13)
+                .addGap(18, 18, 18)
                 .addComponent(lbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmbCustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtCustomerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -975,69 +1043,35 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addGap(18, 18, 18)
+                .addComponent(btnAddNewCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jLabel12.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel12.setText("Bill Total :");
-
-        jLabel10.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel10.setText("Bottle Cost :");
-
-        lblEmptyBottleCost.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
-        lblEmptyBottleCost.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblEmptyBottleCost.setText("-");
-
-        lblBillTotal.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
-        lblBillTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblBillTotal.setText("-");
 
         lblFinalTotal.setFont(new java.awt.Font("Open Sans", 1, 22)); // NOI18N
         lblFinalTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblFinalTotal.setText("-");
 
-        jSeparator4.setForeground(new java.awt.Color(224, 219, 221));
-
-        jLabel13.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
-        jLabel13.setText("Customer Details");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnPay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnPay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                     .addComponent(txtQty)
                     .addComponent(jSeparator1)
-                    .addComponent(cmbEmptyBottle, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtEmptyBottleQty)
                     .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator2)
-                    .addComponent(jSeparator3)
-                    .addComponent(pnlCheque, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlCheque, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel12))
+                        .addGap(7, 7, 7)
+                        .addComponent(jLabel16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblBillTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblEmptyBottleCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblFinalTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(lblFinalTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel13))
-                        .addGap(0, 77, Short.MAX_VALUE)))
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -1052,37 +1086,11 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cmbEmptyBottle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtEmptyBottleQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlCheque, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlCheque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(lblEmptyBottleCost))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(lblBillTotal))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel16)
-                    .addComponent(lblFinalTotal))
+                    .addComponent(lblFinalTotal)
+                    .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -1161,10 +1169,6 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         ((JTextField) evt.getSource()).selectAll();
     }//GEN-LAST:event_txtSellingPriceFocusGained
 
-    private void txtQtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQtyFocusGained
-        ((JTextField) evt.getSource()).selectAll();
-    }//GEN-LAST:event_txtQtyFocusGained
-
     private void txtBarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBarcodeKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && dtmSearchItems.getRowCount() > 0) {
             tblSearchItems.requestFocusInWindow();
@@ -1209,46 +1213,91 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         }
     }//GEN-LAST:event_tblSearchItemsKeyPressed
 
-    private void txtQtyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyTyped
-        if (!Character.isDigit(evt.getKeyChar())) {
-            if (!(evt.getKeyChar() == KeyEvent.VK_DELETE | evt.getKeyChar() == KeyEvent.VK_BACKSPACE)) {
-                evt.consume();
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        for (int i = 0; i < dtmItems.getRowCount(); i++) {
+            
+            boolean delete = (boolean) dtmItems.getValueAt(i, 0);
+            if (delete) {
+                dtmItems.removeRow(i);
+                i--;
             }
         }
-    }//GEN-LAST:event_txtQtyKeyTyped
+        
+        resetTextFields(null);
+        searchItems(CustomDAO.ItemQueryType.ITEM_CODE, txtItemCode.getText());
+        enableQty();
+        txtBarcode.requestFocusInWindow();
+        tblItems.getSelectionModel().clearSelection();
 
-    private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
-        int qty = 0, stock;
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
-        btnSave.setEnabled(false);
+    private void tblItemsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblItemsKeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_SPACE) {
+            
+            if (dtmItems.getRowCount() > 0) {
+                boolean currentStatus = (boolean) dtmItems.getValueAt(tblItems.getSelectedRow(), 0);
+                dtmItems.setValueAt(!currentStatus, tblItems.getSelectedRow(), 0);
+                
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            initUpdate();
+        }
+    }//GEN-LAST:event_tblItemsKeyPressed
 
-        // If user does some silly copy paste of some string
-        try {
-            qty = Integer.parseInt(txtQty.getText());
-        } catch (NumberFormatException exception) {
-            qty = 0;
-            txtQty.selectAll();
+    private void tblItemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemsMouseClicked
+        initUpdate();
+    }//GEN-LAST:event_tblItemsMouseClicked
+
+    private void formComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentHidden
+    }//GEN-LAST:event_formComponentHidden
+
+    private void formAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorRemoved
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(pstProcessor);
+    }//GEN-LAST:event_formAncestorRemoved
+
+    private void formAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorAdded
+        this.pstProcessor = new KeyEventPostProcessor() {
+            @Override
+            public boolean postProcessKeyEvent(java.awt.event.KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_END) {
+                    btnPay.doClick();
+                }
+                return false;
+            }
+        };
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(pstProcessor);
+    }//GEN-LAST:event_formAncestorAdded
+
+    private void txtAddressKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAddressKeyReleased
+
+    }//GEN-LAST:event_txtAddressKeyReleased
+
+    private void txtAddressFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAddressFocusGained
+        ((JTextField) evt.getSource()).selectAll();
+    }//GEN-LAST:event_txtAddressFocusGained
+
+    private void txtContactNumbersKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContactNumbersKeyReleased
+
+    }//GEN-LAST:event_txtContactNumbersKeyReleased
+
+    private void txtContactNumbersFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtContactNumbersFocusGained
+        ((JTextField) evt.getSource()).selectAll();
+    }//GEN-LAST:event_txtContactNumbersFocusGained
+
+    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
+        
+        if (cashTenderForm == null) {
+            cashTenderForm = new CashTenderForm(this, finalTotal);
+        }
+        if (!cashTenderForm.isVisible()) {
+            cashTenderForm.setTotal(finalTotal);
+            cashTenderForm.setVisible(true);
         }
 
-        stock = Integer.parseInt((String) dtmSearchItems.getValueAt(tblSearchItems.getSelectedRow(), 2));
-
-        if (qty <= stock && qty > 0) {
-            btnSave.setEnabled(true);
-        }
-
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            btnSave.doClick();
-        }
-    }//GEN-LAST:event_txtQtyKeyReleased
-
-    private void txtQtyPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtQtyPropertyChange
-        if (!txtQty.isEnabled()) {
-            btnSave.setEnabled(false);
-        }
-    }//GEN-LAST:event_txtQtyPropertyChange
+    }//GEN-LAST:event_btnPayActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-
+        
         if (btnSave.getText().equals("Add Item")) {
 
             // Check whether the item is already in the table
@@ -1261,10 +1310,10 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
                         icon);
             } else {
                 JCheckBox chk = (JCheckBox) tblItems.getColumnModel().getColumn(0).getHeaderRenderer().getTableCellRendererComponent(tblItems, null, true, true, 0, 0);
-
+                
                 BigDecimal bd = new BigDecimal(txtSellingPrice.getText().trim());
                 bd = bd.multiply(new BigDecimal(txtQty.getText().trim()));
-
+                
                 Object[] rowData = {false,
                     txtItemCode.getText().trim(),
                     txtItemName.getText().trim(),
@@ -1274,67 +1323,176 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
                 };
                 dtmItems.addRow(rowData);
             }
-
+            
         } else {
-
+            
             int selectedRow = tblItems.getSelectedRow();
             dtmItems.setValueAt(txtQty.getText().trim(), selectedRow, 3);
-
+            
             BigDecimal bd = new BigDecimal(txtSellingPrice.getText().trim());
             bd = bd.multiply(new BigDecimal(txtQty.getText().trim()));
             dtmItems.setValueAt(this.formatPrice(bd), selectedRow, 5);
-
+            
             btnSave.setText("Add Item");
-
+            
         }
-
+        
         resetTextFields(null);
         txtBarcode.requestFocusInWindow();
         txtBarcodeKeyReleased(null);
         tblItems.getSelectionModel().clearSelection();
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        for (int i = 0; i < dtmItems.getRowCount(); i++) {
-
-            boolean delete = (boolean) dtmItems.getValueAt(i, 0);
-            if (delete) {
-                dtmItems.removeRow(i);
-                i--;
+    private void txtQtyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            if (!(evt.getKeyChar() == KeyEvent.VK_DELETE | evt.getKeyChar() == KeyEvent.VK_BACKSPACE)) {
+                evt.consume();
             }
         }
+    }//GEN-LAST:event_txtQtyKeyTyped
 
-        resetTextFields(null);
-        searchItems(CustomDAO.ItemQueryType.ITEM_CODE, txtItemCode.getText());
-        enableQty();
-        txtBarcode.requestFocusInWindow();
-        tblItems.getSelectionModel().clearSelection();
+    private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
+        int qty = 0, stock;
+        
+        btnSave.setEnabled(false);
 
-    }//GEN-LAST:event_btnDeleteActionPerformed
-
-    private void tblItemsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblItemsKeyPressed
-        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_SPACE) {
-
-            if (dtmItems.getRowCount() > 0) {
-                boolean currentStatus = (boolean) dtmItems.getValueAt(tblItems.getSelectedRow(), 0);
-                dtmItems.setValueAt(!currentStatus, tblItems.getSelectedRow(), 0);
-
-            }
-        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            initUpdate();
+        // If user does some silly copy paste of some string
+        try {
+            qty = Integer.parseInt(txtQty.getText());
+        } catch (NumberFormatException exception) {
+            qty = 0;
+            txtQty.selectAll();
         }
-    }//GEN-LAST:event_tblItemsKeyPressed
+        
+        stock = Integer.parseInt((String) dtmSearchItems.getValueAt(tblSearchItems.getSelectedRow(), 2));
+        
+        if (qty <= stock && qty > 0) {
+            btnSave.setEnabled(true);
+        }
+        
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btnSave.doClick();
+        }
+    }//GEN-LAST:event_txtQtyKeyReleased
 
-    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
+    private void txtQtyPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtQtyPropertyChange
+        if (!txtQty.isEnabled()) {
+            btnSave.setEnabled(false);
+        }
+    }//GEN-LAST:event_txtQtyPropertyChange
 
+    private void txtQtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQtyFocusLost
+
+    }//GEN-LAST:event_txtQtyFocusLost
+
+    private void txtQtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQtyFocusGained
+        ((JTextField) evt.getSource()).selectAll();
+    }//GEN-LAST:event_txtQtyFocusGained
+
+    private void cmbCustomerNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCustomerNameItemStateChanged
+
+        //System.out.println(cmbCustomerName.getSelectedIndex());
+        resetCustomer(false);
+        
+        if (cmbCustomerName.getSelectedIndex() != -1) {
+            CustomerDTO customer = alCustomers.get(cmbCustomerName.getSelectedIndex());
+            txtCustomerId.setText(customer.getCustomerId() + "");
+            txtContactNumbers.setText(customer.getTelephoneNumber());
+            txtAddress.setText(customer.getAddress());
+        }
+    }//GEN-LAST:event_cmbCustomerNameItemStateChanged
+
+    private void btnAddNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewCustomerActionPerformed
+        new SaveCustomer(this).setVisible(true);
+    }//GEN-LAST:event_btnAddNewCustomerActionPerformed
+
+    private void txtCustomerIdFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustomerIdFocusGained
+        txtCustomerId.selectAll();
+    }//GEN-LAST:event_txtCustomerIdFocusGained
+
+    private void cmbCustomerNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCustomerNameActionPerformed
+//        btnPay.doClick();
+    }//GEN-LAST:event_cmbCustomerNameActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddNewCustomer;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnPay;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox<String> cmbCustomerName;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JLabel lbl;
+    private javax.swing.JLabel lblFinalTotal;
+    private javax.swing.JPanel pnlCheque;
+    private javax.swing.JTable tblItems;
+    private javax.swing.JTable tblSearchItems;
+    private javax.swing.JTextField txtAddress;
+    private javax.swing.JTextField txtBarcode;
+    private javax.swing.JTextField txtContactNumbers;
+    private javax.swing.JTextField txtCustomerId;
+    private javax.swing.JTextField txtItemCode;
+    private javax.swing.JTextField txtItemName;
+    private javax.swing.JTextField txtQty;
+    private javax.swing.JTextField txtSellingPrice;
+    // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtBarcode.requestFocusInWindow();
+            }
+        });
+    }
+    
+    @Override
+    public void addCustomer(CustomerDTO customer) {
+        if (alCustomers == null) {
+            alCustomers = new ArrayList<>();
+        }
+        alCustomers.add(customer);
+        cmbCustomerName.addItem(customer.getCustomerName());
+        cmbCustomerName.setSelectedIndex(cmbCustomerName.getItemCount() - 1);
+    }
+    
+    @Override
+    public void processOrder(BigDecimal cashTendered) {
+        
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        // Filling the customer details
+        customerDTO = alCustomers.get(cmbCustomerName.getSelectedIndex());
 
         // Filling the cutomer order
         creditOrder = new CreditOrderDTO(null,
                 formatDate(new Date()),
                 "Admin",
                 finalTotal.doubleValue(),
-                null);
+                String.valueOf(customerDTO.getCustomerId()),
+                cashTendered);
 
         // Filling the order item details
         creditOrderItemDetails = new ArrayList<>();
@@ -1347,25 +1505,24 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
                     Double.valueOf(dtmItems.getValueAt(i, 4).toString()));
             creditOrderItemDetails.add(dto);
         }
-        // Filling the customer details
-        customerDTO = new CustomerDTO(-1, txtCustomerName.getText().trim(), txtContactNumbers.getText().trim(), txtAddress.getText().trim());
 
         // Sending data to the controller
         SalesController controller = (SalesController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SALES);
         try {
-            boolean success = controller.saveCreditSale(creditOrder, creditOrderItemDetails, creditOrderEmptyBottleDetails, customerDTO);
+            boolean success = controller.saveCreditSale(creditOrder, creditOrderItemDetails);
             if (success) {
                 // Resetting
                 resetTextFields(null);
                 dtmSearchItems.setRowCount(0);
                 dtmItems.setRowCount(0);
-                if (cmbEmptyBottle.getItemCount() > 0) {
-                    cmbEmptyBottle.setSelectedIndex(0);
-                }
-                txtEmptyBottleQty.setText("0");
-                txtCustomerName.setText("");
-                txtContactNumbers.setText("");
-                txtAddress.setText("");
+                cmbCustomerName.setSelectedIndex(-1);
+//                if (cmbEmptyBottle.getItemCount() > 0) {
+//                    cmbEmptyBottle.setSelectedIndex(0);
+//                }
+//                txtEmptyBottleQty.setText("0");
+//                txtCustomerName.setText("");
+//                txtContactNumbers.setText("");
+//                txtAddress.setText("");
                 txtBarcode.requestFocusInWindow();
                 enableQty();
                 enablePay();
@@ -1390,184 +1547,6 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler{
         } finally {
             this.setCursor(Cursor.getDefaultCursor());
         }
-    }//GEN-LAST:event_btnPayActionPerformed
-
-    private void tblItemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemsMouseClicked
-        initUpdate();
-    }//GEN-LAST:event_tblItemsMouseClicked
-
-    private void txtQtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQtyFocusLost
-
-    }//GEN-LAST:event_txtQtyFocusLost
-
-    private void txtCustomerNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustomerNameFocusGained
-        ((JTextField) evt.getSource()).selectAll();
-    }//GEN-LAST:event_txtCustomerNameFocusGained
-
-    private void txtContactNumbersFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtContactNumbersFocusGained
-        ((JTextField) evt.getSource()).selectAll();
-    }//GEN-LAST:event_txtContactNumbersFocusGained
-
-    private void txtAddressFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAddressFocusGained
-        ((JTextField) evt.getSource()).selectAll();
-    }//GEN-LAST:event_txtAddressFocusGained
-
-    private void txtCustomerNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustomerNameKeyReleased
-        enablePay();
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            txtContactNumbers.requestFocusInWindow();
-        }
-    }//GEN-LAST:event_txtCustomerNameKeyReleased
-
-    private void txtContactNumbersKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContactNumbersKeyReleased
-        enablePay();
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            txtAddress.requestFocusInWindow();
-        }
-    }//GEN-LAST:event_txtContactNumbersKeyReleased
-
-    private void txtAddressKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAddressKeyReleased
-        enablePay();
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            btnPay.doClick();
-        }
-    }//GEN-LAST:event_txtAddressKeyReleased
-
-    private void txtEmptyBottleQtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmptyBottleQtyFocusGained
-        ((JTextField) evt.getSource()).selectAll();
-    }//GEN-LAST:event_txtEmptyBottleQtyFocusGained
-
-    private void cmbEmptyBottleKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbEmptyBottleKeyReleased
-
-    }//GEN-LAST:event_cmbEmptyBottleKeyReleased
-
-    private void txtEmptyBottleQtyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmptyBottleQtyKeyTyped
-        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            cmbEmptyBottle.requestFocusInWindow();
-        }
-        if (!Character.isDigit(evt.getKeyChar())) {
-            if (!(evt.getKeyChar() == KeyEvent.VK_DELETE | evt.getKeyChar() == KeyEvent.VK_BACKSPACE)) {
-                evt.consume();
-            }
-        }
-    }//GEN-LAST:event_txtEmptyBottleQtyKeyTyped
-
-    private void cmbEmptyBottleKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbEmptyBottleKeyTyped
-        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            txtEmptyBottleQty.requestFocusInWindow();
-        }
-    }//GEN-LAST:event_cmbEmptyBottleKeyTyped
-
-    private void txtEmptyBottleQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmptyBottleQtyKeyReleased
-        if (creditOrderEmptyBottleDetails == null) {
-            return;
-        }
-
-        CreditOrderEmptyBottleDetailsDTO dto = creditOrderEmptyBottleDetails.get(cmbEmptyBottle.getSelectedIndex());
-        // If user does some silly, copy and paste thing :(
-        try {
-            dto.setQty(Integer.parseInt(txtEmptyBottleQty.getText().trim()));
-            BigDecimal total = BigDecimal.valueOf(emptyBottleTypes.get(cmbEmptyBottle.getSelectedIndex()).getCost());
-            total = total.multiply(new BigDecimal(dto.getQty()));
-            dto.setTotal(Double.valueOf(this.formatPrice(total)));
-        } catch (NumberFormatException exception) {
-            dto.setQty(0);
-            dto.setTotal(0);
-            txtEmptyBottleQty.setText("0");
-            txtEmptyBottleQty.selectAll();
-            txtEmptyBottleQty.requestFocusInWindow();
-        }
-        calculateEmptyBottleCost();
-    }//GEN-LAST:event_txtEmptyBottleQtyKeyReleased
-
-    private void cmbEmptyBottleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbEmptyBottleItemStateChanged
-        if (creditOrderEmptyBottleDetails == null || creditOrderEmptyBottleDetails.size() == 0) {
-            return;
-        }
-
-        txtEmptyBottleQty.setText(String.valueOf(creditOrderEmptyBottleDetails.get(cmbEmptyBottle.getSelectedIndex()).getQty()));
-    }//GEN-LAST:event_cmbEmptyBottleItemStateChanged
-
-    private void formComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentHidden
-    }//GEN-LAST:event_formComponentHidden
-
-    private void formAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorRemoved
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventPostProcessor(pstProcessor);
-    }//GEN-LAST:event_formAncestorRemoved
-
-    private void formAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorAdded
-        this.pstProcessor = new KeyEventPostProcessor() {
-            @Override
-            public boolean postProcessKeyEvent(java.awt.event.KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_END) {
-                    btnPay.doClick();
-                }
-                return false;
-            }
-        };
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(pstProcessor);
-    }//GEN-LAST:event_formAncestorAdded
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnPay;
-    private javax.swing.JButton btnSave;
-    private javax.swing.JComboBox<String> cmbEmptyBottle;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JLabel lbl;
-    private javax.swing.JLabel lblBillTotal;
-    private javax.swing.JLabel lblEmptyBottleCost;
-    private javax.swing.JLabel lblFinalTotal;
-    private javax.swing.JPanel pnlCheque;
-    private javax.swing.JTable tblItems;
-    private javax.swing.JTable tblSearchItems;
-    private javax.swing.JTextField txtAddress;
-    private javax.swing.JTextField txtBarcode;
-    private javax.swing.JTextField txtContactNumbers;
-    private javax.swing.JTextField txtCustomerName;
-    private javax.swing.JTextField txtEmptyBottleQty;
-    private javax.swing.JTextField txtItemCode;
-    private javax.swing.JTextField txtItemName;
-    private javax.swing.JTextField txtQty;
-    private javax.swing.JTextField txtSellingPrice;
-    // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void initFoucs() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                txtBarcode.requestFocusInWindow();
-            }
-        });
+        
     }
 }

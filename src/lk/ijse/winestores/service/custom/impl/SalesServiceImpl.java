@@ -27,10 +27,8 @@ import lk.ijse.winestores.dao.custom.OrderEmptyBottleDetailsDAO;
 import lk.ijse.winestores.dao.custom.OrderItemDetailsDAO;
 import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
 import lk.ijse.winestores.dao.dto.CreditOrderDTO;
-import lk.ijse.winestores.dao.dto.CreditOrderEmptyBottleDetailsDTO;
 import lk.ijse.winestores.dao.dto.CreditOrderItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.CustomOrderDTO;
-import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.OrderEmptyBottleDetailsDTO;
 import lk.ijse.winestores.dao.dto.OrderItemDetailsDTO;
 import lk.ijse.winestores.resource.ResourceConnection;
@@ -171,21 +169,21 @@ public class SalesServiceImpl implements SalesService {
     }
 
     @Override
-    public boolean saveCreditSale(CreditOrderDTO order, ArrayList<CreditOrderItemDetailsDTO> orderItemDetails, ArrayList<CreditOrderEmptyBottleDetailsDTO> orderEmptyBottleDetails, CustomerDTO customerDetails) throws ClassNotFoundException, SQLException {
+    public boolean saveCreditSale(CreditOrderDTO order, ArrayList<CreditOrderItemDetailsDTO> orderItemDetails) throws ClassNotFoundException, SQLException {
 
         // Setting the transaction
         connection.setAutoCommit(false);
 
         // Saving customer details
-        String customerID = customerDAO.create(customerDetails);
-        if (customerID == null) {
-            connection.rollback();
-            connection.setAutoCommit(false);
-            return false;
-        }
+//        customerDAO.setConnection(connection);
+//        String customerID = customerDAO.create(customerDetails);
+//        if (customerID == null) {
+//            connection.rollback();
+//            connection.setAutoCommit(false);
+//            return false;
+//        }
 
         // Saving Order
-        order.setCustomerId(customerID);
         String orderID = creditOrderDAO.create(order);
 
         if (orderID == null) {
@@ -198,9 +196,9 @@ public class SalesServiceImpl implements SalesService {
         for (CreditOrderItemDetailsDTO dto : orderItemDetails) {
             dto.setOrderId(orderID);
             boolean success = creditOrderItemDetailsDAO.create(dto);
-            int currentQty = itemDetailsDAO.readCurrentQty(dto.getItemCode());
-            currentQty = currentQty - dto.getQty();
-            itemDetailsDAO.updateCurrentQty(connection, dto.getItemCode(), currentQty);
+            //int currentQty = itemDetailsDAO.readCurrentQty(dto.getItemCode());
+            //currentQty = currentQty - dto.getQty();
+            //itemDetailsDAO.updateCurrentQty(connection, dto.getItemCode(), currentQty);
             if (!success) {
                 connection.rollback();
                 connection.setAutoCommit(false);
@@ -209,19 +207,19 @@ public class SalesServiceImpl implements SalesService {
         }
 
         // Saving OrderEmptyBottleDetails
-        if (orderEmptyBottleDetails != null) {
-            for (CreditOrderEmptyBottleDetailsDTO dto : orderEmptyBottleDetails) {
-                if (dto.getQty() != 0) {
-                    dto.setOrderId(orderID);
-                    boolean success = creditOrderEmptyBottleDetailsDAO.create(dto);
-                    if (!success) {
-                        connection.rollback();
-                        connection.setAutoCommit(false);
-                        return false;
-                    }
-                }
-            }
-        }
+//        if (orderEmptyBottleDetails != null) {
+//            for (CreditOrderEmptyBottleDetailsDTO dto : orderEmptyBottleDetails) {
+//                if (dto.getQty() != 0) {
+//                    dto.setOrderId(orderID);
+//                    boolean success = creditOrderEmptyBottleDetailsDAO.create(dto);
+//                    if (!success) {
+//                        connection.rollback();
+//                        connection.setAutoCommit(false);
+//                        return false;
+//                    }
+//                }
+//            }
+//        }
 
         // It's time to commit
         connection.commit();

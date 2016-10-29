@@ -5,56 +5,169 @@
  */
 package lk.ijse.winestores.views;
 
+import com.sun.glass.events.KeyEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import lk.ijse.winestores.controller.ControllerFactory;
+import lk.ijse.winestores.controller.SuperController;
+import lk.ijse.winestores.controller.custom.CustomerController;
+import lk.ijse.winestores.controller.custom.QueryController;
+import lk.ijse.winestores.dao.dto.CustomerDTO;
+import lk.ijse.winestores.views.util.Customer;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
  * @author Ranjith Suranga
  */
-public class Customers extends javax.swing.JPanel {
-    
+public class Customers extends javax.swing.JPanel implements FocusHandler, Customer{
+
     private SuraButton sbtn;
     private SuraTable stbl;
-    
+
+    private DefaultTableModel dtm;
+    private TableRowSorter rowSorter;
+
+    private QueryController ctrlQuery;
+    private CustomerController ctrlCustomer;
+
     public Customers() {
-        
+
         initForm();
-        
+
 //        Object[] rowData = {"01", "D M R Suranga","0772048857","Earth"};
 //        DefaultTableModel model = (DefaultTableModel) tblCustomers.getModel();
 //        model.addRow(rowData);
 //        model.addRow(rowData);
 //        model.addRow(rowData);
-        
     }
-    
+
     private void initForm() {
-        
+
         initComponents();
+
+        ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+        ctrlCustomer = (CustomerController) ControllerFactory.getInstance().getController(SuperController.ControllerType.CUSTOMER);
         
         sbtn = new SuraButton(pnlHeader);
         sbtn.convertAllJButtonsToSuraButtons();
-        
+
         stbl = new SuraTable(tblCustomers);
-               
-        
+
         for (int i = 0; i < tblCustomers.getColumnCount(); i++) {
-            if (i==1 || i== 3)continue;
+            if (i == 1 || i == 3) {
+                continue;
+            }
             stbl.setHeaderAlignment(i, SwingConstants.CENTER);
         }
 
         // Centering CustomerID & Contact Number
         stbl.setColumnAlignment(0, SwingConstants.CENTER);
         stbl.setColumnAlignment(2, SwingConstants.CENTER);
+
+        dtm = (DefaultTableModel) tblCustomers.getModel();
+        rowSorter = new TableRowSorter(dtm){
+            @Override
+            public boolean isSortable(int column) {
+                return false; 
+            }
+            
+        };
+        tblCustomers.setRowSorter(rowSorter);
+        //rowSorter.
         
+        loadAllCustomers();
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 txtCustomerName.requestFocusInWindow();
             }
         });
+        
+        tblCustomers.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                btnEdit.setEnabled(false);
+                btnDelete.setEnabled(false);
+                
+                if (tblCustomers.getSelectedRow() != -1){
+                    btnEdit.setEnabled(true);
+                    btnDelete.setEnabled(true);
+                }
+            }
+        });
+        
+        txtCustomerName.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                showResult();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                showResult();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                showResult();
+            }
+            
+            private void showResult(){
+                rowSorter.setRowFilter( RowFilter.regexFilter(txtCustomerName.getText().trim(), 1));
+            }
+        });
+        
+        
     }
+
+    public void loadAllCustomers() {
+
+        dtm.setRowCount(0);
+
+        try {
+
+            ArrayList<CustomerDTO> allCustomers = ctrlQuery.getAllCustomers();
+
+            if (allCustomers != null) {
+                for (CustomerDTO customer : allCustomers) {
+                    Object[] rowData = {String.valueOf(customer.getCustomerId()),
+                        customer.getCustomerName(),
+                        customer.getTelephoneNumber(),
+                        customer.getAddress()};
+                    dtm.addRow(rowData);
+                }
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void changeCustomer(int rowIndex, CustomerDTO customer) {
+        dtm.removeRow(rowIndex);
+        Object[] rowData = {String.valueOf(customer.getCustomerId()),
+            customer.getCustomerName(),
+            customer.getTelephoneNumber(),
+            customer.getAddress()
+        };
+        dtm.insertRow(rowIndex, rowData);
+    }
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -96,6 +209,14 @@ public class Customers extends javax.swing.JPanel {
                 javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5))
         );
         txtCustomerName.setMargin(new java.awt.Insets(3, 5, 3, 3));
+        txtCustomerName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCustomerNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCustomerNameFocusLost(evt);
+            }
+        });
 
         btnAdd.setBackground(new java.awt.Color(72, 158, 231));
         btnAdd.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
@@ -135,7 +256,9 @@ public class Customers extends javax.swing.JPanel {
             }
         });
 
+        jLabel2.setDisplayedMnemonic('L');
         jLabel2.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        jLabel2.setLabelFor(tblCustomers);
         jLabel2.setText("List of Customers");
 
         javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(pnlHeader);
@@ -182,6 +305,7 @@ public class Customers extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(153, 0, 51));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 225, 234)));
+        jPanel3.setOpaque(false);
 
         jScrollPane1.setBackground(new java.awt.Color(255, 102, 0));
         jScrollPane1.setBorder(null);
@@ -212,6 +336,16 @@ public class Customers extends javax.swing.JPanel {
         tblCustomers.setSelectionForeground(new java.awt.Color(0, 0, 0));
         tblCustomers.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblCustomers.getTableHeader().setReorderingAllowed(false);
+        tblCustomers.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tblCustomersFocusGained(evt);
+            }
+        });
+        tblCustomers.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tblCustomersKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblCustomers);
         if (tblCustomers.getColumnModel().getColumnCount() > 0) {
             tblCustomers.getColumnModel().getColumn(0).setMinWidth(130);
@@ -270,16 +404,53 @@ public class Customers extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        
+        new SaveCustomer(this).setVisible(true);
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-
+        new SaveCustomer(this,
+        tblCustomers.convertRowIndexToModel(tblCustomers.getSelectedRow()),
+        Integer.parseInt(tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 0).toString()),
+        tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 1).toString(),
+                tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 2).toString(),
+                tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 3).toString()).setVisible(true);
+        
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-
+        try {
+            boolean result = ctrlCustomer.deleteCustomer(Integer.parseInt((String) tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 0)));
+            if (result){
+                dtm.removeRow(tblCustomers.getSelectedRow());
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void txtCustomerNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustomerNameFocusGained
+
+    }//GEN-LAST:event_txtCustomerNameFocusGained
+
+    private void txtCustomerNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCustomerNameFocusLost
+
+    }//GEN-LAST:event_txtCustomerNameFocusLost
+
+    private void tblCustomersFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblCustomersFocusGained
+        if (dtm.getRowCount() > 0){
+            if (tblCustomers.getSelectedRow() == -1){
+                tblCustomers.getSelectionModel().setSelectionInterval(0, 0);
+            }
+        }
+    }//GEN-LAST:event_tblCustomersFocusGained
+
+    private void tblCustomersKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblCustomersKeyTyped
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER && tblCustomers.getSelectedRow() != -1){
+            btnEdit.doClick();
+        }
+    }//GEN-LAST:event_tblCustomersKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -295,4 +466,15 @@ public class Customers extends javax.swing.JPanel {
     private javax.swing.JTable tblCustomers;
     private javax.swing.JTextField txtCustomerName;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        txtCustomerName.requestFocusInWindow();
+    }
+
+    @Override
+    public void addCustomer(CustomerDTO customer) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

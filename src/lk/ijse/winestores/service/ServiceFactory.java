@@ -6,6 +6,7 @@
 
 package lk.ijse.winestores.service;
 
+import lk.ijse.winestores.service.custom.impl.CustomerServiceImpl;
 import lk.ijse.winestores.service.custom.impl.EmptyBottleServiceImpl;
 import lk.ijse.winestores.service.custom.impl.GrnServiceImpl;
 import lk.ijse.winestores.service.custom.impl.ItemServiceImpl;
@@ -54,6 +55,8 @@ public class ServiceFactory {
                 return new QueryServiceImpl();
             case EMPTY_BOTTLE:
                 return new EmptyBottleServiceImpl();
+            case CUSTOMER:
+                return new CustomerServiceImpl();
             default:
                 return null;
         }

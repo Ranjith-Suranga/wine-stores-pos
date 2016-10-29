@@ -8,6 +8,7 @@ package lk.ijse.winestores.controller.custom.impl;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import lk.ijse.winestores.controller.custom.QueryController;
+import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
 import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
@@ -47,6 +48,11 @@ public class QueryControllerImpl implements QueryController{
     @Override
     public ArrayList<EmptyBottleDTO> getAllEmptyBottles() throws ClassNotFoundException, SQLException {
         return queryService.getAllEmptyBottles();
+    }
+
+    @Override
+    public ArrayList<CustomerDTO> getAllCustomers() throws ClassNotFoundException, SQLException {
+        return queryService.getAllCustomers();
     }
     
 }

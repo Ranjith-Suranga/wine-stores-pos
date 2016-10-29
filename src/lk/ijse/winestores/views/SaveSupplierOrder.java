@@ -1415,7 +1415,7 @@ public class SaveSupplierOrder extends javax.swing.JPanel implements Extension{
 
     @Override
     public boolean exit() {
-        if (changed && !pnlProtectedView.isVisible()){
+        if (changed && !pnlProtectedView.isVisible() && cmbSupplier.getSelectedIndex() != -1){
             ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/question.png"));
             int result = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(this),
                     "Some changes have been made. Do you want to exit without saving them ?",

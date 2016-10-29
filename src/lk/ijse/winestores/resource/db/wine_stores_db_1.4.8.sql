@@ -285,16 +285,16 @@ create table credit_order_item_details(
         constraint foreign key(item_code) references item_details(item_code)
 );
 
-create table credit_order_empty_bottle_details(
-        order_empty_bottle_details_id int not null AUTO_INCREMENT,
-        order_id int not null,
-        bottle_type varchar(100) not null,
-        qty int not null,
-        total decimal(10,2) not null,
-        constraint primary key(order_empty_bottle_details_id),
-        constraint foreign key(order_id) references credit_order(order_id),
-        constraint foreign key(bottle_type) references empty_bottle(bottle_type)        
-);
+-- create table credit_order_empty_bottle_details(
+--         order_empty_bottle_details_id int not null AUTO_INCREMENT,
+--         order_id int not null,
+--         bottle_type varchar(100) not null,
+--         qty int not null,
+--         total decimal(10,2) not null,
+--         constraint primary key(order_empty_bottle_details_id),
+--         constraint foreign key(order_id) references credit_order(order_id),
+--         constraint foreign key(bottle_type) references empty_bottle(bottle_type)        
+-- );
 
 create table supplier_order(
 	order_id int not null AUTO_INCREMENT,

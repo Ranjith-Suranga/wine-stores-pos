@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import lk.ijse.winestores.dao.DAOFactory;
 import lk.ijse.winestores.dao.SuperDAO;
 import lk.ijse.winestores.dao.custom.QueryDAO;
+import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
 import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
@@ -47,6 +48,11 @@ public class QueryServiceImpl implements QueryService{
     @Override
     public ArrayList<EmptyBottleDTO> getAllEmptyBottles() throws ClassNotFoundException, SQLException {
         return queryDAO.readAllEmptyBottles();
+    }
+
+    @Override
+    public ArrayList<CustomerDTO> getAllCustomers() throws ClassNotFoundException, SQLException {
+        return queryDAO.readAllCustomers();
     }
     
 }

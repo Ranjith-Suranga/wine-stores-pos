@@ -47,11 +47,12 @@ public class CreditOrderDAOImpl implements CreditOrderDAO{
 
     @Override
     public String create(CreditOrderDTO dto) throws ClassNotFoundException, SQLException {
-        PreparedStatement pstm = connection.prepareStatement("INSERT INTO credit_order (order_date, made_by, total, customer_id) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement pstm = connection.prepareStatement("INSERT INTO credit_order (order_date, made_by, total, customer_id, tendered_cash) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
         pstm.setObject(1, dto.getOrderDate());
         pstm.setObject(2, dto.getMadeBy());
         pstm.setObject(3, dto.getTotal());
         pstm.setObject(4, dto.getCustomerId());
+        pstm.setObject(5, dto.getTenderedCash().toPlainString());
         pstm.executeUpdate();
         ResultSet rstKeys = pstm.getGeneratedKeys();
         if (rstKeys.next()){

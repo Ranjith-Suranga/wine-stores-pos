@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import lk.ijse.winestores.dao.custom.QueryDAO;
+import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
 import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
@@ -179,6 +180,37 @@ public class QueryDAOImpl implements QueryDAO {
         }
         
         connection.close();
+        return al;
+    }
+
+    @Override
+    public ArrayList<CustomerDTO> readAllCustomers() throws ClassNotFoundException, SQLException {
+        
+        Connection connection = this.getConnection();
+        
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT * FROM wine_stores.customer");
+        
+        ArrayList<CustomerDTO> al = null;
+        
+        while(rst.next()){
+            
+            if (al == null){
+                al = new ArrayList<>();
+            }
+            
+            CustomerDTO dto = new CustomerDTO(
+                    rst.getInt(1),
+                    rst.getString(2),
+                    rst.getString(3),
+                    rst.getString(4));
+            
+            al.add(dto);
+            
+        }
+        
+        connection.close();
+        
         return al;
     }
 

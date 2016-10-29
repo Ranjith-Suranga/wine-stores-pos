@@ -66,7 +66,7 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     public Main() {
-        initComponents();        
+        initComponents();
         initMe();
     }
 
@@ -91,41 +91,42 @@ public class Main extends javax.swing.JFrame {
 
             @Override
             public boolean postProcessKeyEvent(KeyEvent e) {
-
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_F1:
-                        setSeletctedMenuItem(MenuItems.DASHBOARD);
-                        break;
-                    case KeyEvent.VK_F2:
-                        setSeletctedMenuItem(MenuItems.CASH_SALES);
-                        break;
-                    case KeyEvent.VK_F3:
-                        setSeletctedMenuItem(MenuItems.CREDIT_SALE);
-                        break;
-                    case KeyEvent.VK_F4:
-                        setSeletctedMenuItem(MenuItems.ITEMS);
-                        break;
-                    case KeyEvent.VK_F5:
-                        setSeletctedMenuItem(MenuItems.ITEM_MASTER);
-                        break;
-                    case KeyEvent.VK_F6:
-                        setSeletctedMenuItem(MenuItems.SUPPLIER_MASTER);
-                        break;
-                    case KeyEvent.VK_F7:
-                        setSeletctedMenuItem(MenuItems.SUPPLIER_ORDER);
-                        break;
-                    case KeyEvent.VK_F8:
-                        setSeletctedMenuItem(MenuItems.GRN);
-                        break;
-                    case KeyEvent.VK_F9:
-                        setSeletctedMenuItem(MenuItems.VIEWS);
-                        break;
-                    case KeyEvent.VK_F10:
-                        setSeletctedMenuItem(MenuItems.CUSTOMERS);
-                        break;
-                    case KeyEvent.VK_F11:
-                        setSeletctedMenuItem(MenuItems.SYSTEM_SETTINGS);
-                        break;
+                if (e.getID() == KeyEvent.KEY_PRESSED) {
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_F1:
+                            setSeletctedMenuItem(MenuItems.DASHBOARD);
+                            break;
+                        case KeyEvent.VK_F2:
+                            setSeletctedMenuItem(MenuItems.CASH_SALES);
+                            break;
+                        case KeyEvent.VK_F3:
+                            setSeletctedMenuItem(MenuItems.CREDIT_SALE);
+                            break;
+                        case KeyEvent.VK_F4:
+                            setSeletctedMenuItem(MenuItems.ITEMS);
+                            break;
+                        case KeyEvent.VK_F5:
+                            setSeletctedMenuItem(MenuItems.ITEM_MASTER);
+                            break;
+                        case KeyEvent.VK_F6:
+                            setSeletctedMenuItem(MenuItems.SUPPLIER_MASTER);
+                            break;
+                        case KeyEvent.VK_F7:
+                            setSeletctedMenuItem(MenuItems.SUPPLIER_ORDER);
+                            break;
+                        case KeyEvent.VK_F8:
+                            setSeletctedMenuItem(MenuItems.GRN);
+                            break;
+                        case KeyEvent.VK_F9:
+                            setSeletctedMenuItem(MenuItems.VIEWS);
+                            break;
+                        case KeyEvent.VK_F10:
+                            setSeletctedMenuItem(MenuItems.CUSTOMERS);
+                            break;
+                        case KeyEvent.VK_F11:
+                            setSeletctedMenuItem(MenuItems.SYSTEM_SETTINGS);
+                            break;
+                    }
                 }
                 return false;
             }
@@ -215,7 +216,7 @@ public class Main extends javax.swing.JFrame {
                             setSeletctedMenuItem(MenuItems.MINIMIZE);
                         } else if (e.getComponent() == lblLogOut) {
                             setSeletctedMenuItem(MenuItems.LOGOUT);
-                        }else if (e.getComponent() == lblCustomers){
+                        } else if (e.getComponent() == lblCustomers) {
                             setSeletctedMenuItem(MenuItems.CUSTOMERS);
                         } else {
                             setSeletctedMenuItem(MenuItems.EXIT_SYSTEM);
@@ -288,8 +289,15 @@ public class Main extends javax.swing.JFrame {
 
     private void setSeletctedMenuItem(MenuItems menuItem) {
 
+        //System.out.println(menuItem + " " + SelectedMenuItem);
         if (menuItem == SelectedMenuItem) {
             return;
+        }
+
+        if (this.extension != null) {
+            if (!this.extension.exit()) {
+                return;
+            }
         }
 
         initMenuItems();
@@ -362,10 +370,10 @@ public class Main extends javax.swing.JFrame {
                     break;
                 case EXIT_SYSTEM:
                     System.exit(0);
-                    break;                  
-                
+                    break;
+
             }
-            
+
             pnlContainer.updateUI();
             this.setCursor(Cursor.getDefaultCursor());
             lbl.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
@@ -402,7 +410,6 @@ public class Main extends javax.swing.JFrame {
 //11 Minimize
 //12 Exit System
 //13 [F11] - System Settings   
-        
         NOTHING(-1), DASHBOARD(0), CASH_SALES(1), CREDIT_SALE(10), ITEMS(2), ITEM_MASTER(3), SUPPLIER_MASTER(4),
         SUPPLIER_ORDER(5), GRN(6), VIEWS(7), SYSTEM_SETTINGS(13), MINIMIZE(11), LOGOUT(9), EXIT_SYSTEM(12), CUSTOMERS(8);
 
@@ -420,12 +427,11 @@ public class Main extends javax.swing.JFrame {
 
     private void handleNavigation(MenuItems menuItem, Extension extension) {
 
-        if (this.extension != null) {
-            if (!this.extension.exit()) {
-                return;
-            }
-        }
-
+//        if (this.extension != null) {
+//            if (!this.extension.exit()) {
+//                return;
+//            }
+//        }
         this.extension = extension;
 
         if (menuItem != MenuItems.MINIMIZE) {
@@ -524,10 +530,10 @@ public class Main extends javax.swing.JFrame {
                     }
                     lblMenuItem.setText("Customers");
                     pnlContainer.add(pnlCustomers);
-                    break;                    
+                    break;
             }
-            
-            if (pnlContainer.getComponent(0) instanceof FocusHandler){
+
+            if (pnlContainer.getComponent(0) instanceof FocusHandler) {
                 FocusHandler fh = (FocusHandler) pnlContainer.getComponent(0);
                 fh.initFoucs();
             }

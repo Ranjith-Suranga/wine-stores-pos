@@ -13,7 +13,8 @@ package lk.ijse.winestores.controller;
 public interface SuperController {
     
     public enum ControllerType{
-        MAJOR_CATEGORY, SUB_CATEOGRY, ITEM, SUPPLIER, GRN, SALES, NEW_ITEM, SUPPLIER_ORDER, QUERY, EMPTY_BOTTLE
+        MAJOR_CATEGORY, SUB_CATEOGRY, ITEM, SUPPLIER, GRN, SALES, NEW_ITEM, SUPPLIER_ORDER, QUERY, EMPTY_BOTTLE,
+        CUSTOMER
     }
     
 }

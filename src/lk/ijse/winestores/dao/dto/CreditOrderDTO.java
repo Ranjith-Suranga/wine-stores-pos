@@ -5,6 +5,8 @@
  */
 package lk.ijse.winestores.dao.dto;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author Ranjith Suranga
@@ -16,17 +18,27 @@ public class CreditOrderDTO {
     private String madeBy;
     private double total;
     private String customerId;
+    private BigDecimal tenderedCash;
 
     public CreditOrderDTO() {
     }
 
-    public CreditOrderDTO(String orderId, String orderDate, String madeBy, double total, String customerId) {
+    public CreditOrderDTO(String orderId, String orderDate, String madeBy, double total, String customerId, BigDecimal tenderedCash) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.madeBy = madeBy;
         this.total = total;
         this.customerId = customerId;
+        this.tenderedCash = tenderedCash;
     }
+    
+//    public CreditOrderDTO(String orderId, String orderDate, String madeBy, double total, String customerId ) {
+//        this.orderId = orderId;
+//        this.orderDate = orderDate;
+//        this.madeBy = madeBy;
+//        this.total = total;
+//        this.customerId = customerId;
+//    }
     
     /**
      * @return the orderId
@@ -96,6 +108,20 @@ public class CreditOrderDTO {
      */
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+
+    /**
+     * @return the tenderedCash
+     */
+    public BigDecimal getTenderedCash() {
+        return tenderedCash;
+    }
+
+    /**
+     * @param tenderedCash the tenderedCash to set
+     */
+    public void setTenderedCash(BigDecimal tenderedCash) {
+        this.tenderedCash = tenderedCash;
     }
 
 }

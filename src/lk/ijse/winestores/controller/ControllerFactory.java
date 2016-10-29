@@ -5,6 +5,7 @@
  */
 package lk.ijse.winestores.controller;
 
+import lk.ijse.winestores.controller.custom.impl.CustomerControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.EmptyBottleControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.GRNControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.ItemControllerImpl;
@@ -54,6 +55,8 @@ public class ControllerFactory {
                 return new QueryControllerImpl();
             case EMPTY_BOTTLE:
                 return new EmptyBottleControllerImpl();
+            case CUSTOMER:
+                return new CustomerControllerImpl();
             default:
                 return null;
         }

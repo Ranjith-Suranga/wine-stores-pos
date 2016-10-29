@@ -21,9 +21,16 @@ import lk.ijse.winestores.resource.ResourceFactory;
  *
  * @author Ranjith Suranga
  */
-public class CustomerDAOImpl implements CustomerDAO{
-    
+public class CustomerDAOImpl implements CustomerDAO {
+
+    // Dependencies
     private Connection connection;
+
+    // Dependency Injection
+    @Override
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 
     public CustomerDAOImpl() {
         try {
@@ -33,7 +40,7 @@ public class CustomerDAOImpl implements CustomerDAO{
         } catch (SQLException ex) {
             Logger.getLogger(CustomOrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
+    }
 
     @Override
     public boolean isExists(String queryId) throws ClassNotFoundException, SQLException {
@@ -54,10 +61,29 @@ public class CustomerDAOImpl implements CustomerDAO{
         pstm.executeUpdate();
         ResultSet rstKeys = pstm.getGeneratedKeys();
         String pK = null;
-        if (rstKeys.next()){
+        if (rstKeys.next()) {
             pK = rstKeys.getString(1);
         }
         return pK;
     }
-    
+
+    @Override
+    public boolean update(int customerId, CustomerDTO customer) throws ClassNotFoundException, SQLException {
+        PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET customer_name=?, telephone_number=?, address=? WHERE customer_id=?");
+        pstm.setString(1, customer.getCustomerName());
+        pstm.setString(2, customer.getTelephoneNumber());
+        pstm.setString(3, customer.getAddress());
+        pstm.setInt(4, customerId);
+        int affectedRows = pstm.executeUpdate();
+        return (affectedRows != 0);
+    }
+
+    @Override
+    public boolean delete(int customerId) throws ClassNotFoundException, SQLException {
+        PreparedStatement pstm = connection.prepareStatement("DELETE FROM customer WHERE customer_id=?");
+        pstm.setInt(1, customerId);
+        int affectedRows = pstm.executeUpdate();
+        return (affectedRows != 0);
+    }
+
 }
