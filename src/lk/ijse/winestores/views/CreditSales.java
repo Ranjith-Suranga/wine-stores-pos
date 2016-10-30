@@ -53,7 +53,7 @@ import lk.ijse.winestores.views.util.SuraBoyTextComponenets;
  *
  * @author Ranjith Suranga
  */
-public class CreditSales extends javax.swing.JPanel implements FocusHandler, Customer, CashTendered {
+public class CreditSales extends javax.swing.JPanel implements FocusHandler, Customer {
     
     private ArrayList<EmptyBottleDTO> emptyBottleTypes;
     
@@ -73,7 +73,7 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler, Cus
     
     private DefaultComboBoxModel dcbm;
     
-    private CashTenderForm cashTenderForm;
+//    private CashTenderForm cashTenderForm;
 
     //private BigDecimal emptyBottleTotal = BigDecimal.ZERO;
 //    private BigDecimal billTotal = BigDecimal.ZERO;
@@ -1286,13 +1286,81 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler, Cus
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
         
-        if (cashTenderForm == null) {
-            cashTenderForm = new CashTenderForm(this, finalTotal);
+//        if (cashTenderForm == null) {
+//            cashTenderForm = new CashTenderForm(this, finalTotal);
+//        }
+//        if (!cashTenderForm.isVisible()) {
+//            cashTenderForm.setTotal(finalTotal);
+//            cashTenderForm.setVisible(true);
+//        }
+
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        // Filling the customer details
+        customerDTO = alCustomers.get(cmbCustomerName.getSelectedIndex());
+
+        // Filling the cutomer order
+        creditOrder = new CreditOrderDTO(null,
+                formatDate(new Date()),
+                "Admin",
+                finalTotal.doubleValue(),
+                String.valueOf(customerDTO.getCustomerId())
+                );
+
+        // Filling the order item details
+        creditOrderItemDetails = new ArrayList<>();
+        for (int i = 0; i < dtmItems.getRowCount(); i++) {
+            CreditOrderItemDetailsDTO dto = new CreditOrderItemDetailsDTO(
+                    null,
+                    null,
+                    dtmItems.getValueAt(i, 1).toString(),
+                    Integer.parseInt(dtmItems.getValueAt(i, 3).toString()),
+                    Double.valueOf(dtmItems.getValueAt(i, 4).toString()));
+            creditOrderItemDetails.add(dto);
         }
-        if (!cashTenderForm.isVisible()) {
-            cashTenderForm.setTotal(finalTotal);
-            cashTenderForm.setVisible(true);
+
+        // Sending data to the controller
+        SalesController controller = (SalesController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SALES);
+        try {
+            boolean success = controller.saveCreditSale(creditOrder, creditOrderItemDetails);
+            if (success) {
+                // Resetting
+                resetTextFields(null);
+                dtmSearchItems.setRowCount(0);
+                dtmItems.setRowCount(0);
+                cmbCustomerName.setSelectedIndex(-1);
+//                if (cmbEmptyBottle.getItemCount() > 0) {
+//                    cmbEmptyBottle.setSelectedIndex(0);
+//                }
+//                txtEmptyBottleQty.setText("0");
+//                txtCustomerName.setText("");
+//                txtContactNumbers.setText("");
+//                txtAddress.setText("");
+                txtBarcode.requestFocusInWindow();
+                enableQty();
+                enablePay();
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
+                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((this)),
+                        "Order has been successfully saved.",
+                        "Order Success",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+            } else {
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                        "Sorry, this order can not be saved right now due to some unexpected reason. Please try again.",
+                        "Order Failed",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            this.setCursor(Cursor.getDefaultCursor());
         }
+
 
     }//GEN-LAST:event_btnPayActionPerformed
 
@@ -1477,76 +1545,5 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler, Cus
         cmbCustomerName.addItem(customer.getCustomerName());
         cmbCustomerName.setSelectedIndex(cmbCustomerName.getItemCount() - 1);
     }
-    
-    @Override
-    public void processOrder(BigDecimal cashTendered) {
-        
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-        // Filling the customer details
-        customerDTO = alCustomers.get(cmbCustomerName.getSelectedIndex());
-
-        // Filling the cutomer order
-        creditOrder = new CreditOrderDTO(null,
-                formatDate(new Date()),
-                "Admin",
-                finalTotal.doubleValue(),
-                String.valueOf(customerDTO.getCustomerId()),
-                cashTendered);
-
-        // Filling the order item details
-        creditOrderItemDetails = new ArrayList<>();
-        for (int i = 0; i < dtmItems.getRowCount(); i++) {
-            CreditOrderItemDetailsDTO dto = new CreditOrderItemDetailsDTO(
-                    null,
-                    null,
-                    dtmItems.getValueAt(i, 1).toString(),
-                    Integer.parseInt(dtmItems.getValueAt(i, 3).toString()),
-                    Double.valueOf(dtmItems.getValueAt(i, 4).toString()));
-            creditOrderItemDetails.add(dto);
-        }
-
-        // Sending data to the controller
-        SalesController controller = (SalesController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SALES);
-        try {
-            boolean success = controller.saveCreditSale(creditOrder, creditOrderItemDetails);
-            if (success) {
-                // Resetting
-                resetTextFields(null);
-                dtmSearchItems.setRowCount(0);
-                dtmItems.setRowCount(0);
-                cmbCustomerName.setSelectedIndex(-1);
-//                if (cmbEmptyBottle.getItemCount() > 0) {
-//                    cmbEmptyBottle.setSelectedIndex(0);
-//                }
-//                txtEmptyBottleQty.setText("0");
-//                txtCustomerName.setText("");
-//                txtContactNumbers.setText("");
-//                txtAddress.setText("");
-                txtBarcode.requestFocusInWindow();
-                enableQty();
-                enablePay();
-                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
-                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((this)),
-                        "Order has been successfully saved.",
-                        "Order Success",
-                        JOptionPane.INFORMATION_MESSAGE,
-                        icon);
-            } else {
-                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
-                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
-                        "Sorry, this order can not be saved right now due to some unexpected reason. Please try again.",
-                        "Order Failed",
-                        JOptionPane.INFORMATION_MESSAGE,
-                        icon);
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            this.setCursor(Cursor.getDefaultCursor());
-        }
-        
-    }
+  
 }

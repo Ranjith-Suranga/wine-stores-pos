@@ -18,18 +18,18 @@ public class CreditOrderDTO {
     private String madeBy;
     private double total;
     private String customerId;
-    private BigDecimal tenderedCash;
+//    private BigDecimal tenderedCash;
 
     public CreditOrderDTO() {
     }
 
-    public CreditOrderDTO(String orderId, String orderDate, String madeBy, double total, String customerId, BigDecimal tenderedCash) {
+    public CreditOrderDTO(String orderId, String orderDate, String madeBy, double total, String customerId) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.madeBy = madeBy;
         this.total = total;
         this.customerId = customerId;
-        this.tenderedCash = tenderedCash;
+//        this.tenderedCash = tenderedCash;
     }
     
 //    public CreditOrderDTO(String orderId, String orderDate, String madeBy, double total, String customerId ) {
@@ -110,18 +110,18 @@ public class CreditOrderDTO {
         this.customerId = customerId;
     }
 
-    /**
-     * @return the tenderedCash
-     */
-    public BigDecimal getTenderedCash() {
-        return tenderedCash;
-    }
-
-    /**
-     * @param tenderedCash the tenderedCash to set
-     */
-    public void setTenderedCash(BigDecimal tenderedCash) {
-        this.tenderedCash = tenderedCash;
-    }
+//    /**
+//     * @return the tenderedCash
+//     */
+//    public BigDecimal getTenderedCash() {
+//        return tenderedCash;
+//    }
+//
+//    /**
+//     * @param tenderedCash the tenderedCash to set
+//     */
+//    public void setTenderedCash(BigDecimal tenderedCash) {
+//        this.tenderedCash = tenderedCash;
+//    }
 
 }

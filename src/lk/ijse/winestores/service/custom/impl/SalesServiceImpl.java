@@ -225,6 +225,29 @@ public class SalesServiceImpl implements SalesService {
         connection.commit();
         // Ending the transaction
         connection.setAutoCommit(true);
+        
+        // Everything is good, so let's print the issue order
+        try {
+            JasperReport compiledReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/winestores/reports/CreditSaleBill.jasper"));
+            
+            HashMap<String, Object> parms = new HashMap<>();
+            parms.put("orderId", orderID);
+            
+            JasperPrint filledReport = JasperFillManager.fillReport(compiledReport, parms, connection);
+            JasperPrintManager.printReport(filledReport, false);
+            
+        } catch (JRException ex) {
+            Logger.getLogger(SalesServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            
+            ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+            JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
+                    "Sorry, issue order can not be printed, please check the printer.",
+                    "Printing Failed",
+                    JOptionPane.ERROR_MESSAGE,
+                    icon);            
+            
+        }        
+        
         // And returns our success :)
         return true;
 
