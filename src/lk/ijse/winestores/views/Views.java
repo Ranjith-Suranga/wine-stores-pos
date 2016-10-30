@@ -50,6 +50,8 @@ public class Views extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btnInitialStockTakingReport = new javax.swing.JButton();
+        btnSearchOrder = new javax.swing.JButton();
+        btnIssueOrder = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -73,6 +75,17 @@ public class Views extends javax.swing.JPanel {
             }
         });
 
+        btnSearchOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnSearchOrder.setText("Search Cash Order");
+        btnSearchOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchOrderActionPerformed(evt);
+            }
+        });
+
+        btnIssueOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnIssueOrder.setText("Search Issue Order");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -85,25 +98,45 @@ public class Views extends javax.swing.JPanel {
                         .addComponent(jLabel2))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
-                            .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnSearchOrder)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnItemMasterFullReport, btnSearchOrder});
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnInitialStockTakingReport, btnIssueOrder});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearchOrder))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                    .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnItemMasterFullReport, btnSearchOrder});
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnInitialStockTakingReport, btnIssueOrder});
+
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnItemMasterFullReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemMasterFullReportActionPerformed
@@ -194,9 +227,22 @@ public class Views extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btnInitialStockTakingReportActionPerformed
 
+    private void btnSearchOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchOrderActionPerformed
+            Main m = (Main) SwingUtilities.getWindowAncestor(this);
+            m.pnlContainer.removeAll();
+            ReportContainer reportContainer = new ReportContainer("Item Master Full Report");
+            m.setExtenstion(reportContainer);
+            reportContainer.add(pnlReport);
+            reportContainer.updateUI();
+            m.pnlContainer.add(reportContainer);
+            m.pnlContainer.updateUI();
+    }//GEN-LAST:event_btnSearchOrderActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInitialStockTakingReport;
+    private javax.swing.JButton btnIssueOrder;
     private javax.swing.JButton btnItemMasterFullReport;
+    private javax.swing.JButton btnSearchOrder;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

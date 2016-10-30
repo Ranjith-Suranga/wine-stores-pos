@@ -5,7 +5,7 @@ com.jaspersoft.studio.theme.ui.dark=pageBackground\=0,0,0\ncontainerMarginColor\
 com.jaspersoft.studio.theme.ui.light=pageBackground\=255,255,255\ncontainerMarginColor\=170,168,255\ngridColor\=192,192,192\nelementDesignBorderColor\=0,0,0\npageMarginColor\=170,168,255\n
 defaultValues=<defaultReports></defaultReports>
 eclipse.preferences.version=1
-jssbranding_product_mainbundle=com.jaspersoft.studio.rcp
-jssbranding_product_name=Jaspersoft Studio Community Edition
+jssbranding_product_mainbundle=com.jaspersoft.studio
+jssbranding_product_name=Jaspersoft Studio plug-in
 jssbranding_product_version=6.3.0.final
 net.sf.jasperreports.JRPROPERTIES=com.jaspersoft.jasperreports.components.customvisualization.require.js\=file\\\:/C\\\:/Users/Ranjith Suranga/.eclipse/1733265830_win32_win32_x86_64/configuration/org.eclipse.osgi/25/0/.cp/resources/scripts/require-2.1.6.src.js\nnet.sf.jasperreports.web.resource.pattern.customvisualization.scripts\=com/jaspersoft/jasperreports/customvisualization/resources/require/.*\nnet.sf.jasperreports.compiler.temp.dir\=C\\\:\\\\Program Files\\\\TIBCO\\\\Jaspersoft Studio-6.3.0.final\nnet.sf.jasperreports.compiler.classpath\=C\\\:\\\\Program Files\\\\TIBCO\\\\Jaspersoft Studio-6.3.0.final\\\\\\\\plugins/org.eclipse.equinox.launcher_1.3.100.v20150511-1540.jar\n

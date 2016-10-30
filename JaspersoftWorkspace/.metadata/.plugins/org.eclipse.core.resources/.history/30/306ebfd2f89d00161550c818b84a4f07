@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
-<!-- 2016-10-29T22:27:49 -->
+<!-- 2016-10-26T10:11:20 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CashSaleBill" pageWidth="226" pageHeight="792" whenNoDataType="BlankPage" columnWidth="198" leftMargin="14" rightMargin="14" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="73c88906-3dd1-4b8e-a8df-09685069782d">
 	<property name="com.jaspersoft.studio.data.sql.tables" value="d2luZV9zdG9yZXMubWFpbl9zdWJfaXRlbSAsMTUsMTM1LGY2Y2NhMGQ0LTJmZDQtNGEyZS1iMmE2&#xA;LTIwY2Y5OTVmNzMwZjt3aW5lX3N0b3Jlcy5jdXN0b21fb3JkZXIgLDM5MSwxNSxjYTZiMGQ4OS1l&#xA;ODI4LTRlZDItOWJiZi0xZWFhYTU0MWViNzA7d2luZV9zdG9yZXMub3JkZXJfaXRlbV9kZXRhaWxz&#xA;ICwxOTUsNDAsZWVlMjFjOTYtMDUyZi00YTExLThhZWItNmE5YTlmYTBmOGI2O3dpbmVfc3RvcmVz&#xA;Lml0ZW0gLDUzOCwxODgsOGYwM2ZmZDQtOTk4MC00MmQ5LWEwMTUtMmUyYTk4YjNlMjk0Ow=="/>
 	<property name="com.jaspersoft.studio.unit." value="mm"/>
@@ -45,40 +45,33 @@ WHERE
 		<band height="78" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="198" height="20" uuid="7d2c5014-3b2d-4983-93ee-134770d178c0"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Open Sans" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[HORAMPELLA WINE STORES]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="20" width="198" height="14" uuid="c7d03fdf-d12b-45ca-8f41-861996845113"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
+				<reportElement x="0" y="20" width="198" height="20" uuid="c7d03fdf-d12b-45ca-8f41-861996845113"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Open Sans" isBold="true"/>
 				</textElement>
 				<text><![CDATA[No:05, Ganehemulla, Dewalapola.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="34" width="198" height="14" uuid="b2000f24-eb10-4360-8c1e-2f05114c7292"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
+				<reportElement x="0" y="40" width="198" height="20" uuid="b2000f24-eb10-4360-8c1e-2f05114c7292"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Open Sans" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Tel: 0112297817]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="48" width="198" height="11" uuid="9acb8284-04dd-4899-86c6-5dad55c20c18">
+				<reportElement x="0" y="60" width="198" height="11" uuid="9acb8284-04dd-4899-86c6-5dad55c20c18">
 					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Open Sans" size="8"/>
 				</textElement>
 				<text><![CDATA[(Open from 09.00 hrs to 21.00 hrs)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="60" width="198" height="18" uuid="43488a57-2af1-4652-8b75-61ce08aeb69a"/>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Open Sans" size="9" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Cash Bill]]></text>
 			</staticText>
 		</band>
 	</title>
