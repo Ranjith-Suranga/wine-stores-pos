@@ -7,6 +7,7 @@ package lk.ijse.winestores.views;
 
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -104,6 +105,9 @@ public class SearchCreditOrderPanel extends javax.swing.JPanel implements FocusH
 
     private void showCreditOrder() {
         
+        Cursor cursor = tblCreditOrders.getCursor();
+        tblCreditOrders.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        
         JPanel pnlContainer = searchCreditOrder.pnlContainer;
         pnlContainer.removeAll();
         
@@ -116,6 +120,8 @@ public class SearchCreditOrderPanel extends javax.swing.JPanel implements FocusH
         pnlContainer.updateUI();
         
         searchCreditOrder.initFoucs();
+        
+        tblCreditOrders.setCursor(cursor);
     }
 
     /**

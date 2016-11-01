@@ -34,12 +34,12 @@ import lk.ijse.winestores.views.util.FocusHandler;
  * @author Ranjith Suranga
  */
 public class SearchCreditOrder extends javax.swing.JPanel implements Extension, FocusHandler {
-    
+
     private SuraButton sbtn;
     private QueryController ctrlQuery;
-    
+
     private JTextField txtCustomerName;
-    
+
     private SearchCreditOrderSearchPanel pnlDate;
 
     /**
@@ -47,41 +47,41 @@ public class SearchCreditOrder extends javax.swing.JPanel implements Extension, 
      */
     public SearchCreditOrder() {
         initForm();
-        
+
     }
-    
+
     private void initForm() {
         initComponents();
-        
+
         sbtn = new SuraButton(this);
         sbtn.convertAllJButtonsToSuraButtons();
-        
+
         ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
-        
+
         txtCustomerName = new JTextField();
         txtCustomerName.setFont(lblSearchTitle.getFont());
-        
+
         txtCustomerName.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
-                
+
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
                     btnSearch.doClick();
                 }
             }
         });
-        
+
         txtCustomerName.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                super.focusGained(e); 
+                super.focusGained(e);
                 txtCustomerName.selectAll();
             }
         });
-        
+
         pnlDate = new SearchCreditOrderSearchPanel(btnSearch);
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -89,7 +89,7 @@ public class SearchCreditOrder extends javax.swing.JPanel implements Extension, 
             }
         });
     }
-    
+
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
@@ -247,43 +247,43 @@ public class SearchCreditOrder extends javax.swing.JPanel implements Extension, 
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        
+
         Cursor cursor = this.getCursor();
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        
+
         ArrayList<CreditOrderDTO> creditOrders = null;
-        
+
         try {
-            
+
             String searchTitle = null;
-            
+
             pnlContainer.removeAll();
-            
+
             if (rdoCustomerName.isSelected()) {
                 creditOrders = ctrlQuery.getCreditOrdersByCustomerName(txtCustomerName.getText().trim());
-                searchTitle = "We have found " + creditOrders.size() + " credit orders related with this Customer Name \"" + txtCustomerName.getText() + "\". Please select one to view.";
+                searchTitle = "We have found " + ((creditOrders != null) ? creditOrders.size() : "0") + " credit orders related with this Customer Name \"" + txtCustomerName.getText() + "\". Please select one to view.";
             } else {
                 creditOrders = ctrlQuery.getCreditOrdersByDatePeriod(pnlDate.getFromDate(), pnlDate.getToDate());
-                searchTitle = "We have found " + creditOrders.size() + " credit orders related with this Date Period \"" + formatDate(pnlDate.getFromDate()) + " to " + formatDate(pnlDate.getToDate()) + "\". Please select one to view.";
+                searchTitle = "We have found " + ((creditOrders != null) ? creditOrders.size() : "0") + " credit orders related with this Date Period \"" + formatDate(pnlDate.getFromDate()) + " to " + formatDate(pnlDate.getToDate()) + "\". Please select one to view.";
             }
-            
+
             if (creditOrders != null) {
-                
+
                 if (creditOrders.size() > 1) {
-                    
+
                     SearchCreditOrderPanel pnlCreditOrders = new SearchCreditOrderPanel(this, creditOrders, searchTitle);
                     pnlCreditOrders.setSize(pnlContainer.getSize());
                     pnlContainer.add(pnlCreditOrders);
                     pnlCreditOrders.initFoucs();
-                    
+
                 } else {
-                    
+
                     SearchCreditOrderContainer pnlOrder = new SearchCreditOrderContainer(Integer.parseInt(creditOrders.get(0).getOrderId()));
                     pnlOrder.setSize(pnlContainer.getSize());
                     pnlContainer.add(pnlOrder);
-                    
+
                 }
-                
+
             } else {
                 lblInvalidOrderId.setText("There are no credit issues found. Please " + ((rdoCustomerName.isSelected()) ? "enter correct Customer Name to find Issue Order(s)." : "select valid Date Period to find Issue Order(s)."));
                 lblInvalidOrderId.setForeground(new Color(0xCC0000));
@@ -296,16 +296,16 @@ public class SearchCreditOrder extends javax.swing.JPanel implements Extension, 
         } catch (SQLException ex) {
             Logger.getLogger(SearchCreditOrder.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            pnlContainer.updateUI();            
+            pnlContainer.updateUI();
             this.setCursor(cursor);
         }
 
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void rdoCustomerNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rdoCustomerNameItemStateChanged
-        
+
         lblSearchTitle.setText("Enter Customer Name to Search Order(s)");
-        
+
         pnlContainer.removeAll();
         lblInvalidOrderId.setForeground(new Color(0x009900));
         ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/search.png"));
@@ -313,21 +313,21 @@ public class SearchCreditOrder extends javax.swing.JPanel implements Extension, 
         lblInvalidOrderId.setText("Please enter a Customer Name to find and fetch a Order.");
         pnlContainer.add(pnlErrorMsg);
         pnlContainer.updateUI();
-        
+
         pnlSearchContainer.removeAll();
-        
+
         txtCustomerName.setText("");
-        
+
         pnlSearchContainer.add(txtCustomerName);
-        
+
         pnlSearchContainer.updateUI();
-        
+
         txtCustomerName.requestFocusInWindow();
     }//GEN-LAST:event_rdoCustomerNameItemStateChanged
 
     private void rdoDateItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rdoDateItemStateChanged
         lblSearchTitle.setText("Select Date Period to Search Order(s)");
-        
+
         pnlContainer.removeAll();
         lblInvalidOrderId.setForeground(new Color(0x009900));
         ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/search.png"));
@@ -335,13 +335,13 @@ public class SearchCreditOrder extends javax.swing.JPanel implements Extension, 
         lblInvalidOrderId.setText("Please select valid Date Period to find and fetch a Order.");
         pnlContainer.add(pnlErrorMsg);
         pnlContainer.updateUI();
-        
+
         pnlSearchContainer.removeAll();
-        
+
         pnlSearchContainer.add(pnlDate);
-        
+
         pnlSearchContainer.updateUI();
-        
+
         pnlDate.focusFromDate();
     }//GEN-LAST:event_rdoDateItemStateChanged
 
@@ -351,12 +351,12 @@ public class SearchCreditOrder extends javax.swing.JPanel implements Extension, 
     private void pnlSearchContainerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlSearchContainerFocusGained
 
     }//GEN-LAST:event_pnlSearchContainerFocusGained
-    
+
     @Override
     public boolean exit() {
         return true;
     }
-    
+
     @Override
     public String getExtensionName() {
         return "Search Credit Order";
