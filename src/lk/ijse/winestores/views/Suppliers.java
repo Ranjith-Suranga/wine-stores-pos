@@ -488,6 +488,7 @@ public class Suppliers extends javax.swing.JPanel implements FocusHandler{
 
     @Override
     public void initFoucs() {
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

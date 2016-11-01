@@ -127,26 +127,7 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler, Cus
         
         AutoCompletion ac = new AutoCompletion(cmbCustomerName);
         ac.setStrict(false);
-        cmbCustomerName.removeAllItems();
-        
-        dcbm = (DefaultComboBoxModel) cmbCustomerName.getModel();
-        
-        try {
-            alCustomers = ctrlQuery.getAllCustomers();
-            
-            if (alCustomers != null) {
-                for (CustomerDTO customer : alCustomers) {
-                    dcbm.addElement(customer);
-                }
-            }
-            
-            cmbCustomerName.setSelectedIndex(-1);
-            
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        loadCustomers();
 
         // A little hack
         JTextField txt = (JTextField) cmbCustomerName.getEditor().getEditorComponent();
@@ -270,6 +251,29 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler, Cus
             }
         });
         
+    }
+    
+    private void loadCustomers(){
+        cmbCustomerName.removeAllItems();
+        
+        dcbm = (DefaultComboBoxModel) cmbCustomerName.getModel();
+        
+        try {
+            alCustomers = ctrlQuery.getAllCustomers();
+            
+            if (alCustomers != null) {
+                for (CustomerDTO customer : alCustomers) {
+                    dcbm.addElement(customer);
+                }
+            }
+            
+            cmbCustomerName.setSelectedIndex(-1);
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CreditSales.class.getName()).log(Level.SEVERE, null, ex);
+        }        
     }
     
     private void searchItems(CustomDAO.ItemQueryType queryType, String queryWord) {
@@ -1531,6 +1535,7 @@ public class CreditSales extends javax.swing.JPanel implements FocusHandler, Cus
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                loadCustomers();
                 txtBarcode.requestFocusInWindow();
             }
         });

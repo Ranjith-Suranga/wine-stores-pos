@@ -130,7 +130,24 @@ public class SaveSupplier extends javax.swing.JPanel implements Extension{
                     }
                 });
             }
-        }        
+        } 
+        
+        txtAddress.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changed = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changed = true;
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                changed = true;
+            }
+        });
     }
     
     public void init() {

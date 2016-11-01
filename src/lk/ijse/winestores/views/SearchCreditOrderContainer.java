@@ -201,7 +201,7 @@ public class SearchCreditOrderContainer extends javax.swing.JPanel {
 
         jLabel3.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Customer Name : ");
+        jLabel3.setText("Customer Name :");
 
         jLabel5.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
