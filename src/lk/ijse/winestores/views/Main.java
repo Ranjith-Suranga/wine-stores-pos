@@ -1269,6 +1269,7 @@ public class Main extends javax.swing.JFrame {
         MenuItems currentSelectedMenuItem = SelectedMenuItem;
         SelectedMenuItem = MenuItems.NOTHING;
         setSeletctedMenuItem(currentSelectedMenuItem);
+        SelectedMenuItem = currentSelectedMenuItem;
     }//GEN-LAST:event_lblMenuItemMouseClicked
 
     private void lblHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHomeMouseClicked
