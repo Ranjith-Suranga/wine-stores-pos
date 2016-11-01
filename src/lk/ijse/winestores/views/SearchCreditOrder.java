@@ -5,17 +5,94 @@
  */
 package lk.ijse.winestores.views;
 
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import lk.ijse.winestores.controller.ControllerFactory;
+import lk.ijse.winestores.controller.SuperController;
+import lk.ijse.winestores.controller.custom.QueryController;
+import lk.ijse.winestores.dao.dto.CreditOrderDTO;
+import lk.ijse.winestores.views.util.Extension;
+import lk.ijse.winestores.views.util.FocusHandler;
+
 /**
  *
  * @author Ranjith Suranga
  */
-public class SearchCreditOrder extends javax.swing.JPanel {
+public class SearchCreditOrder extends javax.swing.JPanel implements Extension, FocusHandler {
+    
+    private SuraButton sbtn;
+    private QueryController ctrlQuery;
+    
+    private JTextField txtCustomerName;
+    
+    private SearchCreditOrderSearchPanel pnlDate;
 
     /**
-     * Creates new form SearchCreditOrder
+     * Creates new form SearchCashOrder
      */
     public SearchCreditOrder() {
+        initForm();
+        
+    }
+    
+    private void initForm() {
         initComponents();
+        
+        sbtn = new SuraButton(this);
+        sbtn.convertAllJButtonsToSuraButtons();
+        
+        ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+        
+        txtCustomerName = new JTextField();
+        txtCustomerName.setFont(lblSearchTitle.getFont());
+        
+        txtCustomerName.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+                
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    btnSearch.doClick();
+                }
+            }
+        });
+        
+        txtCustomerName.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e); 
+                txtCustomerName.selectAll();
+            }
+        });
+        
+        pnlDate = new SearchCreditOrderSearchPanel(btnSearch);
+        
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                rdoCustomerNameItemStateChanged(null);
+            }
+        });
+    }
+    
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
     }
 
     /**
@@ -27,21 +104,282 @@ public class SearchCreditOrder extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(204, 0, 102));
+        btnGrpSearch = new javax.swing.ButtonGroup();
+        lblSearchTitle = new javax.swing.JLabel();
+        btnSearch = new javax.swing.JButton();
+        pnlContainer = new javax.swing.JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (this.getComponentCount() == 0 || this.getComponent(0).equals(pnlErrorMsg) ){
+                    ImageIcon animatedGif = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/images/searching.gif"));
+                    Graphics2D gd = (Graphics2D) g;
+                    gd.drawImage(animatedGif.getImage(),
+                        (this.getWidth() - animatedGif.getIconWidth())/2,
+                        (this.getHeight() - animatedGif.getIconHeight())/2,
+                        this);}
+            }
+        };
+        pnlErrorMsg = new javax.swing.JPanel();
+        lblInvalidOrderId = new javax.swing.JLabel();
+        rdoCustomerName = new javax.swing.JRadioButton();
+        rdoDate = new javax.swing.JRadioButton();
+        pnlSearchContainer = new javax.swing.JPanel();
+
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        lblSearchTitle.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        lblSearchTitle.setText("Enter Order Id to Search the Order");
+        lblSearchTitle.setToolTipText("");
+        lblSearchTitle.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                lblSearchTitleFocusGained(evt);
+            }
+        });
+
+        btnSearch.setBackground(new java.awt.Color(72, 158, 231));
+        btnSearch.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnSearch.setForeground(new java.awt.Color(255, 255, 255));
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+
+        pnlContainer.setBackground(new java.awt.Color(241, 242, 241));
+
+        pnlErrorMsg.setBackground(new java.awt.Color(255, 153, 0));
+        pnlErrorMsg.setOpaque(false);
+
+        lblInvalidOrderId.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
+        lblInvalidOrderId.setForeground(new java.awt.Color(0, 153, 0));
+        lblInvalidOrderId.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/icons/search.png"))); // NOI18N
+        lblInvalidOrderId.setText("Please enter a valid Order ID to find and fetch the Order.");
+        pnlErrorMsg.add(lblInvalidOrderId);
+
+        javax.swing.GroupLayout pnlContainerLayout = new javax.swing.GroupLayout(pnlContainer);
+        pnlContainer.setLayout(pnlContainerLayout);
+        pnlContainerLayout.setHorizontalGroup(
+            pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlErrorMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
+        );
+        pnlContainerLayout.setVerticalGroup(
+            pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContainerLayout.createSequentialGroup()
+                .addContainerGap(205, Short.MAX_VALUE)
+                .addComponent(pnlErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(68, 68, 68))
+        );
+
+        btnGrpSearch.add(rdoCustomerName);
+        rdoCustomerName.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        rdoCustomerName.setMnemonic('C');
+        rdoCustomerName.setSelected(true);
+        rdoCustomerName.setText("Customer Name");
+        rdoCustomerName.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        rdoCustomerName.setOpaque(false);
+        rdoCustomerName.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rdoCustomerNameItemStateChanged(evt);
+            }
+        });
+
+        btnGrpSearch.add(rdoDate);
+        rdoDate.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        rdoDate.setMnemonic('D');
+        rdoDate.setText("Date");
+        rdoDate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        rdoDate.setOpaque(false);
+        rdoDate.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rdoDateItemStateChanged(evt);
+            }
+        });
+
+        pnlSearchContainer.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                pnlSearchContainerFocusGained(evt);
+            }
+        });
+        pnlSearchContainer.setLayout(new java.awt.CardLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 560, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblSearchTitle)
+                                .addGap(0, 407, Short.MAX_VALUE))
+                            .addComponent(pnlSearchContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(rdoCustomerName)
+                        .addGap(18, 18, 18)
+                        .addComponent(rdoDate)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 407, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rdoCustomerName)
+                    .addComponent(rdoDate))
+                .addGap(18, 18, 18)
+                .addComponent(lblSearchTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlSearchContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        
+        Cursor cursor = this.getCursor();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        
+        ArrayList<CreditOrderDTO> creditOrders = null;
+        
+        try {
+            
+            String searchTitle = null;
+            
+            pnlContainer.removeAll();
+            
+            if (rdoCustomerName.isSelected()) {
+                creditOrders = ctrlQuery.getCreditOrdersByCustomerName(txtCustomerName.getText().trim());
+                searchTitle = "We have found " + creditOrders.size() + " credit orders related with this Customer Name \"" + txtCustomerName.getText() + "\". Please select one to view.";
+            } else {
+                creditOrders = ctrlQuery.getCreditOrdersByDatePeriod(pnlDate.getFromDate(), pnlDate.getToDate());
+                searchTitle = "We have found " + creditOrders.size() + " credit orders related with this Date Period \"" + formatDate(pnlDate.getFromDate()) + " to " + formatDate(pnlDate.getToDate()) + "\". Please select one to view.";
+            }
+            
+            if (creditOrders != null) {
+                
+                if (creditOrders.size() > 1) {
+                    
+                    SearchCreditOrderPanel pnlCreditOrders = new SearchCreditOrderPanel(this, creditOrders, searchTitle);
+                    pnlCreditOrders.setSize(pnlContainer.getSize());
+                    pnlContainer.add(pnlCreditOrders);
+                    pnlCreditOrders.initFoucs();
+                    
+                } else {
+                    
+                    SearchCreditOrderContainer pnlOrder = new SearchCreditOrderContainer(Integer.parseInt(creditOrders.get(0).getOrderId()));
+                    pnlOrder.setSize(pnlContainer.getSize());
+                    pnlContainer.add(pnlOrder);
+                    
+                }
+                
+            } else {
+                lblInvalidOrderId.setText("There are no credit issues found. Please " + ((rdoCustomerName.isSelected()) ? "enter correct Customer Name to find Issue Order(s)." : "select valid Date Period to find Issue Order(s)."));
+                lblInvalidOrderId.setForeground(new Color(0xCC0000));
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+                lblInvalidOrderId.setIcon(icon);
+                pnlContainer.add(pnlErrorMsg);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SearchCreditOrder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(SearchCreditOrder.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            pnlContainer.updateUI();            
+            this.setCursor(cursor);
+        }
+
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void rdoCustomerNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rdoCustomerNameItemStateChanged
+        
+        lblSearchTitle.setText("Enter Customer Name to Search Order(s)");
+        
+        pnlContainer.removeAll();
+        lblInvalidOrderId.setForeground(new Color(0x009900));
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/search.png"));
+        lblInvalidOrderId.setIcon(icon);
+        lblInvalidOrderId.setText("Please enter a Customer Name to find and fetch a Order.");
+        pnlContainer.add(pnlErrorMsg);
+        pnlContainer.updateUI();
+        
+        pnlSearchContainer.removeAll();
+        
+        txtCustomerName.setText("");
+        
+        pnlSearchContainer.add(txtCustomerName);
+        
+        pnlSearchContainer.updateUI();
+        
+        txtCustomerName.requestFocusInWindow();
+    }//GEN-LAST:event_rdoCustomerNameItemStateChanged
+
+    private void rdoDateItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rdoDateItemStateChanged
+        lblSearchTitle.setText("Select Date Period to Search Order(s)");
+        
+        pnlContainer.removeAll();
+        lblInvalidOrderId.setForeground(new Color(0x009900));
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/search.png"));
+        lblInvalidOrderId.setIcon(icon);
+        lblInvalidOrderId.setText("Please select valid Date Period to find and fetch a Order.");
+        pnlContainer.add(pnlErrorMsg);
+        pnlContainer.updateUI();
+        
+        pnlSearchContainer.removeAll();
+        
+        pnlSearchContainer.add(pnlDate);
+        
+        pnlSearchContainer.updateUI();
+        
+        pnlDate.focusFromDate();
+    }//GEN-LAST:event_rdoDateItemStateChanged
+
+    private void lblSearchTitleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lblSearchTitleFocusGained
+    }//GEN-LAST:event_lblSearchTitleFocusGained
+
+    private void pnlSearchContainerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlSearchContainerFocusGained
+
+    }//GEN-LAST:event_pnlSearchContainerFocusGained
+    
+    @Override
+    public boolean exit() {
+        return true;
+    }
+    
+    @Override
+    public String getExtensionName() {
+        return "Search Credit Order";
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup btnGrpSearch;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JLabel lblInvalidOrderId;
+    private javax.swing.JLabel lblSearchTitle;
+    javax.swing.JPanel pnlContainer;
+    private javax.swing.JPanel pnlErrorMsg;
+    private javax.swing.JPanel pnlSearchContainer;
+    private javax.swing.JRadioButton rdoCustomerName;
+    private javax.swing.JRadioButton rdoDate;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void initFoucs() {
+        if (rdoCustomerName.isSelected()) {
+            txtCustomerName.requestFocusInWindow();
+        } else {
+            pnlDate.focusFromDate();
+        }
+    }
 }

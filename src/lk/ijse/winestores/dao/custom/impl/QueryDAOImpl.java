@@ -12,8 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import lk.ijse.winestores.dao.custom.QueryDAO;
 import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
+import lk.ijse.winestores.dao.dto.CreditOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
@@ -256,15 +258,15 @@ public class QueryDAOImpl implements QueryDAO {
     @Override
     public CustomOrderDTO readOrder(int orderId) throws ClassNotFoundException, SQLException {
         Connection connection = this.getConnection();
-        
+
         CustomOrderDTO dto = null;
-        
+
         PreparedStatement pstm = connection.prepareStatement("SELECT * FROM custom_order WHERE order_id=?");
         pstm.setObject(1, orderId);
-        
+
         ResultSet rst = pstm.executeQuery();
-        
-        if (rst.next()){
+
+        if (rst.next()) {
             dto = new CustomOrderDTO(rst.getString(1),
                     rst.getString(2),
                     rst.getString(3),
@@ -273,52 +275,162 @@ public class QueryDAOImpl implements QueryDAO {
                     rst.getString(5)
             );
         }
-        
+
         connection.close();
-        
+
         return dto;
     }
 
     @Override
     public EmptyBottleDTO readEmptyBottle(String emptyBottleType) throws ClassNotFoundException, SQLException {
         Connection connection = this.getConnection();
-        
+
         EmptyBottleDTO dto = null;
-        
-        PreparedStatement pstm= connection.prepareStatement("SELECT * FROM empty_bottle WHERE bottle_type=?");
+
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM empty_bottle WHERE bottle_type=?");
         pstm.setString(1, emptyBottleType);
-        
+
         ResultSet rst = pstm.executeQuery();
-        if (rst.next()){
+        if (rst.next()) {
             dto = new EmptyBottleDTO(rst.getString(1), rst.getDouble(2));
         }
-        
+
         connection.close();
-        
+
         return dto;
     }
 
     @Override
     public ChequeDetailsDTO readChequeDetails(int orderId) throws ClassNotFoundException, SQLException {
         Connection connection = this.getConnection();
-        
+
         ChequeDetailsDTO dto = null;
-        
+
         PreparedStatement pstm = connection.prepareStatement("SELECT * FROM cheque_details WHERE order_id=?");
         pstm.setInt(1, orderId);
-        
+
         ResultSet rst = pstm.executeQuery();
-        if (rst.next()){
-            dto = new ChequeDetailsDTO(rst.getString(1), 
+        if (rst.next()) {
+            dto = new ChequeDetailsDTO(rst.getString(1),
                     rst.getString(2),
                     rst.getString(3),
-                    rst.getString(4), 
+                    rst.getString(4),
                     rst.getString(5));
         }
-        
+
         connection.close();
-        
+
         return dto;
+    }
+
+    @Override
+    public CustomerDTO readCustomer(int customerId) throws ClassNotFoundException, SQLException {
+        Connection connection = this.getConnection();
+
+        CustomerDTO dto = null;
+
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM customer WHERE customer_id=?");
+        pstm.setInt(1, customerId);;
+        ResultSet rst = pstm.executeQuery();
+
+        if (rst.next()) {
+            dto = new CustomerDTO(rst.getInt(1),
+                    rst.getString(2),
+                    rst.getString(3),
+                    rst.getString(4));
+        }
+
+        connection.close();
+
+        return dto;
+    }
+
+    @Override
+    public CreditOrderDTO readCreditOrder(int orderId) throws ClassNotFoundException, SQLException {
+        Connection connection = this.getConnection();
+
+        CreditOrderDTO dto = null;
+
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM credit_order WHERE order_id = ?");
+        pstm.setInt(1, orderId);
+
+        ResultSet rst = pstm.executeQuery();
+
+        if (rst.next()) {
+            dto = new CreditOrderDTO(rst.getString(1),
+                    rst.getString(2),
+                    rst.getString(3),
+                    rst.getDouble(4),
+                    rst.getString(5));
+        }
+
+        connection.close();
+
+        return dto;
+    }
+
+    @Override
+    public ArrayList<CreditOrderDTO> readCreditOrdersByCustomerName(String customerName) throws ClassNotFoundException, SQLException {
+
+        ArrayList<CreditOrderDTO> al = null;
+
+        Connection connection = this.getConnection();
+
+        PreparedStatement pstm = connection.prepareStatement("SELECT credit_order.* FROM wine_stores.credit_order INNER JOIN customer ON customer.customer_id = credit_order.customer_id WHERE customer_name LIKE ?");
+        pstm.setString(1, customerName + "%");
+
+        ResultSet rst = pstm.executeQuery();
+
+        while (rst.next()) {
+            if (al == null) {
+                al = new ArrayList<>();
+            }
+            CreditOrderDTO dto = new CreditOrderDTO(
+                    rst.getString(1),
+                    rst.getString(2),
+                    rst.getString(3),
+                    rst.getDouble(4),
+                    rst.getString(5));
+            al.add(dto);
+        }
+
+        connection.close();
+
+        return al;
+
+    }
+
+    @Override
+    public ArrayList<CreditOrderDTO> readCreditOrdersByDatePeriod(Date fromDate, Date toDate) throws ClassNotFoundException, SQLException {
+
+        ArrayList<CreditOrderDTO> al = null;
+
+        Connection connection = this.getConnection();
+
+        PreparedStatement pstm = connection.prepareStatement("SELECT credit_order.* FROM wine_stores.credit_order WHERE order_date BETWEEN ? AND ?;");
+        pstm.setDate(1, new java.sql.Date(fromDate.getTime()));
+        pstm.setDate(2, new java.sql.Date(toDate.getTime()));
+
+        ResultSet rst = pstm.executeQuery();
+
+        while (rst.next()) {
+            if (al == null) {
+                al = new ArrayList<>();
+            }
+            CreditOrderDTO dto = new CreditOrderDTO(
+                    rst.getString(1),
+                    rst.getString(2),
+                    rst.getString(3),
+                    rst.getDouble(4),
+                    rst.getString(5));
+            al.add(dto);
+        }
+
+        connection.close();
+
+        return al;        
+        
+        
     }
 
 }

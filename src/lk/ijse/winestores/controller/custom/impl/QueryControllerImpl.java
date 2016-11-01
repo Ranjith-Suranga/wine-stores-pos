@@ -7,8 +7,10 @@ package lk.ijse.winestores.controller.custom.impl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import lk.ijse.winestores.controller.custom.QueryController;
 import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
+import lk.ijse.winestores.dao.dto.CreditOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
@@ -69,7 +71,7 @@ public class QueryControllerImpl implements QueryController{
     }
 
     @Override
-    public CustomOrderDTO getOrder(int orderId) throws ClassNotFoundException, SQLException {
+    public CustomOrderDTO getCashOrder(int orderId) throws ClassNotFoundException, SQLException {
         return queryService.getOrder(orderId);
     }
 
@@ -81,6 +83,26 @@ public class QueryControllerImpl implements QueryController{
     @Override
     public ChequeDetailsDTO getChequeDetails(int orderId) throws ClassNotFoundException, SQLException {
         return queryService.getChequeDetails(orderId);
+    }
+
+    @Override
+    public ArrayList<CreditOrderDTO> getCreditOrdersByCustomerName(String customerName) throws ClassNotFoundException, SQLException {
+        return queryService.getCreditOrdersByCustomerName(customerName);
+    }
+
+    @Override
+    public ArrayList<CreditOrderDTO> getCreditOrdersByDatePeriod(Date fromDate, Date toDate) throws ClassNotFoundException, SQLException {
+        return queryService.getCreditOrdersByDatePeriod(fromDate, toDate);
+    }
+
+    @Override
+    public CustomerDTO getCustomer(int customerId) throws ClassNotFoundException, SQLException {
+        return queryService.getCustomer(customerId);
+    }
+
+    @Override
+    public CreditOrderDTO getCreditOrder(int orderId) throws ClassNotFoundException, SQLException {
+        return queryService.getCreditOrder(orderId);
     }
     
 }

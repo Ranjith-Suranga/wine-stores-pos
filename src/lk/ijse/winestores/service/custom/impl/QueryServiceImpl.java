@@ -7,10 +7,12 @@ package lk.ijse.winestores.service.custom.impl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import lk.ijse.winestores.dao.DAOFactory;
 import lk.ijse.winestores.dao.SuperDAO;
 import lk.ijse.winestores.dao.custom.QueryDAO;
 import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
+import lk.ijse.winestores.dao.dto.CreditOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
@@ -81,6 +83,26 @@ public class QueryServiceImpl implements QueryService{
     @Override
     public ChequeDetailsDTO getChequeDetails(int orderId) throws ClassNotFoundException, SQLException {
         return queryDAO.readChequeDetails(orderId);
+    }
+
+    @Override
+    public CustomerDTO getCustomer(int customerId) throws ClassNotFoundException, SQLException {
+        return queryDAO.readCustomer(customerId);
+    }
+
+    @Override
+    public CreditOrderDTO getCreditOrder(int orderId) throws ClassNotFoundException, SQLException {
+        return queryDAO.readCreditOrder(orderId);
+    }
+
+    @Override
+    public ArrayList<CreditOrderDTO> getCreditOrdersByCustomerName(String customerName) throws ClassNotFoundException, SQLException {
+        return queryDAO.readCreditOrdersByCustomerName(customerName);
+    }
+
+    @Override
+    public ArrayList<CreditOrderDTO> getCreditOrdersByDatePeriod(Date fromDate, Date toDate) throws ClassNotFoundException, SQLException {
+        return queryDAO.readCreditOrdersByDatePeriod(fromDate, toDate);
     }
     
 }

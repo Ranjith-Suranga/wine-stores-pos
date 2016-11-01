@@ -7,8 +7,10 @@ package lk.ijse.winestores.dao.custom;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import lk.ijse.winestores.dao.SuperDAO;
 import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
+import lk.ijse.winestores.dao.dto.CreditOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
@@ -45,11 +47,18 @@ public interface QueryDAO extends SuperDAO{
     // Customer Related Queries
     
     public ArrayList<CustomerDTO> readAllCustomers() throws ClassNotFoundException, SQLException;
+    public CustomerDTO readCustomer(int customerId) throws ClassNotFoundException, SQLException; 
     
     // Cash Sales Related Queries
     
     public boolean hasCashOrder(int orderId) throws ClassNotFoundException, SQLException;
     public CustomOrderDTO readOrder(int orderId) throws ClassNotFoundException, SQLException;
     public ChequeDetailsDTO readChequeDetails(int orderId) throws ClassNotFoundException, SQLException;
+    
+    // Credit Sales Related Queries
+    
+    public CreditOrderDTO readCreditOrder(int orderId) throws ClassNotFoundException, SQLException;
+    public ArrayList<CreditOrderDTO> readCreditOrdersByCustomerName(String customerName) throws ClassNotFoundException, SQLException;
+    public ArrayList<CreditOrderDTO> readCreditOrdersByDatePeriod(Date fromDate, Date toDate) throws ClassNotFoundException, SQLException;    
     
 }

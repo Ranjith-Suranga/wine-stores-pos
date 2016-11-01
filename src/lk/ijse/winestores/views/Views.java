@@ -85,6 +85,11 @@ public class Views extends javax.swing.JPanel {
 
         btnIssueOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         btnIssueOrder.setText("Search Issue Order");
+        btnIssueOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIssueOrderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -235,6 +240,15 @@ public class Views extends javax.swing.JPanel {
             m.pnlContainer.add(pnlSearchCashOrder);
             m.pnlContainer.updateUI();
     }//GEN-LAST:event_btnSearchOrderActionPerformed
+
+    private void btnIssueOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIssueOrderActionPerformed
+            Main m = (Main) SwingUtilities.getWindowAncestor(this);
+            m.pnlContainer.removeAll();
+            SearchCreditOrder pnlSearchCreditOrder = new SearchCreditOrder();
+            m.setExtenstion(pnlSearchCreditOrder);
+            m.pnlContainer.add(pnlSearchCreditOrder);
+            m.pnlContainer.updateUI();
+    }//GEN-LAST:event_btnIssueOrderActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInitialStockTakingReport;

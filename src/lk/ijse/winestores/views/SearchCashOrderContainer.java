@@ -168,7 +168,7 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
 
         try {
 
-            order = ctrlQuery.getOrder(this.orderId);
+            order = ctrlQuery.getCashOrder(this.orderId);
 
             BigDecimal billTotal = BigDecimal.valueOf(order.getTotal());
             lblBillTotal.setText(billTotal.setScale(2).toPlainString());
