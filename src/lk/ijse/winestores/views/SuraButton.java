@@ -94,6 +94,10 @@ public class SuraButton {
                         
                         super.mouseEntered(e);
                         
+                        if (!btn.isEnabled()) {
+                            return;
+                        }                        
+                        
                         Color currentColor = btn.getBackground();
                         if (btn.getClientProperty("data-background") == null) {
                             btn.putClientProperty("data-background", currentColor);
