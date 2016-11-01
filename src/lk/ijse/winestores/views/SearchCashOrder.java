@@ -239,7 +239,6 @@ public class SearchCashOrder extends javax.swing.JPanel implements Extension, Fo
         return "Search Cash Order";
     }
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSearch;
     private javax.swing.JLabel jLabel1;
