@@ -186,7 +186,6 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
 
     private void loadChequeDetails() {
 
-        System.out.println(order.getPaymentId());
         if (order.getPaymentId().equals("02")) {        // Cheque
 
             try {
