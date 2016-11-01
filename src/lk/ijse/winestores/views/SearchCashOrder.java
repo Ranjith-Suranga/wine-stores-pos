@@ -6,6 +6,7 @@
 package lk.ijse.winestores.views;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -178,6 +179,10 @@ public class SearchCashOrder extends javax.swing.JPanel implements Extension, Fo
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        
+        Cursor cursor = this.getCursor();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        
         try {
             boolean hasOrder = ctrlQuery.hasCashOrder(Integer.parseInt(txtOrderId.getText().trim()));
 
@@ -206,6 +211,7 @@ public class SearchCashOrder extends javax.swing.JPanel implements Extension, Fo
         } finally {
             pnlContainer.updateUI();
             txtOrderId.selectAll();
+            this.setCursor(cursor);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
