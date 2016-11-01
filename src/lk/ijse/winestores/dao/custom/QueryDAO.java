@@ -8,8 +8,11 @@ package lk.ijse.winestores.dao.custom;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import lk.ijse.winestores.dao.SuperDAO;
+import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
+import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
+import lk.ijse.winestores.dao.dto.OrderEmptyBottleDetailsDTO;
 import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
 
@@ -35,10 +38,18 @@ public interface QueryDAO extends SuperDAO{
     
     // EmptyBottle Related Queries
     
+    public EmptyBottleDTO readEmptyBottle(String emptyBottleType) throws ClassNotFoundException, SQLException;
     public ArrayList<EmptyBottleDTO> readAllEmptyBottles()throws ClassNotFoundException, SQLException;
+    public ArrayList<OrderEmptyBottleDetailsDTO> readEmptyBottleDetails(int orderId) throws ClassNotFoundException, SQLException;
     
     // Customer Related Queries
     
     public ArrayList<CustomerDTO> readAllCustomers() throws ClassNotFoundException, SQLException;
+    
+    // Cash Sales Related Queries
+    
+    public boolean hasCashOrder(int orderId) throws ClassNotFoundException, SQLException;
+    public CustomOrderDTO readOrder(int orderId) throws ClassNotFoundException, SQLException;
+    public ChequeDetailsDTO readChequeDetails(int orderId) throws ClassNotFoundException, SQLException;
     
 }

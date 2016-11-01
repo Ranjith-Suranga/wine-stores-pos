@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -31,7 +33,7 @@ import lk.ijse.winestores.views.util.FocusHandler;
  *
  * @author Ranjith Suranga
  */
-public class Customers extends javax.swing.JPanel implements FocusHandler, Customer{
+public class Customers extends javax.swing.JPanel implements FocusHandler, Customer {
 
     private SuraButton sbtn;
     private SuraTable stbl;
@@ -59,7 +61,7 @@ public class Customers extends javax.swing.JPanel implements FocusHandler, Custo
 
         ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
         ctrlCustomer = (CustomerController) ControllerFactory.getInstance().getController(SuperController.ControllerType.CUSTOMER);
-        
+
         sbtn = new SuraButton(pnlHeader);
         sbtn.convertAllJButtonsToSuraButtons();
 
@@ -77,16 +79,16 @@ public class Customers extends javax.swing.JPanel implements FocusHandler, Custo
         stbl.setColumnAlignment(2, SwingConstants.CENTER);
 
         dtm = (DefaultTableModel) tblCustomers.getModel();
-        rowSorter = new TableRowSorter(dtm){
+        rowSorter = new TableRowSorter(dtm) {
             @Override
             public boolean isSortable(int column) {
-                return false; 
+                return false;
             }
-            
+
         };
         tblCustomers.setRowSorter(rowSorter);
         //rowSorter.
-        
+
         loadAllCustomers();
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -95,20 +97,20 @@ public class Customers extends javax.swing.JPanel implements FocusHandler, Custo
                 txtCustomerName.requestFocusInWindow();
             }
         });
-        
+
         tblCustomers.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 btnEdit.setEnabled(false);
                 btnDelete.setEnabled(false);
-                
-                if (tblCustomers.getSelectedRow() != -1){
+
+                if (tblCustomers.getSelectedRow() != -1) {
                     btnEdit.setEnabled(true);
                     btnDelete.setEnabled(true);
                 }
             }
         });
-        
+
         txtCustomerName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -124,13 +126,12 @@ public class Customers extends javax.swing.JPanel implements FocusHandler, Custo
             public void changedUpdate(DocumentEvent e) {
                 showResult();
             }
-            
-            private void showResult(){
-                rowSorter.setRowFilter( RowFilter.regexFilter(txtCustomerName.getText().trim(), 1));
+
+            private void showResult() {
+                rowSorter.setRowFilter(RowFilter.regexFilter(txtCustomerName.getText().trim(), 1));
             }
         });
-        
-        
+
     }
 
     public void loadAllCustomers() {
@@ -167,7 +168,6 @@ public class Customers extends javax.swing.JPanel implements FocusHandler, Custo
         };
         dtm.insertRow(rowIndex, rowData);
     }
-   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -409,24 +409,38 @@ public class Customers extends javax.swing.JPanel implements FocusHandler, Custo
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         new SaveCustomer(this,
-        tblCustomers.convertRowIndexToModel(tblCustomers.getSelectedRow()),
-        Integer.parseInt(tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 0).toString()),
-        tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 1).toString(),
+                tblCustomers.convertRowIndexToModel(tblCustomers.getSelectedRow()),
+                Integer.parseInt(tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 0).toString()),
+                tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 1).toString(),
                 tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 2).toString(),
                 tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 3).toString()).setVisible(true);
-        
+
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         try {
             boolean result = ctrlCustomer.deleteCustomer(Integer.parseInt((String) tblCustomers.getValueAt(tblCustomers.getSelectedRow(), 0)));
-            if (result){
+            if (result) {
                 dtm.removeRow(tblCustomers.getSelectedRow());
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+            
+            if (ex.getErrorCode() == 1451) {
+                
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+                
+                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                        "Sorry, You can't delete this customer right now because he/she is related with some issue orders.",
+                        "Delete Failed",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+                
+            } else {
+                Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -439,15 +453,15 @@ public class Customers extends javax.swing.JPanel implements FocusHandler, Custo
     }//GEN-LAST:event_txtCustomerNameFocusLost
 
     private void tblCustomersFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblCustomersFocusGained
-        if (dtm.getRowCount() > 0){
-            if (tblCustomers.getSelectedRow() == -1){
+        if (dtm.getRowCount() > 0) {
+            if (tblCustomers.getSelectedRow() == -1) {
                 tblCustomers.getSelectionModel().setSelectionInterval(0, 0);
             }
         }
     }//GEN-LAST:event_tblCustomersFocusGained
 
     private void tblCustomersKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblCustomersKeyTyped
-        if (evt.getKeyChar() == KeyEvent.VK_ENTER && tblCustomers.getSelectedRow() != -1){
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER && tblCustomers.getSelectedRow() != -1) {
             btnEdit.doClick();
         }
     }//GEN-LAST:event_tblCustomersKeyTyped

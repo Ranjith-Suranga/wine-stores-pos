@@ -101,11 +101,11 @@ public class Views extends javax.swing.JPanel {
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnSearchOrder)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -122,7 +122,7 @@ public class Views extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearchOrder))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
                     .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -130,7 +130,7 @@ public class Views extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnItemMasterFullReport, btnSearchOrder});
@@ -230,11 +230,9 @@ public class Views extends javax.swing.JPanel {
     private void btnSearchOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchOrderActionPerformed
             Main m = (Main) SwingUtilities.getWindowAncestor(this);
             m.pnlContainer.removeAll();
-            ReportContainer reportContainer = new ReportContainer("Item Master Full Report");
-            m.setExtenstion(reportContainer);
-            reportContainer.add(pnlReport);
-            reportContainer.updateUI();
-            m.pnlContainer.add(reportContainer);
+            SearchCashOrder pnlSearchCashOrder = new SearchCashOrder();
+            m.setExtenstion(pnlSearchCashOrder);
+            m.pnlContainer.add(pnlSearchCashOrder);
             m.pnlContainer.updateUI();
     }//GEN-LAST:event_btnSearchOrderActionPerformed
 

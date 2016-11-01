@@ -50,7 +50,7 @@ import lk.ijse.winestores.views.util.SuraBoyTextComponenets;
  *
  * @author Ranjith Suranga
  */
-public class CashSales extends javax.swing.JPanel implements CashTendered, FocusHandler{
+public class CashSales extends javax.swing.JPanel implements CashTendered, FocusHandler {
 
     private ArrayList<EmptyBottleDTO> emptyBottleTypes;
     private CashTenderForm cashTenderForm;
@@ -113,27 +113,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
         dtmItems = (DefaultTableModel) tblItems.getModel();
         cmbEmptyBottle.removeAllItems();
 
-        GRNController ctrl = (GRNController) ControllerFactory.getInstance().getController(SuperController.ControllerType.GRN);
-        try {
-            emptyBottleTypes = ctrl.getAllEmptyBottleTypes();
-            if (emptyBottleTypes != null) {
-                orderEmptyBottleDetails = new ArrayList<>();
-                for (EmptyBottleDTO emptyBottleType : emptyBottleTypes) {
-                    cmbEmptyBottle.addItem(emptyBottleType.getBottleType());
-                    OrderEmptyBottleDetailsDTO dto = new OrderEmptyBottleDetailsDTO(null,
-                            null,
-                            emptyBottleType.getBottleType(),
-                            0,
-                            0);
-                    orderEmptyBottleDetails.add(dto);
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        loadEmptyBottles();
         txtEmptyBottleQty.setEnabled((emptyBottleTypes != null) && (emptyBottleTypes.size() != 0));
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -193,6 +173,30 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
             }
         });
 
+    }
+
+    private void loadEmptyBottles() {
+        GRNController ctrl = (GRNController) ControllerFactory.getInstance().getController(SuperController.ControllerType.GRN);
+        try {
+            emptyBottleTypes = ctrl.getAllEmptyBottleTypes();
+            if (emptyBottleTypes != null) {
+                orderEmptyBottleDetails = new ArrayList<>();
+                cmbEmptyBottle.removeAllItems();
+                for (EmptyBottleDTO emptyBottleType : emptyBottleTypes) {
+                    cmbEmptyBottle.addItem(emptyBottleType.getBottleType());
+                    OrderEmptyBottleDetailsDTO dto = new OrderEmptyBottleDetailsDTO(null,
+                            null,
+                            emptyBottleType.getBottleType(),
+                            0,
+                            0);
+                    orderEmptyBottleDetails.add(dto);
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void searchItems(CustomDAO.ItemQueryType queryType, String queryWord) {
@@ -1364,15 +1368,15 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
     }//GEN-LAST:event_tblItemsKeyPressed
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
-        
-        if (cashTenderForm == null){
-            cashTenderForm = new CashTenderForm(this,finalTotal);
+
+        if (cashTenderForm == null) {
+            cashTenderForm = new CashTenderForm(this, finalTotal);
         }
-        if (!cashTenderForm.isVisible()){
+        if (!cashTenderForm.isVisible()) {
             cashTenderForm.setTotal(finalTotal);
             cashTenderForm.setVisible(true);
         }
-                
+
     }//GEN-LAST:event_btnPayActionPerformed
 
     private void tblItemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemsMouseClicked
@@ -1557,7 +1561,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
 
     @Override
     public void processOrder(BigDecimal cashTendered) {
-        
+
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
         // Filling the cutomer order
@@ -1629,7 +1633,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
         } finally {
             this.setCursor(Cursor.getDefaultCursor());
         }
-        
+
     }
 
     @Override
@@ -1638,6 +1642,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
             @Override
             public void run() {
                 txtBarcode.requestFocusInWindow();
+                loadEmptyBottles();
             }
         });
     }
