@@ -1337,6 +1337,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        
         for (int i = 0; i < dtmItems.getRowCount(); i++) {
 
             boolean delete = (boolean) dtmItems.getValueAt(i, 0);
@@ -1365,6 +1366,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             initUpdate();
         }
+        
     }//GEN-LAST:event_tblItemsKeyPressed
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
@@ -1374,6 +1376,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
         }
         if (!cashTenderForm.isVisible()) {
             cashTenderForm.setTotal(finalTotal);
+            cashTenderForm.initFoucs();
             cashTenderForm.setVisible(true);
         }
 

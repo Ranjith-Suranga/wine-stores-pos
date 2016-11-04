@@ -15,12 +15,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import javax.swing.SwingUtilities;
 import lk.ijse.winestores.views.util.CashTendered;
+import lk.ijse.winestores.views.util.FocusHandler;
 
 /**
  *
- * @author Ranjith Suranga
+ * @author Ranjith Suranga     
  */
-public class CashTenderForm extends javax.swing.JFrame {
+public class CashTenderForm extends javax.swing.JFrame implements FocusHandler {
 
     private SuraButton sbtn;
     private BigDecimal total;
@@ -294,4 +295,12 @@ public class CashTenderForm extends javax.swing.JFrame {
         this.total = total;
         lblTotal.setText(total.setScale(2).toPlainString());
     }
+
+    @Override
+    public void initFoucs() {
+        txtCashTendered.setText(null);
+        txtCashTendered.requestFocusInWindow();
+    }
+    
+    
 }
