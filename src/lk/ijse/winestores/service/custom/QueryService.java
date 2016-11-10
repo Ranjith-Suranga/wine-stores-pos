@@ -49,10 +49,16 @@ public interface QueryService extends SuperService {
     public CustomOrderDTO getOrder(int orderId) throws ClassNotFoundException, SQLException;
     public ChequeDetailsDTO getChequeDetails(int orderId) throws ClassNotFoundException, SQLException;
     
-// Credit Sales Related Queries
+    // Credit Sales Related Queries
     
     public CreditOrderDTO getCreditOrder(int orderId) throws ClassNotFoundException, SQLException;
     public ArrayList<CreditOrderDTO> getCreditOrdersByCustomerName(String customerName) throws ClassNotFoundException, SQLException;
     public ArrayList<CreditOrderDTO> getCreditOrdersByDatePeriod(Date fromDate, Date toDate) throws ClassNotFoundException, SQLException;
+    
+    // Initial Stock Taking Queries
+    
+    public boolean hasFinishedInitalStockTaking();    
+    public Date getLastDayEnd() throws ClassNotFoundException, SQLException;
+    public boolean hasDayEndDone(Date date) throws ClassNotFoundException, SQLException;    
     
 }

@@ -462,23 +462,23 @@ public class Main extends javax.swing.JFrame {
                     pnlContainer.add(pnlDashBoard);
                     break;
                 case CASH_SALES:
-                    if (pnlCashSales == null) {
+                    //if (pnlCashSales == null) {
                         pnlCashSales = new CashSales();
-                    }
+                    //}
                     lblMenuItem.setText("Cash Sales");
                     pnlContainer.add(pnlCashSales);
                     break;
                 case CREDIT_SALE:
-                    if (pnlCreditIssue == null) {
+                    //if (pnlCreditIssue == null) {
                         pnlCreditIssue = new CreditSales();
-                    }
+                    //}
                     lblMenuItem.setText("Credit Issue");
                     pnlContainer.add(pnlCreditIssue);
                     break;
                 case ITEMS:
-                    if (pnlItemSearch == null) {
+                    //if (pnlItemSearch == null) {
                         pnlItemSearch = new Items();
-                    }
+                    //}
                     lblMenuItem.setText("Item Search");
                     pnlContainer.add(pnlItemSearch);
                     break;

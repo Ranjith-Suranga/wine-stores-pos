@@ -6,6 +6,7 @@
 package lk.ijse.winestores.views;
 
 import java.awt.Cursor;
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -13,6 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import lk.ijse.winestores.controller.ControllerFactory;
+import lk.ijse.winestores.controller.SuperController;
+import lk.ijse.winestores.controller.custom.QueryController;
 import lk.ijse.winestores.resource.ResourceConnection;
 import lk.ijse.winestores.resource.ResourceFactory;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
@@ -30,11 +34,20 @@ import net.sf.jasperreports.swing.JRViewer;
  */
 public class Views extends javax.swing.JPanel {
 
+    // Dependencies
+    private QueryController ctrlQuery;
+
     /**
      * Creates new form Views
      */
     public Views() {
         initComponents();
+
+        // Dependecy Injection
+        ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+
+        btnDayEndReports.setEnabled(ctrlQuery.hasFinishedInitalStockTaking());
+        //btnMonthEndReports.setEnabled(ctrlQuery.hasFinishedInitalStockTaking());
     }
 
     /**
@@ -52,6 +65,9 @@ public class Views extends javax.swing.JPanel {
         btnInitialStockTakingReport = new javax.swing.JButton();
         btnSearchOrder = new javax.swing.JButton();
         btnIssueOrder = new javax.swing.JButton();
+        btnSearchOrder1 = new javax.swing.JButton();
+        btnDayEndReports = new javax.swing.JButton();
+        btnMonthEndReports = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -76,7 +92,7 @@ public class Views extends javax.swing.JPanel {
         });
 
         btnSearchOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnSearchOrder.setText("Search Cash Order");
+        btnSearchOrder.setText("Searching Bills");
         btnSearchOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchOrderActionPerformed(evt);
@@ -84,12 +100,32 @@ public class Views extends javax.swing.JPanel {
         });
 
         btnIssueOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnIssueOrder.setText("Search Issue Order");
+        btnIssueOrder.setText("Searching Credit Issues");
         btnIssueOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIssueOrderActionPerformed(evt);
             }
         });
+
+        btnSearchOrder1.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnSearchOrder1.setText("Search Cash Order");
+        btnSearchOrder1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchOrder1ActionPerformed(evt);
+            }
+        });
+
+        btnDayEndReports.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnDayEndReports.setText("Day End Reports");
+        btnDayEndReports.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDayEndReportsActionPerformed(evt);
+            }
+        });
+
+        btnMonthEndReports.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnMonthEndReports.setText("Month End Reports");
+        btnMonthEndReports.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -104,19 +140,29 @@ public class Views extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSearchOrder)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnMonthEndReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnSearchOrder)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnDayEndReports, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(232, 232, 232)
+                    .addComponent(btnSearchOrder1)
+                    .addContainerGap(442, Short.MAX_VALUE)))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnItemMasterFullReport, btnSearchOrder});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDayEndReports, btnItemMasterFullReport, btnSearchOrder});
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnInitialStockTakingReport, btnIssueOrder});
 
@@ -124,18 +170,26 @@ public class Views extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearchOrder))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSearchOrder))
+                    .addComponent(btnDayEndReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
-                    .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnMonthEndReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addContainerGap(27, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(21, 21, 21)
+                    .addComponent(btnSearchOrder1)
+                    .addContainerGap(633, Short.MAX_VALUE)))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnItemMasterFullReport, btnSearchOrder});
@@ -162,7 +216,6 @@ public class Views extends javax.swing.JPanel {
             JasperReport compiledReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/winestores/reports/ItemMasterFullReport.jasper"));
             JasperPrint filledReport = JasperFillManager.fillReport(compiledReport, new HashMap<>(), connection);
             JRViewer pnlReport = new JRViewer(filledReport);
-
 
             Main m = (Main) SwingUtilities.getWindowAncestor(this);
             m.pnlContainer.removeAll();
@@ -227,34 +280,46 @@ public class Views extends javax.swing.JPanel {
             Logger.getLogger(Views.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             this.setCursor(currentCursor);
-        }        
-        
-        
+        }
+
+
     }//GEN-LAST:event_btnInitialStockTakingReportActionPerformed
 
     private void btnSearchOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchOrderActionPerformed
-            Main m = (Main) SwingUtilities.getWindowAncestor(this);
-            m.pnlContainer.removeAll();
-            SearchCashOrder pnlSearchCashOrder = new SearchCashOrder();
-            m.setExtenstion(pnlSearchCashOrder);
-            m.pnlContainer.add(pnlSearchCashOrder);
-            m.pnlContainer.updateUI();
+        Main m = (Main) SwingUtilities.getWindowAncestor(this);
+        m.pnlContainer.removeAll();
+        SearchCashOrder pnlSearchCashOrder = new SearchCashOrder();
+        m.setExtenstion(pnlSearchCashOrder);
+        m.pnlContainer.add(pnlSearchCashOrder);
+        m.pnlContainer.updateUI();
     }//GEN-LAST:event_btnSearchOrderActionPerformed
 
     private void btnIssueOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIssueOrderActionPerformed
-            Main m = (Main) SwingUtilities.getWindowAncestor(this);
-            m.pnlContainer.removeAll();
-            SearchCreditOrder pnlSearchCreditOrder = new SearchCreditOrder();
-            m.setExtenstion(pnlSearchCreditOrder);
-            m.pnlContainer.add(pnlSearchCreditOrder);
-            m.pnlContainer.updateUI();
+        Main m = (Main) SwingUtilities.getWindowAncestor(this);
+        m.pnlContainer.removeAll();
+        SearchCreditOrder pnlSearchCreditOrder = new SearchCreditOrder();
+        m.setExtenstion(pnlSearchCreditOrder);
+        m.pnlContainer.add(pnlSearchCreditOrder);
+        m.pnlContainer.updateUI();
     }//GEN-LAST:event_btnIssueOrderActionPerformed
 
+    private void btnSearchOrder1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchOrder1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSearchOrder1ActionPerformed
+
+    private void btnDayEndReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDayEndReportsActionPerformed
+        DayEndReports dayEnd = new DayEndReports((Frame) SwingUtilities.getWindowAncestor(this), true);
+        dayEnd.setVisible(true);
+    }//GEN-LAST:event_btnDayEndReportsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDayEndReports;
     private javax.swing.JButton btnInitialStockTakingReport;
     private javax.swing.JButton btnIssueOrder;
     private javax.swing.JButton btnItemMasterFullReport;
+    private javax.swing.JButton btnMonthEndReports;
     private javax.swing.JButton btnSearchOrder;
+    private javax.swing.JButton btnSearchOrder1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

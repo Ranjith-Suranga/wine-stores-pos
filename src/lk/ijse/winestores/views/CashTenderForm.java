@@ -150,8 +150,8 @@ public class CashTenderForm extends javax.swing.JFrame implements FocusHandler {
         btnPlaceOrder.setBackground(new java.awt.Color(72, 158, 231));
         btnPlaceOrder.setFont(new java.awt.Font("Open Sans", 0, 36)); // NOI18N
         btnPlaceOrder.setForeground(new java.awt.Color(255, 255, 255));
-        btnPlaceOrder.setText("Place Order");
-        btnPlaceOrder.setToolTipText("Click to fnish the order");
+        btnPlaceOrder.setText("Print");
+        btnPlaceOrder.setToolTipText("Click to save the the order and print.");
         btnPlaceOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlaceOrderActionPerformed(evt);
@@ -170,12 +170,12 @@ public class CashTenderForm extends javax.swing.JFrame implements FocusHandler {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
                     .addComponent(txtCashTendered)
                     .addComponent(lblBalance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlContainerLayout.createSequentialGroup()
-                        .addComponent(btnPlaceOrder)
-                        .addGap(0, 104, Short.MAX_VALUE)))
+                        .addComponent(btnPlaceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(20, 20, 20))
         );
         pnlContainerLayout.setVerticalGroup(
@@ -299,6 +299,8 @@ public class CashTenderForm extends javax.swing.JFrame implements FocusHandler {
     @Override
     public void initFoucs() {
         txtCashTendered.setText(null);
+        lblBalance.setText("-");
+        btnPlaceOrder.setEnabled(false);
         txtCashTendered.requestFocusInWindow();
     }
     

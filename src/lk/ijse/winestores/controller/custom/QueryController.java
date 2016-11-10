@@ -58,4 +58,10 @@ public interface QueryController extends SuperController{
     public CreditOrderDTO getCreditOrder(int orderId) throws ClassNotFoundException, SQLException;
     public ArrayList<CreditOrderDTO> getCreditOrdersByCustomerName(String customerName) throws ClassNotFoundException, SQLException;
     public ArrayList<CreditOrderDTO> getCreditOrdersByDatePeriod(Date fromDate, Date toDate) throws ClassNotFoundException, SQLException;
+    
+    // Initial Stock Taking Queries
+    
+    public boolean hasFinishedInitalStockTaking();    
+    public Date getLastDayEnd() throws ClassNotFoundException, SQLException;
+    public boolean hasDayEndDone(Date date)throws ClassNotFoundException, SQLException;
 }

@@ -104,5 +104,20 @@ public class QueryControllerImpl implements QueryController{
     public CreditOrderDTO getCreditOrder(int orderId) throws ClassNotFoundException, SQLException {
         return queryService.getCreditOrder(orderId);
     }
+
+    @Override
+    public boolean hasFinishedInitalStockTaking() {
+        return queryService.hasFinishedInitalStockTaking();
+    }
+
+    @Override
+    public Date getLastDayEnd() throws ClassNotFoundException, SQLException{
+        return queryService.getLastDayEnd();
+    }
+
+    @Override
+    public boolean hasDayEndDone(Date date) throws ClassNotFoundException, SQLException{
+        return queryService.hasDayEndDone(date);
+    }
     
 }

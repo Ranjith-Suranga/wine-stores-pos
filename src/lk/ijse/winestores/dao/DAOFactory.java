@@ -13,6 +13,7 @@ import lk.ijse.winestores.dao.custom.impl.CreditOrderItemDetailsDAOImpl;
 import lk.ijse.winestores.dao.custom.impl.CustomDAOImpl;
 import lk.ijse.winestores.dao.custom.impl.CustomOrderDAOImpl;
 import lk.ijse.winestores.dao.custom.impl.CustomerDAOImpl;
+import lk.ijse.winestores.dao.custom.impl.DayEndDAOImpl;
 import lk.ijse.winestores.dao.custom.impl.EmptyBottleDAOImpl;
 import lk.ijse.winestores.dao.custom.impl.GrnDAOImpl;
 import lk.ijse.winestores.dao.custom.impl.GrnDetailDAOImpl;
@@ -105,6 +106,8 @@ public class DAOFactory {
                 return new QueryDAOImpl();
             case SUPPLIER_ORDER_DETAILS:
                 return new SupplierOrderDetailsDAOImpl();
+            case DAY_END:
+                return new DayEndDAOImpl();
             default:
                 return null;
         }

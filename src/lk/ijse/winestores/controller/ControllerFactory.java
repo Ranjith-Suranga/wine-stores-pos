@@ -6,6 +6,7 @@
 package lk.ijse.winestores.controller;
 
 import lk.ijse.winestores.controller.custom.impl.CustomerControllerImpl;
+import lk.ijse.winestores.controller.custom.impl.DayEndReportsControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.EmptyBottleControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.GRNControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.ItemControllerImpl;
@@ -16,6 +17,7 @@ import lk.ijse.winestores.controller.custom.impl.SalesControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.SubCategoryControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.SupplierControllerImpl;
 import lk.ijse.winestores.controller.custom.impl.SupplierOrderControllerImpl;
+import lk.ijse.winestores.controller.custom.impl.SystemSettingsControllerImpl;
 
 /**
  *
@@ -57,6 +59,10 @@ public class ControllerFactory {
                 return new EmptyBottleControllerImpl();
             case CUSTOMER:
                 return new CustomerControllerImpl();
+            case SYSTEM_SETTINGS:
+                return new SystemSettingsControllerImpl();
+            case DAYEND_REPORTS:
+                return new DayEndReportsControllerImpl();
             default:
                 return null;
         }

@@ -13,7 +13,7 @@ public interface SuperService {
 
     public enum ServiceType {
         MAJOR_CATEGORY, SUB_CATEGORY, ITEM, SUPPLIER, GRN, SALES, NEW_ITEM, SUPPLIER_ORDER, QUERY,
-        EMPTY_BOTTLE, CUSTOMER
+        EMPTY_BOTTLE, CUSTOMER, STOCK_TAKING, DAYEND
     }
 
 }

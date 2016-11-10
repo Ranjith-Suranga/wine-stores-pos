@@ -5,9 +5,16 @@
  */
 package lk.ijse.winestores.service.custom.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lk.ijse.winestores.dao.DAOFactory;
 import lk.ijse.winestores.dao.SuperDAO;
 import lk.ijse.winestores.dao.custom.QueryDAO;
@@ -20,6 +27,7 @@ import lk.ijse.winestores.dao.dto.OrderEmptyBottleDetailsDTO;
 import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
 import lk.ijse.winestores.service.custom.QueryService;
+import lk.ijse.winestores.views.SystemSettings;
 
 /**
  *
@@ -103,6 +111,39 @@ public class QueryServiceImpl implements QueryService{
     @Override
     public ArrayList<CreditOrderDTO> getCreditOrdersByDatePeriod(Date fromDate, Date toDate) throws ClassNotFoundException, SQLException {
         return queryDAO.readCreditOrdersByDatePeriod(fromDate, toDate);
+    }
+    
+    @Override
+    public boolean hasFinishedInitalStockTaking() {
+        File file = new File("settings/db_settings.txt");
+        try {
+            FileReader reader = new FileReader(file);
+            BufferedReader buffReader = new BufferedReader(reader);
+
+            String data = "";
+            String readedLine = null;
+            while ((readedLine = buffReader.readLine()) != null) {
+                data = data + readedLine + "\n";
+            }
+            return (data.split("\\n")[2]).equals("true");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+
+        } 
+        return false;
+    }    
+
+    @Override
+    public Date getLastDayEnd()throws ClassNotFoundException, SQLException {
+        return queryDAO.readLastDayEnd();
+    }
+
+    @Override
+    public boolean hasDayEndDone(Date date)throws ClassNotFoundException, SQLException {
+        return queryDAO.hasDayEndDone(date);
     }
     
 }

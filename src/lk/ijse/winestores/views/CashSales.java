@@ -1615,12 +1615,12 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
                 txtBarcode.requestFocusInWindow();
                 enableQty();
                 enablePay();
-                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
-                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((this)),
-                        "Order has been successfully saved.",
-                        "Order Success",
-                        JOptionPane.INFORMATION_MESSAGE,
-                        icon);
+//                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
+//                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((this)),
+//                        "Order has been successfully saved.",
+//                        "Order Success",
+//                        JOptionPane.INFORMATION_MESSAGE,
+//                        icon);
             } else {
                 ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),

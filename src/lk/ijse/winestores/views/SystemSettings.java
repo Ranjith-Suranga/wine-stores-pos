@@ -6,7 +6,18 @@
 package lk.ijse.winestores.views;
 
 import java.awt.Cursor;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import lk.ijse.winestores.controller.ControllerFactory;
+import lk.ijse.winestores.controller.SuperController;
+import lk.ijse.winestores.controller.custom.QueryController;
+import lk.ijse.winestores.controller.custom.SystemSettingsController;
+import lk.ijse.winestores.exceptions.WriteFailedException;
 
 /**
  *
@@ -14,11 +25,24 @@ import javax.swing.SwingUtilities;
  */
 public class SystemSettings extends javax.swing.JPanel {
 
+    // Dependencies
+    private SystemSettingsController ctrlSystemSettings;
+    private QueryController ctrlQuery;
+
     /**
      * Creates new form SystemSettings
      */
     public SystemSettings() {
         initComponents();
+
+        // Dependency Injection
+        ctrlSystemSettings = (SystemSettingsController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SYSTEM_SETTINGS);
+        ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+        
+        if (ctrlQuery.hasFinishedInitalStockTaking()) {
+            btnInitialStockTransfer.setEnabled(false);
+            btnFinishStockTransfer.setEnabled(false);
+        }
     }
 
     /**
@@ -30,24 +54,58 @@ public class SystemSettings extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        btnInitialStockTransfer = new javax.swing.JButton();
+        btnFinishStockTransfer = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         btnManageEmptyBottles = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        jButton1.setText("Initial Stock Transfer");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Initial Stock Transfering", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14))); // NOI18N
+        jPanel1.setOpaque(false);
+
+        btnInitialStockTransfer.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnInitialStockTransfer.setText("Initial Stock Transfer");
+        btnInitialStockTransfer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnInitialStockTransferActionPerformed(evt);
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/images/under-construction.png"))); // NOI18N
+        btnFinishStockTransfer.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnFinishStockTransfer.setText("Finish Stock Transfering");
+        btnFinishStockTransfer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinishStockTransferActionPerformed(evt);
+            }
+        });
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/images/animated-working-on-it.gif"))); // NOI18N
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnInitialStockTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFinishStockTransfer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnInitialStockTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnFinishStockTransfer)
+                .addContainerGap())
+        );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnFinishStockTransfer, btnInitialStockTransfer});
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Empty Bottles", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Open Sans", 0, 14))); // NOI18N
+        jPanel2.setOpaque(false);
 
         btnManageEmptyBottles.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         btnManageEmptyBottles.setText("Manage Empty Bottles");
@@ -57,40 +115,46 @@ public class SystemSettings extends javax.swing.JPanel {
             }
         });
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnManageEmptyBottles, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnManageEmptyBottles, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)
-                            .addComponent(btnManageEmptyBottles, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(585, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnManageEmptyBottles, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(572, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnInitialStockTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInitialStockTransferActionPerformed
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         Main m = (Main) SwingUtilities.getWindowAncestor(this);
         m.pnlContainer.removeAll();
@@ -99,18 +163,64 @@ public class SystemSettings extends javax.swing.JPanel {
         m.pnlContainer.add(stock);
         m.pnlContainer.updateUI();
         this.setCursor(Cursor.getDefaultCursor());
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnInitialStockTransferActionPerformed
 
     private void btnManageEmptyBottlesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageEmptyBottlesActionPerformed
         ManageEmptyBottles manageEmtpyBottles = new ManageEmptyBottles();
         manageEmtpyBottles.setVisible(true);
     }//GEN-LAST:event_btnManageEmptyBottlesActionPerformed
 
+    private void btnFinishStockTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinishStockTransferActionPerformed
+
+        Cursor cursor = this.getCursor();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        boolean finish = false;
+        ImageIcon icon = null;
+
+        try {
+            finish = ctrlSystemSettings.finishInitialStockTaking();
+        } catch (WriteFailedException ex) {
+            icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/" + ((finish) ? "ok.png" : "error_icon.png")));            
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                    "Failed to Finish Up Initial Stock Taking",
+                    "Failed",
+                    JOptionPane.ERROR_MESSAGE,
+                    icon);
+            Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SystemSettings.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/" + ((finish) ? "ok.png" : "error_icon.png")));
+        if (finish) {
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                    "Initial Stock Taking has been finished successfully",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    icon);
+        } else {
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                    "Failed to finish up the Initial Stock Taking",
+                    "Failed",
+                    JOptionPane.ERROR_MESSAGE,
+                    icon);
+        }
+
+        this.setCursor(cursor);
+
+    }//GEN-LAST:event_btnFinishStockTransferActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFinishStockTransfer;
+    private javax.swing.JButton btnInitialStockTransfer;
     private javax.swing.JButton btnManageEmptyBottles;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

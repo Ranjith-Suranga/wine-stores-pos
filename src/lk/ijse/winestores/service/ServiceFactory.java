@@ -6,7 +6,9 @@
 
 package lk.ijse.winestores.service;
 
+import lk.ijse.winestores.service.custom.DayEndService;
 import lk.ijse.winestores.service.custom.impl.CustomerServiceImpl;
+import lk.ijse.winestores.service.custom.impl.DayEndServiceImpl;
 import lk.ijse.winestores.service.custom.impl.EmptyBottleServiceImpl;
 import lk.ijse.winestores.service.custom.impl.GrnServiceImpl;
 import lk.ijse.winestores.service.custom.impl.ItemServiceImpl;
@@ -14,6 +16,7 @@ import lk.ijse.winestores.service.custom.impl.MajorCategoryServiceImpl;
 import lk.ijse.winestores.service.custom.impl.NewItemServiceImpl;
 import lk.ijse.winestores.service.custom.impl.QueryServiceImpl;
 import lk.ijse.winestores.service.custom.impl.SalesServiceImpl;
+import lk.ijse.winestores.service.custom.impl.StockTakingServiceImpl;
 import lk.ijse.winestores.service.custom.impl.SubCategoryServiceImpl;
 import lk.ijse.winestores.service.custom.impl.SupplierOrderServiceImpl;
 import lk.ijse.winestores.service.custom.impl.SupplierServiceImpl;
@@ -57,6 +60,10 @@ public class ServiceFactory {
                 return new EmptyBottleServiceImpl();
             case CUSTOMER:
                 return new CustomerServiceImpl();
+            case STOCK_TAKING:
+                return new StockTakingServiceImpl();
+            case DAYEND:
+                return new DayEndServiceImpl();
             default:
                 return null;
         }
