@@ -336,6 +336,7 @@ public class GRNMaster extends javax.swing.JPanel implements FocusHandler{
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setMnemonic('e');
         btnDelete.setText("Delete");
+        btnDelete.setToolTipText("Check one or more GRN(s) to delete");
         btnDelete.setEnabled(false);
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -348,6 +349,7 @@ public class GRNMaster extends javax.swing.JPanel implements FocusHandler{
         btnView.setForeground(new java.awt.Color(255, 255, 255));
         btnView.setMnemonic('V');
         btnView.setText("View");
+        btnView.setToolTipText("Click to view/edit selected GRN");
         btnView.setEnabled(false);
         btnView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -360,6 +362,7 @@ public class GRNMaster extends javax.swing.JPanel implements FocusHandler{
         btnNew.setForeground(new java.awt.Color(255, 255, 255));
         btnNew.setMnemonic('N');
         btnNew.setText("New");
+        btnNew.setToolTipText("Click to create a new GRN");
         btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewActionPerformed(evt);
@@ -597,7 +600,7 @@ public class GRNMaster extends javax.swing.JPanel implements FocusHandler{
 
     private void tblGRNFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblGRNFocusGained
         
-        if (dtm.getRowCount() > 0){
+        if (dtm.getRowCount() > 0 && tblGRN.getSelectedRowCount()== 0){
             tblGRN.getSelectionModel().setSelectionInterval(0, 0);
         }
         

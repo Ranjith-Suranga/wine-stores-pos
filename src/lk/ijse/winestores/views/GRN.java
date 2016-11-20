@@ -11,6 +11,7 @@ import java.awt.Cursor;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -33,10 +34,9 @@ import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.GRNController;
 import lk.ijse.winestores.controller.custom.ItemController;
-import lk.ijse.winestores.controller.custom.MajorCategoryController;
+import lk.ijse.winestores.controller.custom.QueryController;
 import lk.ijse.winestores.controller.custom.SubCategoryController;
 import lk.ijse.winestores.controller.custom.SupplierController;
-import lk.ijse.winestores.controller.custom.impl.MajorCategoryControllerImpl;
 import lk.ijse.winestores.views.util.Extension;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -44,7 +44,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  *
  * @author Ranjith Suranga
  */
-public class GRN extends javax.swing.JPanel implements Extension{
+public class GRN extends javax.swing.JPanel implements Extension {
 
     private SuraButton sbtn;                                                    // Holds the SuraButton Instance
     private SuraTable stbl;                                                     // Holds the SuraTable Instance
@@ -59,6 +59,8 @@ public class GRN extends javax.swing.JPanel implements Extension{
     private boolean addNewGrn = true;                                           // Holds the key whether to add new GRN or view existing GRN
     private boolean updateStatus = false;                                       // Holds another special status, whether to update or add new
 
+    private SupplierController ctrlSupplier;
+    
     /**
      * Creates new form NewGRN
      */
@@ -79,7 +81,8 @@ public class GRN extends javax.swing.JPanel implements Extension{
             lblGrnDate.setText("GRN Date : " + sdf.format(new Date()));
 
             loadSuppliersInToCombo();
-            loadMajorCategoriesInToCombo();
+            cmbSupplier.setSelectedIndex(-1);
+//            loadMajorCategoriesInToCombo();
 
             txtInvoiceDate.setDate(new Date());
 
@@ -123,9 +126,8 @@ public class GRN extends javax.swing.JPanel implements Extension{
 
         }
 
-        AutoCompletion acSupplier = new AutoCompletion(cmbSupplier);
-        acSupplier.setStrict(false);
-        
+//        AutoCompletion acSupplier = new AutoCompletion(cmbSupplier);
+//        acSupplier.setStrict(false);
         AutoCompletion acItem = new AutoCompletion(cmbItem);
         acItem.setStrict(false);
         //AutoCompleteDecorator.decorate(cmbSupplier);
@@ -146,7 +148,28 @@ public class GRN extends javax.swing.JPanel implements Extension{
         items = new ArrayList<>();
 
         loadSuppliersInToCombo();
-        loadMajorCategoriesInToCombo();
+//        loadMajorCategoriesInToCombo();
+         //Let's select correct supplier according to the major category name
+        ctrlSupplier = (SupplierController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SUPPLIER);
+        try {
+            SupplierController.SupplierModel supplier = ctrlSupplier.getSupplierById(currentGrn.getSupplierId());
+            cmbSupplier.setSelectedItem(supplier.getName());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+
+//        for (SupplierController.SupplierModel supplier : allSuppliers) {
+//            String supplierName = supplier.getName();
+//            String supplierABBR = supplierName.substring(supplierName.lastIndexOf("(") + 1, supplierName.lastIndexOf(")"));
+//            if (supplierABBR.equalsIgnoreCase(item.getMajorCategory())){
+//                cmbSupplier.setSelectedItem(supplierName.toString());
+//                break;
+//            }
+//        }
+        
 
         sbtn = new SuraButton(this);
         sbtn.convertAllJButtonsToSuraButtons();
@@ -176,10 +199,12 @@ public class GRN extends javax.swing.JPanel implements Extension{
         AutoCompleteDecorator.decorate(cmbSupplier);
         AutoCompleteDecorator.decorate(cmbItem);
 
+        handleEvents();
+
         // Filling data
         fillingData(currentGrn, isGrnAuthorized);
-
-        handleEvents();
+        
+        tblItems.getSelectionModel().setSelectionInterval(0, 0);
 
     }
 
@@ -253,7 +278,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
             cmbSupplier.setEnabled(false);
             txtInvoiceId.setEnabled(false);
             txtInvoiceDate.setEnabled(false);
-            cmbMajorCateogry.setEnabled(false);
+//            cmbMajorCateogry.setEnabled(false);
             cmbSubCategory.setEnabled(false);
             cmbItem.setEnabled(false);
             txtQty.setEnabled(false);
@@ -264,14 +289,15 @@ public class GRN extends javax.swing.JPanel implements Extension{
             btnDelete.setEnabled(false);
             btnSave.setEnabled(false);
             btnAuthorize.setVisible(true);
-            if (!this.authorizedStatus){
+            if (!this.authorizedStatus) {
                 btnAuthorize.setEnabled(true);
             }
         } else {
             cmbSupplier.setEnabled(true);
+            cmbSupplier.setEditable(false);
             txtInvoiceId.setEnabled(true);
             txtInvoiceDate.setEnabled(true);
-            cmbMajorCateogry.setEnabled(true);
+//            cmbMajorCateogry.setEnabled(true);
             cmbSubCategory.setEnabled(true);
             cmbItem.setEnabled(true);
             txtQty.setEnabled(true);
@@ -314,7 +340,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
                 super.keyPressed(e);
 
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    cmbMajorCateogry.requestFocusInWindow();
+                    cmbSubCategory.requestFocusInWindow();
                 }
             }
 
@@ -344,8 +370,8 @@ public class GRN extends javax.swing.JPanel implements Extension{
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     txtQty.requestFocusInWindow();
                 }
-                
-                if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_SPACE)){
+
+                if (e.isControlDown() && (e.getKeyCode() == KeyEvent.VK_SPACE)) {
                     cmbItem.showPopup();
                 }
             }
@@ -357,23 +383,32 @@ public class GRN extends javax.swing.JPanel implements Extension{
             @Override
             public void tableChanged(TableModelEvent e) {
 
+                BigDecimal totalCostPrice = BigDecimal.ZERO;
+
                 if (!txtInvoiceId.getText().trim().isEmpty() && txtInvoiceDate.getDate() != null && cmbSupplier.getSelectedIndex() != -1) {
                     btnSave.setEnabled(dtm.getRowCount() != 0);
                 }
 
                 btnDelete.setEnabled(false);
 
-                if (pnlProtectedView.isVisible()) {
-                    return;
-                }
-
+//                if (pnlProtectedView.isVisible()) {
+//                    return;
+//                }
+                // Enabling the delete button and calculating the cost price
                 for (int i = 0; i < dtm.getRowCount(); i++) {
 
-                    if ((boolean) dtm.getValueAt(i, 0) == true) {
+                    if (!btnDelete.isEnabled() && !pnlProtectedView.isVisible() && ((boolean) dtm.getValueAt(i, 0) == true)) {
                         btnDelete.setEnabled(true);
-                        break;
                     }
 
+                    totalCostPrice = totalCostPrice.add(items.get(i).getCostPrice().multiply(new BigDecimal(items.get(i).getQty())));
+
+                }
+
+                if (totalCostPrice.compareTo(BigDecimal.ZERO) == 0) {
+                    lblTotalCostPrice.setText("Total Cost Price : -");
+                } else {
+                    lblTotalCostPrice.setText("Total Cost Price : " + totalCostPrice.setScale(2, RoundingMode.HALF_UP));
                 }
             }
         });
@@ -408,46 +443,45 @@ public class GRN extends javax.swing.JPanel implements Extension{
         } catch (SQLException ex) {
             Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
-    private void loadMajorCategoriesInToCombo() {
-
-        cmbMajorCateogry.removeAllItems();
-
-        MajorCategoryController controller = (MajorCategoryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.MAJOR_CATEGORY);
-
-        try {
-            ArrayList<MajorCategoryControllerImpl.MajorCategoryModel> allMajorCategories = controller.getAllMajorCategory();
-
-            if (allMajorCategories == null) {
-                return;
-            }
-
-            for (MajorCategoryControllerImpl.MajorCategoryModel majorCateogry : allMajorCategories) {
-                cmbMajorCateogry.addItem(majorCateogry.getCategoryName());
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NullPointerException ex) {
-            Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
+//    private void loadMajorCategoriesInToCombo() {
+//
+//        cmbMajorCateogry.removeAllItems();
+//
+//        MajorCategoryController controller = (MajorCategoryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.MAJOR_CATEGORY);
+//
+//        try {
+//            ArrayList<MajorCategoryControllerImpl.MajorCategoryModel> allMajorCategories = controller.getAllMajorCategory();
+//
+//            if (allMajorCategories == null) {
+//                return;
+//            }
+//
+//            for (MajorCategoryControllerImpl.MajorCategoryModel majorCateogry : allMajorCategories) {
+//                cmbMajorCateogry.addItem(majorCateogry.getCategoryName());
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (NullPointerException ex) {
+//            Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     private void loadSubCategoriesInToCombo() {
 
         cmbSubCategory.removeAllItems();
 
-        if (cmbMajorCateogry.getSelectedIndex() == -1) {
+        if (cmbSupplier.getSelectedIndex() == -1) {
             return;
         }
 
         SubCategoryController controller = (SubCategoryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SUB_CATEOGRY);
 
         try {
-            ArrayList<SubCategoryController.SubCategoryModel> allSubCategories = controller.getAllSubCategoriesByMajorCategoryName(cmbMajorCateogry.getSelectedItem().toString());
+            ArrayList<SubCategoryController.SubCategoryModel> allSubCategories = controller.getAllSubCategoriesByMajorCategoryName(txtMajorCategory.getText());
 
             if (allSubCategories == null) {
                 return;
@@ -469,14 +503,14 @@ public class GRN extends javax.swing.JPanel implements Extension{
 
         cmbItem.removeAllItems();
 
-        if (cmbSubCategory.getSelectedIndex() == -1 || cmbMajorCateogry.getSelectedIndex() == -1) {
+        if (cmbSubCategory.getSelectedIndex() == -1 || cmbSupplier.getSelectedIndex() == -1) {
             return;
         }
 
         ItemController controller = (ItemController) ControllerFactory.getInstance().getController(SuperController.ControllerType.ITEM);
 
         try {
-            subItems = controller.getItems(cmbMajorCateogry.getSelectedItem().toString(), cmbSubCategory.getSelectedItem().toString());
+            subItems = controller.getItems(txtMajorCategory.getText(), cmbSubCategory.getSelectedItem().toString());
 
             if (subItems == null) {
                 return;
@@ -612,7 +646,6 @@ public class GRN extends javax.swing.JPanel implements Extension{
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        cmbMajorCateogry = new javax.swing.JComboBox<>();
         cmbSubCategory = new javax.swing.JComboBox<>();
         cmbItem = new javax.swing.JComboBox<>();
         txtQty = new javax.swing.JFormattedTextField();
@@ -626,6 +659,8 @@ public class GRN extends javax.swing.JPanel implements Extension{
         btnSave = new javax.swing.JButton();
         btnAuthorize = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        txtMajorCategory = new javax.swing.JTextField();
+        lblTotalCostPrice = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(233, 236, 242));
         setForeground(new java.awt.Color(255, 255, 255));
@@ -647,6 +682,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
         btnEdit.setFont(new java.awt.Font("Open Sans", 0, 11)); // NOI18N
         btnEdit.setForeground(new java.awt.Color(255, 255, 255));
         btnEdit.setText("Enable Editing");
+        btnEdit.setToolTipText("Click to enable editing");
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditActionPerformed(evt);
@@ -723,12 +759,18 @@ public class GRN extends javax.swing.JPanel implements Extension{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel6.setDisplayedMnemonic('S');
         jLabel6.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Supplier :");
 
-        cmbSupplier.setEditable(true);
         cmbSupplier.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        cmbSupplier.setToolTipText("Click to select the supplier");
+        cmbSupplier.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSupplierItemStateChanged(evt);
+            }
+        });
         cmbSupplier.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cmbSupplierFocusGained(evt);
@@ -737,6 +779,11 @@ public class GRN extends javax.swing.JPanel implements Extension{
         cmbSupplier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbSupplierActionPerformed(evt);
+            }
+        });
+        cmbSupplier.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbSupplierKeyPressed(evt);
             }
         });
 
@@ -791,6 +838,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Major Category :");
 
+        jLabel10.setDisplayedMnemonic('C');
         jLabel10.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Sub Category :");
@@ -815,18 +863,6 @@ public class GRN extends javax.swing.JPanel implements Extension{
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Expire Date :");
 
-        cmbMajorCateogry.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        cmbMajorCateogry.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbMajorCateogryItemStateChanged(evt);
-            }
-        });
-        cmbMajorCateogry.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                cmbMajorCateogryKeyPressed(evt);
-            }
-        });
-
         cmbSubCategory.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         cmbSubCategory.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -846,6 +882,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
 
         cmbItem.setEditable(true);
         cmbItem.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        cmbItem.setToolTipText("Press (Ctrl+Space) to open up the item list");
         cmbItem.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbItemItemStateChanged(evt);
@@ -944,6 +981,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
             }
         });
 
+        txtExpireDate.setToolTipText("Expire Date is optional");
         txtExpireDate.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         txtExpireDate.setFormats(new SimpleDateFormat("yyyy-MM-dd"));
 
@@ -1039,7 +1077,9 @@ public class GRN extends javax.swing.JPanel implements Extension{
         btnSave.setBackground(new java.awt.Color(72, 158, 231));
         btnSave.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave.setMnemonic('v');
         btnSave.setText("Save");
+        btnSave.setToolTipText("Click to save the GRN");
         btnSave.setEnabled(false);
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1050,7 +1090,9 @@ public class GRN extends javax.swing.JPanel implements Extension{
         btnAuthorize.setBackground(new java.awt.Color(92, 184, 92));
         btnAuthorize.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         btnAuthorize.setForeground(new java.awt.Color(255, 255, 255));
+        btnAuthorize.setMnemonic('A');
         btnAuthorize.setText("Authorize");
+        btnAuthorize.setToolTipText("Click to authorize the GRN");
         btnAuthorize.setEnabled(false);
         btnAuthorize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1061,14 +1103,21 @@ public class GRN extends javax.swing.JPanel implements Extension{
         btnDelete.setBackground(new java.awt.Color(251, 93, 93));
         btnDelete.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
-        btnDelete.setMnemonic('e');
+        btnDelete.setMnemonic('D');
         btnDelete.setText("Delete");
+        btnDelete.setToolTipText("Check one more items in the table to delete");
         btnDelete.setEnabled(false);
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
             }
         });
+
+        txtMajorCategory.setEditable(false);
+        txtMajorCategory.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+
+        lblTotalCostPrice.setFont(new java.awt.Font("Open Sans", 1, 18)); // NOI18N
+        lblTotalCostPrice.setText("Total Cost Price : -");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -1097,15 +1146,12 @@ public class GRN extends javax.swing.JPanel implements Extension{
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cmbItem, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addContainerGap()
+                        .addComponent(lblTotalCostPrice)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAuthorize)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbMajorCateogry, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
@@ -1141,7 +1187,12 @@ public class GRN extends javax.swing.JPanel implements Extension{
                                 .addComponent(btnAddItem, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 90, Short.MAX_VALUE)))
+                        .addGap(0, 90, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMajorCategory)))
                 .addContainerGap())
         );
 
@@ -1172,11 +1223,11 @@ public class GRN extends javax.swing.JPanel implements Extension{
                         .addComponent(jLabel7))
                     .addComponent(txtInvoiceDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEmptyBottles))
-                .addGap(6, 6, 6)
+                .addGap(9, 9, 9)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbMajorCateogry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addGap(6, 6, 6)
+                    .addComponent(jLabel9)
+                    .addComponent(txtMajorCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(8, 8, 8)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
@@ -1217,7 +1268,8 @@ public class GRN extends javax.swing.JPanel implements Extension{
                 .addGap(11, 11, 11)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAuthorize, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAuthorize, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTotalCostPrice))
                 .addContainerGap())
         );
 
@@ -1253,10 +1305,6 @@ public class GRN extends javax.swing.JPanel implements Extension{
 
         }
     }//GEN-LAST:event_btnEmptyBottlesActionPerformed
-
-    private void cmbMajorCateogryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbMajorCateogryItemStateChanged
-        loadSubCategoriesInToCombo();
-    }//GEN-LAST:event_cmbMajorCateogryItemStateChanged
 
     private void cmbSubCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSubCategoryItemStateChanged
         loadItemsInToCombo();
@@ -1316,7 +1364,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
     private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
 
         ItemController.ItemModel currentItem = getCurrentItem();
-        
+
         if (currentItem == null) {
             return;
         }
@@ -1348,7 +1396,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
         BigDecimal costPrice = new BigDecimal(((Number) txtCostPrice.getValue()).doubleValue());
         BigDecimal sellingPrice = new BigDecimal(((Number) txtSellingPrice.getValue()).doubleValue());
 
-        GRNController.GRNItemModel item = new GRNController.GRNItemModel(cmbMajorCateogry.getSelectedItem().toString(),
+        GRNController.GRNItemModel item = new GRNController.GRNItemModel(txtMajorCategory.getText(),
                 cmbSubCategory.getSelectedItem().toString(),
                 currentItem.getItemCode(),
                 currentItem.getItemName(),
@@ -1420,13 +1468,6 @@ public class GRN extends javax.swing.JPanel implements Extension{
 
 
     }//GEN-LAST:event_txtInvoiceDateKeyPressed
-
-    private void cmbMajorCateogryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbMajorCateogryKeyPressed
-
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            cmbSubCategory.requestFocusInWindow();
-        }
-    }//GEN-LAST:event_cmbMajorCateogryKeyPressed
 
     private void cmbSubCategoryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbSubCategoryKeyPressed
 
@@ -1524,7 +1565,9 @@ public class GRN extends javax.swing.JPanel implements Extension{
         int row = tblItems.getSelectedRow();
         GRNController.GRNItemModel item = items.get(row);
 
-        cmbMajorCateogry.setSelectedItem(item.getMajorCategory().toString());
+//        cmbMajorCateogry.setSelectedItem(item.getMajorCategory().toString());
+
+        txtMajorCategory.setText(item.getMajorCategory());
         cmbSubCategory.setSelectedItem(item.getSubCategory().toString());
         cmbItem.setSelectedItem(item.getItemName().toString());
 
@@ -1541,7 +1584,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
                 txtExpireDate.setDate(null);
                 Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
+        } else {
             txtExpireDate.setDate(null);
         }
 
@@ -1564,7 +1607,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
 
     private void btnAuthorizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthorizeActionPerformed
         //JOptionPane.showMessageDialog(this, getEmptyBottles());
-        
+
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
         GRNController controller = (GRNController) ControllerFactory.getInstance().getController(SuperController.ControllerType.GRN);
@@ -1572,17 +1615,37 @@ public class GRN extends javax.swing.JPanel implements Extension{
         try {
             result = controller.authorizeGrn(lblGrnId.getText());
             if (result > 0) {
+
                 pnlProtectedView.setVisible(true);
                 this.enableEditing(false);
                 btnAuthorize.setEnabled(false);
                 authorizedStatus = true;
+
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
+                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                        "GRN has been successfully authorized !",
+                        "Authorized Success",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+
+                Main m = (Main) SwingUtilities.getWindowAncestor(this);
+                m.resetMenu(Main.MenuItems.GRN);
+
+            } else {
+
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("../error_icon.png"));
+                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                        "Sorry, we coudn't able to authorize this GRN right now, please try again. If the problem persist, please contact the Admin.",
+                        "Authorized Failed",
+                        JOptionPane.ERROR_MESSAGE,
+                        icon);
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.setCursor(Cursor.getDefaultCursor());
 
     }//GEN-LAST:event_btnAuthorizeActionPerformed
@@ -1612,6 +1675,29 @@ public class GRN extends javax.swing.JPanel implements Extension{
 
             try {
                 int result = controller.saveGrn(grnModel, this.items, this.emptyBottles);
+
+                if (result > 0) {
+
+                    ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                            "GRN has been successfully saved !",
+                            "Saved Success",
+                            JOptionPane.INFORMATION_MESSAGE,
+                            icon);
+
+                    Main m = (Main) SwingUtilities.getWindowAncestor(this);
+                    m.resetMenu(Main.MenuItems.GRN);
+
+                } else {
+
+                    ImageIcon icon = new ImageIcon(this.getClass().getResource("../error_icon.png"));
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                            "Sorry, we coudn't able to save this GRN right now, please try again. If the problem persist, please contact the Admin.",
+                            "Save Failed",
+                            JOptionPane.ERROR_MESSAGE,
+                            icon);
+
+                }
 //                System.out.println(result);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
@@ -1634,6 +1720,29 @@ public class GRN extends javax.swing.JPanel implements Extension{
                 int result = controller.changeGrn(grnModel, this.items, this.emptyBottles, authorizedStatus);
 //                System.out.println(result);
                 authorizedStatus = false;
+
+                if (result > 0) {
+
+                    ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                            "GRN has been successfully saved !",
+                            "Saved Success",
+                            JOptionPane.INFORMATION_MESSAGE,
+                            icon);
+
+//                    Main m = (Main) SwingUtilities.getWindowAncestor(this);
+//                    m.resetMenu(Main.MenuItems.GRN);                    
+                } else {
+
+                    ImageIcon icon = new ImageIcon(this.getClass().getResource("../error_icon.png"));
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                            "Sorry, we coudn't able to save this GRN right now, please try again. If the problem persist, please contact the Admin.",
+                            "Save Failed",
+                            JOptionPane.ERROR_MESSAGE,
+                            icon);
+
+                }
+
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(GRN.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -1686,11 +1795,50 @@ public class GRN extends javax.swing.JPanel implements Extension{
         this.enableEditing(true);
         btnSave.setEnabled(true);
         btnAuthorize.setEnabled(false);
+        cmbSupplier.requestFocusInWindow();
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void cmbSupplierFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbSupplierFocusGained
         cmbSupplier.getEditor().selectAll();
     }//GEN-LAST:event_cmbSupplierFocusGained
+
+    private void cmbSupplierKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbSupplierKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtInvoiceId.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_cmbSupplierKeyPressed
+
+    private void cmbSupplierItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSupplierItemStateChanged
+
+        if (cmbSupplier.getSelectedIndex() == -1) {
+            txtMajorCategory.setText("");
+            loadSubCategoriesInToCombo();
+            return;
+        }
+
+        // Setting Major Category Name
+        String supplierName = cmbSupplier.getSelectedItem().toString();
+        String majorCategory = supplierName.substring(supplierName.lastIndexOf("(") + 1, supplierName.lastIndexOf(")"));
+        txtMajorCategory.setText(majorCategory);
+
+        loadSubCategoriesInToCombo();
+        
+        // We need a reset here, 
+        items.removeAll(items);
+        if (dtm != null){
+            dtm.setRowCount(0);
+        }
+        
+        txtQty.setValue(null);
+        txtSellingPrice.setValue(null);
+        txtCostPrice.setValue(null);
+        txtExpireDate.getEditor().setValue(null);
+        btnAddItem.setEnabled(false);
+        updateStatus = false;
+        btnAddItem.setText("Add Item");        
+//        cmbItem.setSelectedIndex(-1);
+        
+    }//GEN-LAST:event_cmbSupplierItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1701,7 +1849,6 @@ public class GRN extends javax.swing.JPanel implements Extension{
     private javax.swing.JButton btnEmptyBottles;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<String> cmbItem;
-    private javax.swing.JComboBox<String> cmbMajorCateogry;
     private javax.swing.JComboBox<String> cmbSubCategory;
     private javax.swing.JComboBox<String> cmbSupplier;
     private javax.swing.JLabel jLabel1;
@@ -1723,6 +1870,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblGrnDate;
     private javax.swing.JLabel lblGrnId;
+    private javax.swing.JLabel lblTotalCostPrice;
     private javax.swing.JPanel pnlProtectedView;
     private javax.swing.JPanel pnlTableContainer;
     private javax.swing.JTable tblItems;
@@ -1730,6 +1878,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
     private org.jdesktop.swingx.JXDatePicker txtExpireDate;
     private org.jdesktop.swingx.JXDatePicker txtInvoiceDate;
     private javax.swing.JTextField txtInvoiceId;
+    private javax.swing.JTextField txtMajorCategory;
     private javax.swing.JFormattedTextField txtQty;
     private javax.swing.JFormattedTextField txtSellingPrice;
     // End of variables declaration//GEN-END:variables
@@ -1759,7 +1908,7 @@ public class GRN extends javax.swing.JPanel implements Extension{
 
     @Override
     public String getExtensionName() {
-        return (addNewGrn) ? "New GRN" : "Edit/View GRN";
+        return (addNewGrn) ? "New GRN" : "Edit-View GRN";
     }
 
 }

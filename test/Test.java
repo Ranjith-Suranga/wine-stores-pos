@@ -1,4 +1,7 @@
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -41,18 +44,26 @@ public class Test extends javax.swing.JFrame {
      */
     public Test() {
         initComponents();
+        
+        BigDecimal a = new BigDecimal("10.126");
+        BigDecimal b = a.add(new BigDecimal(1), new MathContext(4, RoundingMode.HALF_UP));
 
-        sbtn = new SuraButton(this);
-        sbtn.convertAllJButtonsToSuraButtons();
+        System.out.println(b);
         
-        Date d1 = new Date();
-        Date d2 = new Date();
-        d1 = parseDate(d1);
-        d2 = parseDate(d2);
+//        System.out.println(b.);
         
-        System.out.println(d1 + " === " + d2);
-        
-        System.out.println(d1.compareTo(d2));
+//
+//        sbtn = new SuraButton(this);
+//        sbtn.convertAllJButtonsToSuraButtons();
+//        
+//        Date d1 = new Date();
+//        Date d2 = new Date();
+//        d1 = parseDate(d1);
+//        d2 = parseDate(d2);
+//        
+//        System.out.println(d1 + " === " + d2);
+//        
+//        System.out.println(d1.compareTo(d2));
         
 
 //        try {

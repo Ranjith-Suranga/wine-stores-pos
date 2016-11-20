@@ -771,7 +771,7 @@ public class SupplierOrders extends javax.swing.JPanel implements FocusHandler{
 
     private void tblSupplierOrderFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblSupplierOrderFocusGained
         
-        if (tblSupplierOrder.getRowCount() > 0){
+        if (tblSupplierOrder.getRowCount() > 0 && tblSupplierOrder.getSelectedRowCount()== 0){
             tblSupplierOrder.getSelectionModel().setSelectionInterval(0, 0);
         }
         
