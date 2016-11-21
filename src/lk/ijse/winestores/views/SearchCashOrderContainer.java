@@ -7,6 +7,7 @@ package lk.ijse.winestores.views;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -175,7 +176,12 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
 
             BigDecimal total = billTotal.add(emptyBottleCost);
             lblFinalTotal.setText(total.setScale(2).toPlainString());
-
+            
+            lblTenderedAmount.setText(order.getTenderedCash().setScale(2).toPlainString());
+            
+            BigDecimal balance = order.getTenderedCash().subtract(total).setScale(2, RoundingMode.HALF_UP);
+            lblBalance.setText(balance.toPlainString());
+            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(SearchCashOrderContainer.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -240,6 +246,10 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
         lblChequeNumber = new javax.swing.JLabel();
         lblBank = new javax.swing.JLabel();
         lblBranch = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        lblTenderedAmount = new javax.swing.JLabel();
+        lblBalance = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -375,6 +385,21 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
         lblBranch.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         lblBranch.setText("-");
 
+        jLabel9.setFont(new java.awt.Font("Open Sans", 1, 18)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Tendered Amount :");
+
+        jLabel10.setFont(new java.awt.Font("Open Sans", 1, 18)); // NOI18N
+        jLabel10.setText("Balance :");
+
+        lblTenderedAmount.setFont(new java.awt.Font("Open Sans", 1, 18)); // NOI18N
+        lblTenderedAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTenderedAmount.setText("-");
+
+        lblBalance.setFont(new java.awt.Font("Open Sans", 1, 18)); // NOI18N
+        lblBalance.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblBalance.setText("-");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -394,12 +419,16 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblBottleCost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblBillTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblFinalTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)))
+                            .addComponent(lblFinalTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                            .addComponent(lblTenderedAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblBalance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -445,11 +474,19 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(lblBillTotal))
-                .addGap(27, 27, 27)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(lblFinalTotal))
-                .addGap(18, 18, 18)
+                .addGap(20, 20, 20)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(lblTenderedAmount))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(lblBalance))
+                .addGap(35, 35, 35)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -465,7 +502,7 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(lblBranch))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -493,6 +530,7 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -500,18 +538,21 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblBalance;
     private javax.swing.JLabel lblBank;
     private javax.swing.JLabel lblBillTotal;
     private javax.swing.JLabel lblBottleCost;
     private javax.swing.JLabel lblBranch;
     private javax.swing.JLabel lblChequeNumber;
     private javax.swing.JLabel lblFinalTotal;
+    private javax.swing.JLabel lblTenderedAmount;
     private javax.swing.JPanel pnlOrder;
     private javax.swing.JTable tblEmptyBottles;
     // End of variables declaration//GEN-END:variables
