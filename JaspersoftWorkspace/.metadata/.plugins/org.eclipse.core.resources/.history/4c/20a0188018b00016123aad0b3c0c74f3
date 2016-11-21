@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
-<!-- 2016-11-22T00:12:59 -->
+<!-- 2016-11-21T23:59:55 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ItemMasterFullReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f94de4cc-7e26-4c27-8ae3-c1d84e2e4084">
 	<property name="com.jaspersoft.studio.data.sql.tables" value="d2luZV9zdG9yZXMubWFpbl9zdWJfaXRlbSAsMTUsNDEsZWIxYjI2OTEtZTc1MC00NWIyLTk1YTMt&#xA;MDkzOTc3NjJmZGZjO3dpbmVfc3RvcmVzLnN1Yl9jYXRlZ29yeSAsNTQ1LDI5LGRkOTBkMzVlLWI4&#xA;NmUtNDJiZC05NjE1LTAwMTRjOGYzZGY1MDt3aW5lX3N0b3Jlcy5pdGVtICwxOTUsMTU5LDY5Y2U3&#xA;M2ZjLTk4OGUtNDk4MS05ZGE3LTljNjIyMWQzNzE4NDt3aW5lX3N0b3Jlcy5tYWluX2NhdGVnb3J5&#xA;ICwzOTcsOTgsNDU1YjhiMmYtYjkxMy00ZGJjLWJmZDktYWFmYWNhYzQ0MWU3O3dpbmVfc3RvcmVz&#xA;Lm1haW5fc3ViX2NhdGVnb3J5ICwxOTUsMTUsNGIyMjk0YmEtODEzYy00ZDFhLTk4MTQtZWEwYWQy&#xA;NWI5NjEwOw=="/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
@@ -59,7 +59,7 @@ FROM wine_stores.main_sub_item
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="67" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="555" height="40" uuid="e7e0e6e0-879b-49b4-8926-7571ab002f15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -77,8 +77,12 @@ FROM wine_stores.main_sub_item
 				</textElement>
 				<text><![CDATA[Item Master Full Report]]></text>
 			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="19">
 			<staticText>
-				<reportElement x="0" y="60" width="80" height="19" uuid="7fa0475d-6c39-41cf-99ba-653e51130052"/>
+				<reportElement x="0" y="0" width="80" height="19" uuid="7fa0475d-6c39-41cf-99ba-653e51130052"/>
 				<box leftPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Open Sans" size="12" isBold="true"/>
@@ -86,21 +90,14 @@ FROM wine_stores.main_sub_item
 				<text><![CDATA[Item Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="80" y="60" width="350" height="19" uuid="e7a1602d-4b52-4cc2-8eed-85bbc4c02615"/>
+				<reportElement x="80" y="0" width="350" height="18" uuid="e7a1602d-4b52-4cc2-8eed-85bbc4c02615"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Open Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Item Name]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="430" y="60" width="124" height="19" uuid="f007ef23-cf69-4246-96db-b081ff4a1c29"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Open Sans" size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Barcode]]></text>
-			</staticText>
 		</band>
-	</title>
+	</columnHeader>
 	<detail>
 		<band height="19" splitType="Stretch">
 			<textField>

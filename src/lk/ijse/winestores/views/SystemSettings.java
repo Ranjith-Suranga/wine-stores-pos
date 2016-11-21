@@ -38,7 +38,7 @@ public class SystemSettings extends javax.swing.JPanel {
         // Dependency Injection
         ctrlSystemSettings = (SystemSettingsController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SYSTEM_SETTINGS);
         ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
-        
+
         if (ctrlQuery.hasFinishedInitalStockTaking()) {
             btnInitialStockTransfer.setEnabled(false);
             btnFinishStockTransfer.setEnabled(false);
@@ -216,7 +216,7 @@ public class SystemSettings extends javax.swing.JPanel {
         try {
             finish = ctrlSystemSettings.finishInitialStockTaking();
         } catch (WriteFailedException ex) {
-            icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/" + ((finish) ? "ok.png" : "error_icon.png")));            
+            icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/" + ((finish) ? "ok.png" : "error_icon.png")));
             JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
                     "Failed to Finish Up Initial Stock Taking",
                     "Failed",
@@ -238,6 +238,8 @@ public class SystemSettings extends javax.swing.JPanel {
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE,
                     icon);
+            btnInitialStockTransfer.setEnabled(false);
+            btnFinishStockTransfer.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
                     "Failed to finish up the Initial Stock Taking",

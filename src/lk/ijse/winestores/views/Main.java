@@ -521,16 +521,16 @@ public class Main extends javax.swing.JFrame {
                     pnlContainer.add(pnlGRNMaster);
                     break;
                 case VIEWS:
-                    if (pnlViews == null) {
+                    //if (pnlViews == null) {
                         pnlViews = new Views();
-                    }
+                    //}
                     lblMenuItem.setText("Views");
                     pnlContainer.add(pnlViews);
                     break;
                 case SYSTEM_SETTINGS:
-                    if (pnlSystemSettings == null) {
+                    //if (pnlSystemSettings == null) {
                         pnlSystemSettings = new SystemSettings();
-                    }
+                    //}
                     lblMenuItem.setText("System Settings");
                     pnlContainer.add(pnlSystemSettings);
                     break;
