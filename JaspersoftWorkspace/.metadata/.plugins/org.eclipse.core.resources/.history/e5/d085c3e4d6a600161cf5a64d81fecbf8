@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-10T05:16:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DayEndReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cfcc2ddc-42de-467a-9b1b-9c5d6d138e4f">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="d2luZV9zdG9yZXMuaXRlbSBBUyAsNDAwLDEzLDJkNzg2YTU1LTgwZGQtNDViNi05MTY0LWRmNjQ5&#xA;N2UwM2FiNjt3aW5lX3N0b3Jlcy5tYWluX3N1Yl9pdGVtIEFTICwxOTMsMTcsM2Y5NzJmNjEtZjY2&#xA;My00ZjNmLWI0OGYtZmEwYzU5YzdiZTc1O3dpbmVfc3RvcmVzLmRheV9lbmQgLDE1LDE1LDllZWZj&#xA;ZmMwLWVmZjktNDliMi1iZjMwLTY4NGI4YmJiODVhZDs="/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="date" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT wine_stores.day_end.date,
+	wine_stores.day_end.item_code,
+	wine_stores.day_end.opening_qty,
+	wine_stores.day_end.grn_qty,
+	wine_stores.day_end.sales_qty,
+	wine_stores.day_end.selling_price,
+	wine_stores.day_end.buying_price,
+	wine_stores.item.item_name
+FROM wine_stores.main_sub_item
+	INNER JOIN wine_stores.item ON 
+	 wine_stores.main_sub_item.item_id = wine_stores.item.item_id 
+	INNER JOIN wine_stores.day_end ON 
+	 wine_stores.day_end.item_code = wine_stores.main_sub_item.item_code 
+]]>
+	</queryString>
+	<field name="date" class="java.sql.Date"/>
+	<field name="item_code" class="java.lang.String"/>
+	<field name="opening_qty" class="java.lang.Integer"/>
+	<field name="grn_qty" class="java.lang.Integer"/>
+	<field name="sales_qty" class="java.lang.Integer"/>
+	<field name="selling_price" class="java.math.BigDecimal"/>
+	<field name="buying_price" class="java.math.BigDecimal"/>
+	<field name="item_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="40" uuid="6a6c03f5-2d90-4289-9f68-7109124b94f4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAMPELLA WINE STORES
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="802" height="20" uuid="2f43a937-81a4-4b03-835d-f1040dbb785d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Open Sans" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Day End Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="50" height="20" uuid="d2a90b55-a1cc-4cf8-b03b-378aab261384"/>
+				<textElement>
+					<font fontName="Open Sans" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="0" width="100" height="20" uuid="455f4c04-66c3-4072-8096-d0e8ed4365f0"/>
+				<textElement>
+					<font fontName="Open Sans" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="30" uuid="1160affd-d147-4b5c-9c93-05f7d83be290"/>
+				<textElement textAlignment="Center">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="0" width="100" height="30" uuid="0966a777-a881-445e-9728-0b1ca9ee3ac7"/>
+				<textElement>
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[@Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="200" height="30" uuid="c21cdecb-a65b-474f-8a4b-cd22f419b53b"/>
+				<textElement>
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="580" y="0" width="100" height="30" uuid="e274e2af-e0c5-498a-ab1f-d909fa35f5eb"/>
+				<textElement>
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sales Qty.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="0" width="70" height="30" uuid="5928df34-06b4-46e4-b9cc-01baa5e75aca"/>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="760" y="0" width="40" height="30" uuid="8a58b942-0779-4b5c-bee5-5ff23603ba8f"/>
+				<text><![CDATA[Profit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="70" height="43" uuid="dd93c619-f27c-4e3e-a37a-4be25829f95c"/>
+				<textElement>
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Opening Balance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="351" y="0" width="69" height="30" uuid="84db1c35-616a-4c9e-a4c7-be15a3838d92"/>
+				<textElement>
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Receipts]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="0" width="60" height="30" uuid="0419c9c9-0424-4a38-8a18-5d660ddfaa38"/>
+				<textElement>
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="140" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="30" uuid="32dfaf26-c0e9-41aa-8a30-a40bf7e95078"/>
+				<textFieldExpression><![CDATA[$F{item_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="30" uuid="311f211f-260b-4c7e-bbae-c2a654989a1d"/>
+				<textFieldExpression><![CDATA[$F{opening_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="70" width="100" height="30" uuid="d1abd5d2-87a6-48c8-bd61-cb1b011f3608"/>
+				<textFieldExpression><![CDATA[$F{grn_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="110" width="100" height="30" uuid="3c5cba86-62b9-461b-bc44-d779c128b3fd"/>
+				<textFieldExpression><![CDATA[$F{sales_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="90" width="100" height="30" uuid="1fe33670-e6e8-403c-867e-a417c136bdd0"/>
+				<textFieldExpression><![CDATA[$F{selling_price}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="0" width="90" height="30" uuid="ef8e52b1-130d-4227-8b62-6e95ca6659d8"/>
+				<textFieldExpression><![CDATA[$F{selling_price}.multiply( new BigDecimal($F{sales_qty})).setScale(2)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="690" y="0" width="111" height="30" uuid="2e257feb-99a4-44bd-8e20-fb0b5c5d88a1"/>
+				<textFieldExpression><![CDATA[new BigDecimal($F{sales_qty}).multiply($F{selling_price}.subtract($F{buying_price})).setScale(2)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="30" uuid="b018c9ac-8092-4276-ba1a-94729dd680bd"/>
+				<textFieldExpression><![CDATA[$F{item_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
-<!-- 2016-10-29T22:27:49 -->
+<!-- 2016-11-21T11:56:26 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CashSaleBill" pageWidth="226" pageHeight="792" whenNoDataType="BlankPage" columnWidth="198" leftMargin="14" rightMargin="14" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="73c88906-3dd1-4b8e-a8df-09685069782d">
-	<property name="com.jaspersoft.studio.data.sql.tables" value="d2luZV9zdG9yZXMubWFpbl9zdWJfaXRlbSAsMTUsMTM1LGY2Y2NhMGQ0LTJmZDQtNGEyZS1iMmE2&#xA;LTIwY2Y5OTVmNzMwZjt3aW5lX3N0b3Jlcy5jdXN0b21fb3JkZXIgLDM5MSwxNSxjYTZiMGQ4OS1l&#xA;ODI4LTRlZDItOWJiZi0xZWFhYTU0MWViNzA7d2luZV9zdG9yZXMub3JkZXJfaXRlbV9kZXRhaWxz&#xA;ICwxOTUsNDAsZWVlMjFjOTYtMDUyZi00YTExLThhZWItNmE5YTlmYTBmOGI2O3dpbmVfc3RvcmVz&#xA;Lml0ZW0gLDUzOCwxODgsOGYwM2ZmZDQtOTk4MC00MmQ5LWEwMTUtMmUyYTk4YjNlMjk0Ow=="/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="mm"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
 	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
@@ -18,7 +18,8 @@
 	wine_stores.order_item_details.item_code,
 	wine_stores.order_item_details.qty,
 	wine_stores.order_item_details.selling_price,
-	wine_stores.custom_order.total
+	wine_stores.custom_order.total,
+	wine_stores.custom_order.payment_id
 FROM wine_stores.order_item_details
 	INNER JOIN wine_stores.main_sub_item ON 
 	 wine_stores.main_sub_item.item_code = wine_stores.order_item_details.item_code 
@@ -38,6 +39,7 @@ WHERE
 	<field name="qty" class="java.lang.Integer"/>
 	<field name="selling_price" class="java.math.BigDecimal"/>
 	<field name="total" class="java.math.BigDecimal"/>
+	<field name="payment_id" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -73,13 +75,13 @@ WHERE
 				</textElement>
 				<text><![CDATA[(Open from 09.00 hrs to 21.00 hrs)]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="0" y="60" width="198" height="18" uuid="43488a57-2af1-4652-8b75-61ce08aeb69a"/>
+			<textField>
+				<reportElement x="0" y="60" width="198" height="18" uuid="9f6bdf49-0387-4bad-88ae-f618b1d8f224"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Open Sans" size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Cash Bill]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$F{payment_id}.equals("01") ? "Cash Bill" : "Credit Bill"]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

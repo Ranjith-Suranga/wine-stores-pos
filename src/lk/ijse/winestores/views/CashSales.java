@@ -1337,7 +1337,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        
+
         for (int i = 0; i < dtmItems.getRowCount(); i++) {
 
             boolean delete = (boolean) dtmItems.getValueAt(i, 0);
@@ -1366,18 +1366,22 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             initUpdate();
         }
-        
+
     }//GEN-LAST:event_tblItemsKeyPressed
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
 
-        if (cashTenderForm == null) {
-            cashTenderForm = new CashTenderForm(this, finalTotal);
-        }
-        if (!cashTenderForm.isVisible()) {
-            cashTenderForm.setTotal(finalTotal);
-            cashTenderForm.initFoucs();
-            cashTenderForm.setVisible(true);
+        if (!chkChequeDetails.isSelected()) {
+            if (cashTenderForm == null) {
+                cashTenderForm = new CashTenderForm(this, finalTotal);
+            }
+            if (!cashTenderForm.isVisible()) {
+                cashTenderForm.setTotal(finalTotal);
+                cashTenderForm.initFoucs();
+                cashTenderForm.setVisible(true);
+            }
+        } else {
+            processChequeOrder();
         }
 
     }//GEN-LAST:event_btnPayActionPerformed
@@ -1601,20 +1605,24 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
             boolean success = controller.saveCashSale(customOrder, orderItemDetails, orderEmptyBottleDetails, chequeDetails);
             if (success) {
                 // Resetting
-                resetTextFields(null);
-                dtmSearchItems.setRowCount(0);
-                dtmItems.setRowCount(0);
-                if (cmbEmptyBottle.getItemCount() > 0) {
-                    cmbEmptyBottle.setSelectedIndex(0);
-                }
-                txtEmptyBottleQty.setText("0");
-                chkChequeDetails.setSelected(false);
-                txtChequeNumber.setText("");
-                txtBank.setText("");
-                txtBranch.setText("");
-                txtBarcode.requestFocusInWindow();
-                enableQty();
-                enablePay();
+//                resetTextFields(null);
+//                dtmSearchItems.setRowCount(0);
+//                dtmItems.setRowCount(0);
+//                if (cmbEmptyBottle.getItemCount() > 0) {
+//                    cmbEmptyBottle.setSelectedIndex(0);
+//                }
+//                txtEmptyBottleQty.setText("0");
+//                chkChequeDetails.setSelected(false);
+//                txtChequeNumber.setText("");
+//                txtBank.setText("");
+//                txtBranch.setText("");
+//                txtBarcode.requestFocusInWindow();
+//                enableQty();
+//                enablePay();
+
+                Main m = (Main) SwingUtilities.getWindowAncestor(this);
+                m.resetMenu(Main.MenuItems.CASH_SALES);
+
 //                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
 //                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((this)),
 //                        "Order has been successfully saved.",
@@ -1648,5 +1656,85 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
                 loadEmptyBottles();
             }
         });
+    }
+
+    private void processChequeOrder() {
+
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        BigDecimal cashTendered = BigDecimal.ZERO;
+
+        // Filling the cutomer order
+        customOrder = new CustomOrderDTO(null,
+                formatDate(new Date()),
+                "Admin",
+                billTotal.doubleValue(),
+                cashTendered,
+                "02");
+
+        // Filling the order item details
+        orderItemDetails = new ArrayList<>();
+        for (int i = 0; i < dtmItems.getRowCount(); i++) {
+            OrderItemDetailsDTO dto = new OrderItemDetailsDTO(
+                    null,
+                    null,
+                    dtmItems.getValueAt(i, 1).toString(),
+                    Integer.parseInt(dtmItems.getValueAt(i, 3).toString()),
+                    Double.valueOf(dtmItems.getValueAt(i, 4).toString()));
+            orderItemDetails.add(dto);
+        }
+        // Filling cheque details
+        chequeDetails = new ChequeDetailsDTO(null,
+                null,
+                txtChequeNumber.getText().trim(),
+                txtBank.getText().trim(),
+                txtBranch.getText().trim());
+
+        // Sending data to the controller
+        SalesController controller = (SalesController) ControllerFactory.getInstance().getController(SuperController.ControllerType.SALES);
+        try {
+            boolean success = controller.saveCashSale(customOrder, orderItemDetails, orderEmptyBottleDetails, chequeDetails);
+            if (success) {
+                // Resetting
+//                resetTextFields(null);
+//                dtmSearchItems.setRowCount(0);
+//                dtmItems.setRowCount(0);
+//                if (cmbEmptyBottle.getItemCount() > 0) {
+//                    cmbEmptyBottle.setSelectedIndex(0);
+//                }
+//                txtEmptyBottleQty.setText("0");
+//                chkChequeDetails.setSelected(false);
+//                txtChequeNumber.setText("");
+//                txtBank.setText("");
+//                txtBranch.setText("");
+//                txtBarcode.requestFocusInWindow();
+//                enableQty();
+//                enablePay();
+
+                Main m = (Main) SwingUtilities.getWindowAncestor(this);
+                m.resetMenu(Main.MenuItems.CASH_SALES);
+
+//                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/ok.png"));
+//                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((this)),
+//                        "Order has been successfully saved.",
+//                        "Order Success",
+//                        JOptionPane.INFORMATION_MESSAGE,
+//                        icon);
+            } else {
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
+                        "Sorry, this order can not be saved right now due to some unexpected reason. Please try again.",
+                        "Order Failed",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            this.setCursor(Cursor.getDefaultCursor());
+        }
+
     }
 }

@@ -170,6 +170,8 @@ public class Main extends javax.swing.JFrame {
                     ImageIcon icon;
                     if (lbl.getText().equals("Minimize") || lbl.getText().equals("Log out") || lbl.getText().equals("Exit System")) {
                         icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText() + ".png"));
+                    } else if (lbl.getText().equals("[F2] - Cash/Credit Sales")) {
+                        icon = new ImageIcon(getClass().getResource(PATH_NAME + "Cash Sales.png"));
                     } else {
                         icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText().split("- ")[1] + ".png"));
                     }
@@ -240,6 +242,8 @@ public class Main extends javax.swing.JFrame {
                             ImageIcon icon;
                             if (lbl.getText().equals("Minimize") || lbl.getText().equals("Log out") || lbl.getText().equals("Exit System")) {
                                 icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText() + "_hover.png"));
+                            } else if (lbl.getText().equals("[F2] - Cash/Credit Sales")) {
+                                icon = new ImageIcon(getClass().getResource(PATH_NAME + "Cash Sales_hover.png"));
                             } else {
                                 icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText().split("- ")[1] + "_hover.png"));
                             }
@@ -270,6 +274,8 @@ public class Main extends javax.swing.JFrame {
                             ImageIcon icon;
                             if (lbl.getText().equals("Minimize") || lbl.getText().equals("Log out") || lbl.getText().equals("Exit System")) {
                                 icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText() + ".png"));
+                            } else if (lbl.getText().equals("[F2] - Cash/Credit Sales")) {
+                                icon = new ImageIcon(getClass().getResource(PATH_NAME + "Cash Sales.png"));
                             } else {
                                 icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText().split("- ")[1] + ".png"));
                             }
@@ -316,6 +322,8 @@ public class Main extends javax.swing.JFrame {
             ImageIcon icon;
             if (lbl.getText().equals("Minimize") || lbl.getText().equals("Log out") || lbl.getText().equals("Exit System")) {
                 icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText() + "_hover.png"));
+            } else if (lbl.getText().equals("[F2] - Cash/Credit Sales")) {
+                icon = new ImageIcon(getClass().getResource(PATH_NAME + "Cash Sales_hover.png"));
             } else {
                 icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText().split("- ")[1] + "_hover.png"));
             }
@@ -362,8 +370,10 @@ public class Main extends javax.swing.JFrame {
                     ImageIcon icon;
                     if (lblMenu.getText().equals("Minimize") || lblMenu.getText().equals("Log out") || lblMenu.getText().equals("Exit System")) {
                         icon = new ImageIcon(getClass().getResource(PATH_NAME + lblMenu.getText() + "_hover.png"));
+                    } else if (lbl.getText().equals("[F2] - Cash/Credit Sales")) {
+                        icon = new ImageIcon(getClass().getResource(PATH_NAME + "Cash Sales_hover.png"));
                     } else {
-                        icon = new ImageIcon(getClass().getResource(PATH_NAME + lblMenu.getText().split("- ")[1] + "_hover.png"));
+                        icon = new ImageIcon(getClass().getResource(PATH_NAME + lbl.getText().split("- ")[1] + "_hover.png"));
                     }
                     lblMenu.setIcon(icon);
 
@@ -463,21 +473,21 @@ public class Main extends javax.swing.JFrame {
                     break;
                 case CASH_SALES:
                     //if (pnlCashSales == null) {
-                        pnlCashSales = new CashSales();
+                    pnlCashSales = new CashSales();
                     //}
                     lblMenuItem.setText("Cash Sales");
                     pnlContainer.add(pnlCashSales);
                     break;
                 case CREDIT_SALE:
                     //if (pnlCreditIssue == null) {
-                        pnlCreditIssue = new CreditSales();
+                    pnlCreditIssue = new CreditSales();
                     //}
                     lblMenuItem.setText("Credit Issue");
                     pnlContainer.add(pnlCreditIssue);
                     break;
                 case ITEMS:
                     //if (pnlItemSearch == null) {
-                        pnlItemSearch = new Items();
+                    pnlItemSearch = new Items();
                     //}
                     lblMenuItem.setText("Item Search");
                     pnlContainer.add(pnlItemSearch);
@@ -774,7 +784,7 @@ public class Main extends javax.swing.JFrame {
         lblCashSale.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         lblCashSale.setForeground(new java.awt.Color(150, 154, 167));
         lblCashSale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/icons/Cash Sales.png"))); // NOI18N
-        lblCashSale.setText("[F2] - Cash Sales");
+        lblCashSale.setText("[F2] - Cash/Credit Sales");
         lblCashSale.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 15, 0, 0));
         lblCashSale.setIconTextGap(15);
         lblCashSale.addMouseListener(new java.awt.event.MouseAdapter() {

@@ -176,12 +176,19 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
 
             BigDecimal total = billTotal.add(emptyBottleCost);
             lblFinalTotal.setText(total.setScale(2).toPlainString());
-            
-            lblTenderedAmount.setText(order.getTenderedCash().setScale(2).toPlainString());
-            
-            BigDecimal balance = order.getTenderedCash().subtract(total).setScale(2, RoundingMode.HALF_UP);
-            lblBalance.setText(balance.toPlainString());
-            
+
+            if (order.getTenderedCash().compareTo(BigDecimal.ZERO) != 0) {
+
+                lblTenderedAmount.setText(order.getTenderedCash().setScale(2).toPlainString());
+
+                BigDecimal balance = order.getTenderedCash().subtract(total).setScale(2, RoundingMode.HALF_UP);
+                lblBalance.setText(balance.toPlainString());
+                
+            } else {
+                lblTenderedAmount.setText("-");
+                lblBalance.setText("-");
+            }
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(SearchCashOrderContainer.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -200,7 +207,7 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
                 lblChequeNumber.setText(chequeDetails.getChequeNumber());
                 lblBank.setText(chequeDetails.getBank());
                 lblBranch.setText(chequeDetails.getBranch());
-                
+
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(SearchCashOrderContainer.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
