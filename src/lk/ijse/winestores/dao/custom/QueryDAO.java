@@ -58,10 +58,11 @@ public interface QueryDAO extends SuperDAO{
     public boolean hasCashOrder(int orderId) throws ClassNotFoundException, SQLException;
     public CustomOrderDTO readOrder(int orderId) throws ClassNotFoundException, SQLException;
 //    public ArrayList<CustomOrderDTO> readOrdersByDate(Date date)throws ClassNotFoundException, SQLException;
-//    public ArrayList<OrderItemDetailsDTO> readOrderItemDetails(int orderId) throws ClassNotFoundException, SQLException;
+    public ArrayList<OrderItemDetailsDTO> readOrderItemDetails(int orderId) throws ClassNotFoundException, SQLException;
     public ChequeDetailsDTO readChequeDetails(int orderId) throws ClassNotFoundException, SQLException;
 //    public ArrayList<Date> readOrderDates (Date from, String toDate) throws ClassNotFoundException, SQLException;
     public int readSalesQty(Date date, String itemCode) throws ClassNotFoundException, SQLException;
+    public boolean hasOrderEmptyBottleDetailsFor(int orderId) throws ClassNotFoundException, SQLException;    
     
     // Credit Sales Related Queries
     

@@ -11,12 +11,16 @@ import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
@@ -186,11 +190,13 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
 
                 BigDecimal balance = order.getTenderedCash().subtract(total).setScale(2, RoundingMode.HALF_UP);
                 lblBalance.setText(balance.toPlainString());
-                
+
             } else {
                 lblTenderedAmount.setText("-");
                 lblBalance.setText("-");
             }
+
+            btnEdit.setEnabled(!ctrlQuery.hasDayEndDone(parseDate(order.getOrderDate())));
 
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(SearchCashOrderContainer.class.getName()).log(Level.SEVERE, null, ex);
@@ -219,6 +225,16 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
 
         }
 
+    }
+
+    private Date parseDate(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return sdf.parse(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(SearchCashOrderContainer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     /**
@@ -250,7 +266,7 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
         lblChequeNumber = new javax.swing.JLabel();
         lblBank = new javax.swing.JLabel();
         lblBranch = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -369,11 +385,16 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
         lblBranch.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         lblBranch.setText("-");
 
-        jButton2.setBackground(new java.awt.Color(0, 204, 0));
-        jButton2.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
-        jButton2.setMnemonic('d');
-        jButton2.setText("Edit");
-        jButton2.setToolTipText("Click to edit the order");
+        btnEdit.setBackground(new java.awt.Color(0, 204, 0));
+        btnEdit.setFont(new java.awt.Font("Open Sans", 1, 14)); // NOI18N
+        btnEdit.setMnemonic('d');
+        btnEdit.setText("Edit");
+        btnEdit.setToolTipText("Click to edit the order");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -498,7 +519,7 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
                             .addComponent(jLabel5))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -520,7 +541,7 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(68, 68, 68)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(35, 35, 35)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -562,9 +583,18 @@ public class SearchCashOrderContainer extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        Main m = (Main) SwingUtilities.getWindowAncestor(this);
+        m.pnlContainer.removeAll();
+        EditCashSales pnlEditCashSales = new EditCashSales(this.orderId);
+        m.setExtenstion(pnlEditCashSales);
+        m.pnlContainer.add(pnlEditCashSales);
+        m.pnlContainer.updateUI();
+    }//GEN-LAST:event_btnEditActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;

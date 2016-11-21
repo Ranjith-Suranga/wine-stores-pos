@@ -16,5 +16,7 @@ import lk.ijse.winestores.dao.dto.OrderEmptyBottleDetailsDTO;
 public interface OrderEmptyBottleDetailsDAO extends SuperDAO{
     
     public boolean create(OrderEmptyBottleDetailsDTO dto) throws ClassNotFoundException, SQLException;
+
+    public boolean deleteByOrderId(int orderId) throws ClassNotFoundException, SQLException;
     
 }

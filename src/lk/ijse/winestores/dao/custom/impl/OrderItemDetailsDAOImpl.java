@@ -66,4 +66,12 @@ public class OrderItemDetailsDAOImpl implements OrderItemDetailsDAO {
         }
     }
 
+    @Override
+    public boolean deleteByOrderId(int orderID) throws ClassNotFoundException, SQLException {
+        PreparedStatement pstm = connection.prepareStatement("DELETE FROM order_item_details WHERE order_id=?");
+        pstm.setInt(1, orderID);
+        int affectedRows = pstm.executeUpdate();
+        return (affectedRows > 0);
+    }
+
 }

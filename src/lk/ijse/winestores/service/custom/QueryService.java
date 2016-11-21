@@ -14,6 +14,7 @@ import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
 import lk.ijse.winestores.dao.dto.OrderEmptyBottleDetailsDTO;
+import lk.ijse.winestores.dao.dto.OrderItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
 import lk.ijse.winestores.service.SuperService;
@@ -54,6 +55,7 @@ public interface QueryService extends SuperService {
     public CreditOrderDTO getCreditOrder(int orderId) throws ClassNotFoundException, SQLException;
     public ArrayList<CreditOrderDTO> getCreditOrdersByCustomerName(String customerName) throws ClassNotFoundException, SQLException;
     public ArrayList<CreditOrderDTO> getCreditOrdersByDatePeriod(Date fromDate, Date toDate) throws ClassNotFoundException, SQLException;
+    public ArrayList<OrderItemDetailsDTO> getCashOrderItemDetails(int orderId) throws ClassNotFoundException, SQLException;
     
     // Initial Stock Taking Queries
     

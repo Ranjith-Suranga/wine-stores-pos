@@ -15,6 +15,7 @@ import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
 import lk.ijse.winestores.dao.dto.OrderEmptyBottleDetailsDTO;
+import lk.ijse.winestores.dao.dto.OrderItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
 import lk.ijse.winestores.service.ServiceFactory;
@@ -118,6 +119,11 @@ public class QueryControllerImpl implements QueryController{
     @Override
     public boolean hasDayEndDone(Date date) throws ClassNotFoundException, SQLException{
         return queryService.hasDayEndDone(date);
+    }
+
+    @Override
+    public ArrayList<OrderItemDetailsDTO> getCashOrderItemDetails(int orderId) throws ClassNotFoundException, SQLException {
+        return queryService.getCashOrderItemDetails(orderId);
     }
     
 }

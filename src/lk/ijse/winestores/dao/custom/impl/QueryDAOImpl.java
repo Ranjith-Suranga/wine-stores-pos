@@ -476,7 +476,6 @@ public class QueryDAOImpl implements QueryDAO {
 //                hasDayEndDone = false;
 //            }
 //        }
-
         connection.close();
 
         return hasDayEndDone;
@@ -539,37 +538,38 @@ public class QueryDAOImpl implements QueryDAO {
 //        
 //    }
 //
-//    @Override
-//    public ArrayList<OrderItemDetailsDTO> readOrderItemDetails(int orderId) throws ClassNotFoundException, SQLException {
-//
-//        ArrayList<OrderItemDetailsDTO> al = null;
-//        
-//        Connection connection = this.getConnection();
-//        
-//        String sql = "SELECT * FROM order_item_details WHERE order_id=?;";
-//        PreparedStatement pstm = connection.prepareStatement(sql);
-//        pstm.setInt(1, orderId);
-//
-//        ResultSet rst = pstm.executeQuery();
-//        
-//        while(rst.next()){
-//            if (al == null){
-//                al = new ArrayList<>();
-//            }
-//            OrderItemDetailsDTO dto = new OrderItemDetailsDTO(
-//                    rst.getString(1),
-//                    rst.getString(2),
-//                    rst.getString(3),
-//                    rst.getInt(4),
-//                    rst.getDouble(5));
-//            al.add(dto);
-//        }
-//        
-//        connection.close();
-//        
-//        return al;          
-//        
-//    }
+    @Override
+    public ArrayList<OrderItemDetailsDTO> readOrderItemDetails(int orderId) throws ClassNotFoundException, SQLException {
+
+        ArrayList<OrderItemDetailsDTO> al = null;
+
+        Connection connection = this.getConnection();
+
+        String sql = "SELECT * FROM order_item_details WHERE order_id=?;";
+        PreparedStatement pstm = connection.prepareStatement(sql);
+        pstm.setInt(1, orderId);
+
+        ResultSet rst = pstm.executeQuery();
+
+        while (rst.next()) {
+            if (al == null) {
+                al = new ArrayList<>();
+            }
+            OrderItemDetailsDTO dto = new OrderItemDetailsDTO(
+                    rst.getString(1),
+                    rst.getString(2),
+                    rst.getString(3),
+                    rst.getInt(4),
+                    rst.getDouble(5));
+            al.add(dto);
+        }
+
+        connection.close();
+
+        return al;
+
+    }
+
     @Override
     public DayEndDTO readDayEnd(Date date, String itemCode) throws ClassNotFoundException, SQLException {
 
@@ -675,6 +675,23 @@ public class QueryDAOImpl implements QueryDAO {
 
         return qty;
 
+    }
+
+    @Override
+    public boolean hasOrderEmptyBottleDetailsFor(int orderId) throws ClassNotFoundException, SQLException {
+        
+        boolean success = false;
+        
+        Connection connection = this.getConnection();
+        
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM order_empty_bottle_details WHERE order_id=?");
+        pstm.setInt(1, orderId);
+        ResultSet rst = pstm.executeQuery();
+        success = rst.next();
+        
+        connection.close();
+        
+        return success;
     }
 
 }

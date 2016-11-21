@@ -17,6 +17,8 @@ public interface OrderItemDetailsDAO extends SuperDAO{
     
     public boolean create(OrderItemDetailsDTO dto)throws ClassNotFoundException, SQLException;
     
+    public boolean deleteByOrderId(int orderID)throws ClassNotFoundException, SQLException;
+    
     public int readOrderItemDetailsCount(String itemCode) throws ClassNotFoundException, SQLException;
     
 }

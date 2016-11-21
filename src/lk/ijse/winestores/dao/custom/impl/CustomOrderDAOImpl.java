@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lk.ijse.winestores.dao.custom.CustomOrderDAO;
@@ -59,6 +60,18 @@ public class CustomOrderDAOImpl implements CustomOrderDAO{
             return rstKeys.getString(1);
         }
         return null;
+    }
+
+    @Override
+    public boolean update(CustomOrderDTO dto) throws ClassNotFoundException, SQLException {
+        PreparedStatement pstm = connection.prepareStatement("UPDATE custom_order SET order_date=?, made_by=?, total=?, payment_id=?, tendered_cash=? WHERE order_id=?");
+        pstm.setObject(1, dto.getOrderDate());
+        pstm.setString(2, dto.getMadeBy());
+        pstm.setDouble(3, dto.getTotal());
+        pstm.setString(4, dto.getPaymentId());
+        pstm.setBigDecimal(5, dto.getTenderedCash());
+        pstm.setObject(6, dto.getOrderId());
+        return (pstm.executeUpdate()> 0);
     }
     
 }

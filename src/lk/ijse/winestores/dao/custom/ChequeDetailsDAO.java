@@ -16,5 +16,7 @@ import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
 public interface ChequeDetailsDAO extends SuperDAO{
     
     public boolean create(ChequeDetailsDTO dto) throws ClassNotFoundException, SQLException;
+
+    public boolean deleteByOrderId(int orderId) throws ClassNotFoundException, SQLException;
     
 }

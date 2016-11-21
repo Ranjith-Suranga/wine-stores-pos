@@ -53,4 +53,11 @@ public class ChequeDetailsDAOImpl implements ChequeDetailsDAO {
         return (pstm.executeUpdate() != 0);
     }
 
+    @Override
+    public boolean deleteByOrderId(int orderId) throws ClassNotFoundException, SQLException {
+        PreparedStatement pstm = connection.prepareStatement("DELETE FROM cheque_details WHERE order_id=?");
+        pstm.setInt(1, orderId);
+        return (pstm.executeUpdate() != 0);
+    }
+
 }

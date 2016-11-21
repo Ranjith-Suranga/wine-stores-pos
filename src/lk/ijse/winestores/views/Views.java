@@ -65,7 +65,6 @@ public class Views extends javax.swing.JPanel {
         btnInitialStockTakingReport = new javax.swing.JButton();
         btnSearchOrder = new javax.swing.JButton();
         btnIssueOrder = new javax.swing.JButton();
-        btnSearchOrder1 = new javax.swing.JButton();
         btnDayEndReports = new javax.swing.JButton();
         btnMonthEndReports = new javax.swing.JButton();
 
@@ -104,14 +103,6 @@ public class Views extends javax.swing.JPanel {
         btnIssueOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIssueOrderActionPerformed(evt);
-            }
-        });
-
-        btnSearchOrder1.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnSearchOrder1.setText("Search Cash Order");
-        btnSearchOrder1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchOrder1ActionPerformed(evt);
             }
         });
 
@@ -155,11 +146,6 @@ public class Views extends javax.swing.JPanel {
                                     .addComponent(btnDayEndReports, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(232, 232, 232)
-                    .addComponent(btnSearchOrder1)
-                    .addContainerGap(442, Short.MAX_VALUE)))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDayEndReports, btnItemMasterFullReport, btnSearchOrder});
@@ -185,11 +171,6 @@ public class Views extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addContainerGap(27, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(21, 21, 21)
-                    .addComponent(btnSearchOrder1)
-                    .addContainerGap(633, Short.MAX_VALUE)))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnItemMasterFullReport, btnSearchOrder});
@@ -303,10 +284,6 @@ public class Views extends javax.swing.JPanel {
         m.pnlContainer.updateUI();
     }//GEN-LAST:event_btnIssueOrderActionPerformed
 
-    private void btnSearchOrder1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchOrder1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSearchOrder1ActionPerformed
-
     private void btnDayEndReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDayEndReportsActionPerformed
         DayEndReports dayEnd = new DayEndReports((Frame) SwingUtilities.getWindowAncestor(this), true);
         dayEnd.setVisible(true);
@@ -319,7 +296,6 @@ public class Views extends javax.swing.JPanel {
     private javax.swing.JButton btnItemMasterFullReport;
     private javax.swing.JButton btnMonthEndReports;
     private javax.swing.JButton btnSearchOrder;
-    private javax.swing.JButton btnSearchOrder1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

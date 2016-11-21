@@ -15,6 +15,7 @@ import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 import lk.ijse.winestores.dao.dto.CustomerDTO;
 import lk.ijse.winestores.dao.dto.EmptyBottleDTO;
 import lk.ijse.winestores.dao.dto.OrderEmptyBottleDetailsDTO;
+import lk.ijse.winestores.dao.dto.OrderItemDetailsDTO;
 import lk.ijse.winestores.dao.dto.SubCategoryDTO;
 import lk.ijse.winestores.dao.dto.SupplierOrderDTO;
 
@@ -51,6 +52,7 @@ public interface QueryController extends SuperController{
     
     public boolean hasCashOrder(int orderId) throws ClassNotFoundException, SQLException;
     public CustomOrderDTO getCashOrder(int orderId) throws ClassNotFoundException, SQLException;
+    public ArrayList<OrderItemDetailsDTO> getCashOrderItemDetails(int orderId) throws ClassNotFoundException, SQLException;
     public ChequeDetailsDTO getChequeDetails(int orderId) throws ClassNotFoundException, SQLException;
     
     // Credit Sales Related Queries

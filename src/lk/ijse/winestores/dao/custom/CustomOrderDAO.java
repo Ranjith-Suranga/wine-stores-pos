@@ -16,5 +16,7 @@ import lk.ijse.winestores.dao.dto.CustomOrderDTO;
 public interface CustomOrderDAO extends SuperDAO{
     
     public String create(CustomOrderDTO dto)throws ClassNotFoundException, SQLException;
+
+    public boolean update(CustomOrderDTO dto) throws ClassNotFoundException, SQLException;
     
 }

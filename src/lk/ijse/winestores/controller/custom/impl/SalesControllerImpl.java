@@ -39,5 +39,10 @@ public class SalesControllerImpl implements SalesController{
     public boolean saveCreditSale(CreditOrderDTO order, ArrayList<CreditOrderItemDetailsDTO> orderItemDetails) throws ClassNotFoundException, SQLException{
         return salesService.saveCreditSale(order, orderItemDetails);
     }
+
+    @Override
+    public boolean updateCashSale(CustomOrderDTO customOrder, ArrayList<OrderItemDetailsDTO> orderItemDetails, ArrayList<OrderEmptyBottleDetailsDTO> orderEmptyBottleDetails, ChequeDetailsDTO chequeDetails) throws ClassNotFoundException, SQLException {
+        return salesService.updateCashSale(customOrder, orderItemDetails, orderEmptyBottleDetails, chequeDetails);
+    }
     
 }

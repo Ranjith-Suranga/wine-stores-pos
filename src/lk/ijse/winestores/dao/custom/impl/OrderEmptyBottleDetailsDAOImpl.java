@@ -54,5 +54,13 @@ public class OrderEmptyBottleDetailsDAOImpl implements OrderEmptyBottleDetailsDA
         pstm.setObject(4, dto.getTotal());
         return (pstm.executeUpdate()!=0);
     }
+
+    @Override
+    public boolean deleteByOrderId(int orderId) throws ClassNotFoundException, SQLException {
+        PreparedStatement pstm = connection.prepareStatement("DELETE FROM order_empty_bottle_details WHERE order_id=?");
+        pstm.setInt(1, orderId);
+        int affectedRows = pstm.executeUpdate();
+        return (affectedRows > 0);
+    }
     
 }

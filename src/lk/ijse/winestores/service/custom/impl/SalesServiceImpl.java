@@ -25,6 +25,7 @@ import lk.ijse.winestores.dao.custom.CustomerDAO;
 import lk.ijse.winestores.dao.custom.ItemDetailsDAO;
 import lk.ijse.winestores.dao.custom.OrderEmptyBottleDetailsDAO;
 import lk.ijse.winestores.dao.custom.OrderItemDetailsDAO;
+import lk.ijse.winestores.dao.custom.QueryDAO;
 import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
 import lk.ijse.winestores.dao.dto.CreditOrderDTO;
 import lk.ijse.winestores.dao.dto.CreditOrderItemDetailsDTO;
@@ -49,6 +50,7 @@ public class SalesServiceImpl implements SalesService {
 
     private Connection connection;                                  // For transactions
     private ItemDetailsDAO itemDetailsDAO;
+    private QueryDAO daoQuery;
 
     // For cash orders
     private CustomOrderDAO customOrderDAO;
@@ -80,6 +82,8 @@ public class SalesServiceImpl implements SalesService {
         creditOrderItemDetailsDAO = (CreditOrderItemDetailsDAO) DAOFactory.getInstance().getDAO(SuperDAO.DAOType.CREDIT_ORDER_ITEM_DETAILS);
         creditOrderEmptyBottleDetailsDAO = (CreditOrderEmptyBottleDetailsDAO) DAOFactory.getInstance().getDAO(SuperDAO.DAOType.CREDIT_ORDER_EMPTY_BOTTLE_DETAILS);
         customerDAO = (CustomerDAO) DAOFactory.getInstance().getDAO(SuperDAO.DAOType.CUSTOMER);
+
+        daoQuery = (QueryDAO) DAOFactory.getInstance().getDAO(SuperDAO.DAOType.QUERY);
     }
 
     @Override
@@ -103,10 +107,10 @@ public class SalesServiceImpl implements SalesService {
             boolean success = orderItemDetailsDAO.create(dto);
             int currentQty = itemDetailsDAO.readCurrentQty(dto.getItemCode());
             currentQty = currentQty - dto.getQty();
-            itemDetailsDAO.updateCurrentQty(connection, dto.getItemCode(), currentQty);
+            success = itemDetailsDAO.updateCurrentQty(connection, dto.getItemCode(), currentQty);
             if (!success) {
                 connection.rollback();
-                connection.setAutoCommit(false);
+                connection.setAutoCommit(true);
                 return false;
             }
         }
@@ -119,7 +123,7 @@ public class SalesServiceImpl implements SalesService {
                     boolean success = orderEmptyBottleDetailsDAO.create(dto);
                     if (!success) {
                         connection.rollback();
-                        connection.setAutoCommit(false);
+                        connection.setAutoCommit(true);
                         return false;
                     }
                 }
@@ -132,7 +136,7 @@ public class SalesServiceImpl implements SalesService {
             boolean success = chequeDetailsDAO.create(chequeDetails);
             if (!success) {
                 connection.rollback();
-                connection.setAutoCommit(false);
+                connection.setAutoCommit(true);
                 return false;
             }
         }
@@ -141,29 +145,29 @@ public class SalesServiceImpl implements SalesService {
         connection.commit();
         // Ending the transaction
         connection.setAutoCommit(true);
-        
+
         // Everything is good, so let's print the bill
         try {
             JasperReport compiledReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/winestores/reports/CashSaleBill.jasper"));
-            
+
             HashMap<String, Object> parms = new HashMap<>();
             parms.put("orderId", orderID);
-            
+
             JasperPrint filledReport = JasperFillManager.fillReport(compiledReport, parms, connection);
             JasperPrintManager.printReport(filledReport, false);
-            
+
         } catch (JRException ex) {
             Logger.getLogger(SalesServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            
+
             ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
             JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
                     "Sorry, order can not be printed, please check the printer.",
                     "Printing Failed",
                     JOptionPane.ERROR_MESSAGE,
-                    icon);            
-            
+                    icon);
+
         }
-        
+
         // And returns our success :)
         return true;
     }
@@ -182,7 +186,6 @@ public class SalesServiceImpl implements SalesService {
 //            connection.setAutoCommit(false);
 //            return false;
 //        }
-
         // Saving Order
         String orderID = creditOrderDAO.create(order);
 
@@ -201,7 +204,7 @@ public class SalesServiceImpl implements SalesService {
             //itemDetailsDAO.updateCurrentQty(connection, dto.getItemCode(), currentQty);
             if (!success) {
                 connection.rollback();
-                connection.setAutoCommit(false);
+                connection.setAutoCommit(true);
                 return false;
             }
         }
@@ -220,35 +223,175 @@ public class SalesServiceImpl implements SalesService {
 //                }
 //            }
 //        }
-
         // It's time to commit
         connection.commit();
         // Ending the transaction
         connection.setAutoCommit(true);
-        
+
         // Everything is good, so let's print the issue order
         try {
             JasperReport compiledReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/winestores/reports/CreditSaleBill.jasper"));
-            
+
             HashMap<String, Object> parms = new HashMap<>();
             parms.put("orderId", orderID);
-            
+
             JasperPrint filledReport = JasperFillManager.fillReport(compiledReport, parms, connection);
             JasperPrintManager.printReport(filledReport, false);
-            
+
         } catch (JRException ex) {
             Logger.getLogger(SalesServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            
+
             ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
             JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
                     "Sorry, issue order can not be printed, please check the printer.",
                     "Printing Failed",
                     JOptionPane.ERROR_MESSAGE,
-                    icon);            
-            
+                    icon);
+
+        }
+
+        // And returns our success :)
+        return true;
+
+    }
+
+    @Override
+    public boolean updateCashSale(CustomOrderDTO customOrder, ArrayList<OrderItemDetailsDTO> orderItemDetails, ArrayList<OrderEmptyBottleDetailsDTO> orderEmptyBottleDetails, ChequeDetailsDTO chequeDetails) throws ClassNotFoundException, SQLException {
+
+        boolean success = false;
+
+        // Setting the transaction
+        connection.setAutoCommit(false);
+
+        /*
+         * First we need to remove few details corresponding to this order
+         * Because we are going to write a fresh details regarding this order
+         * We are going to delete followings
+         * (1) Order Item Details 
+         *     While doing this it is important to restore the qty, beacause what we are actually
+         *     doing here is "Return Sales" :)
+         * (2) Empty Bottle Details
+         * (3) Cheque Details
+         */
+        // (1)
+        // Restoring the qty
+        ArrayList<OrderItemDetailsDTO> oldOrderItemDetails = daoQuery.readOrderItemDetails(Integer.parseInt(customOrder.getOrderId()));
+        for (OrderItemDetailsDTO oldOrderItemDetail : oldOrderItemDetails) {
+
+            int currentQty = itemDetailsDAO.readCurrentQty(oldOrderItemDetail.getItemCode());
+            currentQty = currentQty + oldOrderItemDetail.getQty();
+            success = itemDetailsDAO.updateCurrentQty(connection, oldOrderItemDetail.getItemCode(), currentQty);
+            if (!success) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+
+        }
+
+        // Now it is time to delete the order item details
+        success = orderItemDetailsDAO.deleteByOrderId(Integer.parseInt(customOrder.getOrderId()));
+        if (!success) {
+            connection.rollback();
+            connection.setAutoCommit(true);
+            return false;
+        }
+
+        // (2) Deleting empty bottle details
+        if (daoQuery.hasOrderEmptyBottleDetailsFor(Integer.parseInt(customOrder.getOrderId()))) {
+            success = orderEmptyBottleDetailsDAO.deleteByOrderId(Integer.parseInt(customOrder.getOrderId()));
+            if (!success) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+        }
+
+        // (3) Deleteing cheque details
+        if (daoQuery.readChequeDetails(Integer.parseInt(customOrder.getOrderId())) != null) {
+            success = chequeDetailsDAO.deleteByOrderId(Integer.parseInt(customOrder.getOrderId()));
+            if (!success) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+        }
+
+        // Then we update the current order
+        success = customOrderDAO.update(customOrder);
+        if (!success) {
+            connection.rollback();
+            connection.setAutoCommit(true);
+            return false;
+        }
+
+        // Then, Saving OrderItemDetails & Updating the Qty
+        for (OrderItemDetailsDTO dto : orderItemDetails) {
+            success = orderItemDetailsDAO.create(dto);
+            int currentQty = itemDetailsDAO.readCurrentQty(dto.getItemCode());
+            currentQty = currentQty - dto.getQty();
+            success = itemDetailsDAO.updateCurrentQty(connection, dto.getItemCode(), currentQty);
+            if (!success) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+        }
+
+        // Then, Saving OrderEmptyBottleDetails
+        if (orderEmptyBottleDetails != null) {
+            for (OrderEmptyBottleDetailsDTO dto : orderEmptyBottleDetails) {
+                if (dto.getQty() != 0) {
+                    dto.setOrderId(customOrder.getOrderId());
+                    success = orderEmptyBottleDetailsDAO.create(dto);
+                    if (!success) {
+                        connection.rollback();
+                        connection.setAutoCommit(true);
+                        return false;
+                    }
+                }
+            }
         }        
         
-        // And returns our success :)
+        // Then, Saving ChequeDetails
+        if (chequeDetails != null) {
+//            chequeDetails.setOrderId(orderID);
+            success = chequeDetailsDAO.create(chequeDetails);
+            if (!success) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+        }        
+        
+        // It's time to commit
+        connection.commit();
+        // Ending the transaction
+        connection.setAutoCommit(true);
+
+        // Everything seems to be good so far, so let's print the updated bill
+        try {
+            JasperReport compiledReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/winestores/reports/CashSaleBill.jasper"));
+
+            HashMap<String, Object> parms = new HashMap<>();
+            parms.put("orderId", customOrder.getOrderId());
+
+            JasperPrint filledReport = JasperFillManager.fillReport(compiledReport, parms, connection);
+            JasperPrintManager.printReport(filledReport, false);
+
+        } catch (JRException ex) {
+            Logger.getLogger(SalesServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+
+            ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+            JOptionPane.showMessageDialog(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow(),
+                    "Sorry, order can not be printed, please check the printer.",
+                    "Printing Failed",
+                    JOptionPane.ERROR_MESSAGE,
+                    icon);
+
+        }
+
+        // And eventually let's return our success :)
         return true;
 
     }
