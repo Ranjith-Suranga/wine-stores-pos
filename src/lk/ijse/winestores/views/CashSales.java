@@ -1375,7 +1375,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
         QueryController ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
         try {
             if (ctrlQuery.hasDayEndDone(new Date())){
-                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/close.png"));
                 JOptionPane.showMessageDialog(
                         SwingUtilities.getWindowAncestor(this),
                         "Sorry, further sales can not be done today since the day end has been already done.",
