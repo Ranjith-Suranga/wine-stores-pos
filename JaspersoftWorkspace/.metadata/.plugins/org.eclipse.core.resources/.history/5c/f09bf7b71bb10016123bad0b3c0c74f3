@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-22T06:28:07 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GRNSummaryReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e7dc1b1f-7233-4992-baea-0bcbbd61a238">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="d2luZV9zdG9yZXMuZ3JuIEFTICwzMiwzMyw5MzMxNjg1MS05YzdiLTQxOTEtOTIwMS1jMGJkYTAx&#xA;YWVhYTA7d2luZV9zdG9yZXMuc3VwcGxpZXIgQVMgLDI5NiwyNDIsOGEyNmNlMjMtZmUwNS00NDdl&#xA;LWE4MmMtZWQxYTU4YTFkZjdjO3dpbmVfc3RvcmVzLml0ZW1fYmF0Y2hfZ3JuX2RldGFpbCBBUyAs&#xA;NDQzLDE1LGJjOWVhNGY3LWZiZGItNDVmOC1hMzUzLTVhMDA0OTVhYzk2MTt3aW5lX3N0b3Jlcy5i&#xA;YXRjaCBBUyAsMjU0LDg1LGI4OWQyMjc0LWJmYTctNGYwYS1iNTE0LTZjMDUyM2NmODk5ODs="/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<parameter name="txtFrom" class="java.sql.Date"/>
+	<parameter name="txtTo" class="java.sql.Date"/>
+	<queryString>
+		<![CDATA[SELECT wine_stores.grn.grn_id,
+	wine_stores.grn.grn_date,
+	wine_stores.grn.invoice_date,
+	wine_stores.grn.edit_date_time,
+	wine_stores.grn.invoice_id,
+	wine_stores.item_batch_grn_detail.buying_price,
+	wine_stores.supplier.name
+FROM wine_stores.item_batch_grn_detail
+	INNER JOIN wine_stores.batch ON 
+	 wine_stores.item_batch_grn_detail.batch_id = wine_stores.batch.batch_id 
+	INNER JOIN wine_stores.grn ON 
+	 wine_stores.batch.grn_id = wine_stores.grn.grn_id 
+	INNER JOIN wine_stores.supplier ON 
+	 wine_stores.grn.supplier_id = wine_stores.supplier.supplier_id
+	 WHERE wine_stores.grn.grn_date BETWEEN $P{txtFrom} AND $P{txtTo}]]>
+	</queryString>
+	<field name="grn_id" class="java.lang.String"/>
+	<field name="grn_date" class="java.sql.Date"/>
+	<field name="invoice_date" class="java.sql.Date"/>
+	<field name="edit_date_time" class="java.sql.Timestamp"/>
+	<field name="invoice_id" class="java.lang.String"/>
+	<field name="buying_price" class="java.math.BigDecimal"/>
+	<field name="name" class="java.lang.String"/>
+	<group name="BySupplier">
+		<groupExpression><![CDATA[$F{name}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement mode="Opaque" x="-20" y="0" width="594" height="20" forecolor="#FFFFFF" backcolor="#B5B5B5" uuid="1c1b7a79-cf9a-4242-aa90-af0f36e0a1b4"/>
+					<box topPadding="0" leftPadding="20" bottomPadding="0" rightPadding="0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Open Sans" size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90" splitType="Stretch">
+			<textField>
+				<reportElement x="415" y="70" width="140" height="20" uuid="bb2e902a-83f3-49a8-b791-50939a84ceaf"/>
+				<textElement textAlignment="Right">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["To : " + $P{txtTo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="70" width="140" height="20" uuid="7677e891-335c-418c-bc40-ea733cd41dea"/>
+				<textElement>
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["From : " + $P{txtFrom}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="20" uuid="f9eb53ef-e6e4-4d17-90bd-8c72f37ad5d1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRN Summary Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="40" uuid="30b54eda-d6dc-47ae-b5b6-b6e82eb43bc9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAMPELLA WINE STORES
+]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="40" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+</jasperReport>

@@ -47,7 +47,7 @@ public class Test extends javax.swing.JFrame {
         
         BigDecimal a = new BigDecimal("10.126");
         BigDecimal b = a.add(new BigDecimal(1), new MathContext(4, RoundingMode.HALF_UP));
-
+//        b.multiply(a)
         System.out.println(b);
         
 //        System.out.println(b.);

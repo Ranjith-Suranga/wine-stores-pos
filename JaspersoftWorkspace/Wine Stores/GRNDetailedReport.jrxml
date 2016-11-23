@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-23T09:35:14 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GRNDetailedReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0e241dd4-d09c-4aa7-b4bb-20ad2770065c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="grnId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT wine_stores.item.item_name,
+	wine_stores.main_sub_item.item_code,
+	wine_stores.item_batch_grn_detail.batch_qty,
+	wine_stores.item_batch_grn_detail.buying_price,
+	wine_stores.supplier.name,
+	wine_stores.grn.grn_id,
+	wine_stores.grn.invoice_id,
+	wine_stores.grn.invoice_date,
+	wine_stores.grn.grn_date,
+	wine_stores.grn.edit_date_time
+FROM wine_stores.item_batch_grn_detail
+	INNER JOIN wine_stores.batch ON 
+	 wine_stores.item_batch_grn_detail.batch_id = wine_stores.batch.batch_id 
+	INNER JOIN wine_stores.grn ON 
+	 wine_stores.batch.grn_id = wine_stores.grn.grn_id 
+	INNER JOIN wine_stores.supplier ON 
+	 wine_stores.grn.supplier_id = wine_stores.supplier.supplier_id 
+	INNER JOIN wine_stores.main_sub_item ON 
+	 wine_stores.item_batch_grn_detail.main_sub_item_id = wine_stores.main_sub_item.main_sub_item_id 
+	INNER JOIN wine_stores.item ON 
+	 wine_stores.main_sub_item.item_id = wine_stores.item.item_id WHERE
+	 wine_stores.grn.grn_id = $P{grnId}]]>
+	</queryString>
+	<field name="item_name" class="java.lang.String"/>
+	<field name="item_code" class="java.lang.String"/>
+	<field name="batch_qty" class="java.lang.Integer"/>
+	<field name="buying_price" class="java.math.BigDecimal"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="grn_id" class="java.lang.String"/>
+	<field name="invoice_id" class="java.lang.String"/>
+	<field name="invoice_date" class="java.sql.Date"/>
+	<field name="grn_date" class="java.sql.Date"/>
+	<field name="edit_date_time" class="java.sql.Timestamp"/>
+	<variable name="total_cost_price" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{buying_price}.multiply(new BigDecimal($F{batch_qty})).setScale(2, RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="final_total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{total_cost_price}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="68" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="40" uuid="aebf5d49-e89e-40f7-ab3d-01c73a537197"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAMPELLA WINE STORES
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="20" uuid="2038b0c8-7db9-48de-ad01-fce973172947"/>
+				<textElement textAlignment="Center">
+					<font fontName="Open Sans" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRN Detailed Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="68" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="110" height="30" uuid="d28fe74c-4650-4208-93a2-9ede06f8f429"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["GRN ID : " + $F{grn_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="31" width="110" height="30" uuid="8020c7a8-7647-46e9-be83-64c6dfcc690c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Invoice ID : " + $F{invoice_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="31" width="180" height="30" uuid="4b0076c7-0a88-44c4-a4c0-7bc2d16dfaa5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Invoice Date : " + $F{invoice_date}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="1" width="180" height="30" uuid="e75afbb9-581e-4b53-b67e-1fc2056e62cb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["GRN Date : " + $F{grn_date}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="30" width="264" height="30" uuid="bac0afe0-9a8e-47df-ac61-1d94a711943b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Authorized Date : " + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format($F{edit_date_time})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="1" width="264" height="30" uuid="0a73d09d-ff8b-484e-b6ff-32f364f69b5b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Supplier : " + $F{name}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-1" y="67" width="560" height="1" uuid="2751e501-a609-423e-9892-b58f420992a5"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="70" height="30" uuid="e153bfbc-fda8-45b4-986a-b3e40552a7fb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="0" width="256" height="30" uuid="b121eb4b-afc8-47da-83da-30db9815622a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="0" width="44" height="30" uuid="1889e82f-0bb4-484d-bf6b-3766e48922ec"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="0" width="79" height="30" uuid="30ec46f0-c13c-4bd8-a573-294a982b1b7a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cost Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="0" width="104" height="30" uuid="512f5e85-f7bd-4a99-84c1-d4906140b190"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Cost Price]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="38" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="70" height="30" uuid="6172d8ba-4bae-4943-98c7-3753f2635b95"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="256" height="30" uuid="c71fdf33-1fc2-4df5-8604-a654a111c329"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="0" width="44" height="30" uuid="9ca55b7d-f529-466c-965a-db9402d1d089"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{batch_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="371" y="0" width="79" height="30" uuid="f6367268-b0d4-4e91-8734-f1ac428fa0c4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{buying_price}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="451" y="0" width="104" height="30" uuid="7e932e9c-5817-4dd0-bc52-221ae5479c47"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_cost_price}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="30">
+			<staticText>
+				<reportElement x="327" y="0" width="123" height="30" uuid="95dd760f-975b-4cb7-a338-a0aa1c032294"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Final Total :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="0" width="104" height="30" uuid="3bee26c3-3ece-4a10-a09b-7a37c942e3a0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Double" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{final_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-23T08:16:32 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GRNSummaryReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e7dc1b1f-7233-4992-baea-0bcbbd61a238">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<parameter name="txtFrom" class="java.sql.Date"/>
+	<parameter name="txtTo" class="java.sql.Date"/>
+	<queryString>
+		<![CDATA[SELECT wine_stores.supplier.name,
+	wine_stores.supplier_order.order_id,
+	wine_stores.supplier_order.order_date,
+	wine_stores.supplier_order.order_total
+FROM wine_stores.supplier_order
+	INNER JOIN wine_stores.supplier ON 
+	 wine_stores.supplier_order.supplier_id = wine_stores.supplier.supplier_id WHERE
+	 wine_stores.supplier_order.order_date BETWEEN $P{txtFrom} AND $P{txtTo}]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<field name="order_id" class="java.lang.Integer"/>
+	<field name="order_date" class="java.sql.Date"/>
+	<field name="order_total" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90" splitType="Stretch">
+			<textField>
+				<reportElement x="415" y="70" width="140" height="20" uuid="bb2e902a-83f3-49a8-b791-50939a84ceaf"/>
+				<textElement textAlignment="Right">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["To : " + $P{txtTo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="70" width="140" height="20" uuid="7677e891-335c-418c-bc40-ea733cd41dea"/>
+				<textElement>
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["From : " + $P{txtFrom}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="20" uuid="f9eb53ef-e6e4-4d17-90bd-8c72f37ad5d1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Supplier Order Summary Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="40" uuid="30b54eda-d6dc-47ae-b5b6-b6e82eb43bc9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAMPELLA WINE STORES
+]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="1" width="70" height="30" uuid="be1825fc-8a2d-4806-b5e3-33da5747d349"/>
+				<textElement textAlignment="Left">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="0" width="96" height="30" uuid="604194be-2a6c-4b60-ade7-8ae01115b1f4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="1" width="304" height="30" uuid="80d2a946-88fa-4ce7-869b-933d4cb36a7b"/>
+				<textElement>
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Supplier Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="470" y="0" width="84" height="30" uuid="dee2a926-479d-44bb-88f1-c58558d387cc"/>
+				<textElement textAlignment="Right">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="70" height="30" uuid="fe0716ee-b133-4c6c-919d-e2afbfda587e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="-1" width="304" height="30" uuid="3f394109-de63-4aa2-9daa-9926a77e985e"/>
+				<textElement>
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="-1" width="84" height="30" uuid="96d1fe93-195c-414c-9914-cb932ca936cf"/>
+				<textElement textAlignment="Right">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="374" y="-1" width="96" height="30" uuid="4b5b9053-76a1-4d64-b4db-25c1f2d6aaa0"/>
+				<textElement textAlignment="Center">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_date}.toString()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

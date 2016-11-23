@@ -1791,6 +1791,25 @@ public class GRN extends javax.swing.JPanel implements Extension {
     }//GEN-LAST:event_txtSellingPriceFocusGained
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        
+        QueryController ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+        try {
+            if (ctrlQuery.hasDayEndDone(new Date())){
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/close.png"));
+                JOptionPane.showMessageDialog(
+                        SwingUtilities.getWindowAncestor(this),
+                        "Sorry, GRN related functions are disabled for today since the day end has been already done.",
+                        "No more sales for today",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+                return;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        }         
+        
         pnlProtectedView.setVisible(false);
         this.enableEditing(true);
         btnSave.setEnabled(true);

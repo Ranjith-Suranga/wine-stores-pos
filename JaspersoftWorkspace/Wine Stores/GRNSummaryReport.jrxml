@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-23T07:44:46 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GRNSummaryReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e7dc1b1f-7233-4992-baea-0bcbbd61a238">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<parameter name="txtFrom" class="java.sql.Date"/>
+	<parameter name="txtTo" class="java.sql.Date"/>
+	<queryString>
+		<![CDATA[SELECT wine_stores.supplier.name,
+	wine_stores.grn.grn_id,
+	wine_stores.grn.invoice_id,
+	wine_stores.grn.invoice_date,
+	wine_stores.grn.grn_date,
+	wine_stores.grn.edit_date_time
+FROM  wine_stores.grn
+	INNER JOIN wine_stores.supplier ON 
+	 wine_stores.grn.supplier_id = wine_stores.supplier.supplier_id  WHERE
+	 wine_stores.grn.grn_date BETWEEN $P{txtFrom} AND $P{txtTo}
+GROUP BY wine_stores.grn.grn_id
+ORDER BY wine_stores.supplier.name DESC]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<field name="grn_id" class="java.lang.String"/>
+	<field name="invoice_id" class="java.lang.String"/>
+	<field name="invoice_date" class="java.sql.Date"/>
+	<field name="grn_date" class="java.sql.Date"/>
+	<field name="edit_date_time" class="java.sql.Timestamp"/>
+	<group name="BySupplierName">
+		<groupExpression><![CDATA[$F{name}]]></groupExpression>
+		<groupHeader>
+			<band height="26">
+				<textField>
+					<reportElement mode="Opaque" x="-20" y="0" width="595" height="20" forecolor="#FFFFFF" backcolor="#B5B5B5" uuid="d0d6aa53-b033-45dd-9280-138daf031b71"/>
+					<box topPadding="0" leftPadding="20" bottomPadding="0" rightPadding="0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Open Sans" size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90" splitType="Stretch">
+			<textField>
+				<reportElement x="415" y="70" width="140" height="20" uuid="bb2e902a-83f3-49a8-b791-50939a84ceaf"/>
+				<textElement textAlignment="Right">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["To : " + $P{txtTo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="70" width="140" height="20" uuid="7677e891-335c-418c-bc40-ea733cd41dea"/>
+				<textElement>
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["From : " + $P{txtFrom}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="20" uuid="f9eb53ef-e6e4-4d17-90bd-8c72f37ad5d1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRN Summary Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="40" uuid="30b54eda-d6dc-47ae-b5b6-b6e82eb43bc9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAMPELLA WINE STORES
+]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="126" height="20" uuid="69ecfeb6-1f48-4e70-ad96-40f64fb08e55"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRN Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="0" width="80" height="20" uuid="73385eaf-818b-473f-ad40-6ba6522cae79"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRN ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="206" y="0" width="80" height="20" uuid="4bd8a89c-2ab9-4bb8-9b70-d91bc22cde40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="120" height="20" uuid="3d70e159-f117-47e8-9e46-5cb10c79e11c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="0" width="114" height="20" uuid="19b35888-8011-437b-9f5a-cdc1f58fd91d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Authorized Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="126" height="30" uuid="3e2ec198-19ee-4564-a2cf-a81a1c83d2b1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grn_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="0" width="80" height="30" uuid="98e099af-7d39-45d2-bfff-24e1522370c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grn_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="0" width="80" height="30" uuid="aaa6d7f8-0c29-404b-89ad-e073fb01c185"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{invoice_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="0" width="120" height="30" uuid="8791fc5b-4cf3-4fc6-8c34-923bfa6de422"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{invoice_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="114" height="30" uuid="5a89cde6-a764-434c-88c0-cdbf88fea7b9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{edit_date_time}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

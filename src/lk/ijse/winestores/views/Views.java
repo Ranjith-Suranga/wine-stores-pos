@@ -59,55 +59,140 @@ public class Views extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnItemMasterFullReport = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        btnInitialStockTakingReport = new javax.swing.JButton();
-        btnSearchOrder = new javax.swing.JButton();
-        btnIssueOrder = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        btnGRNSummaryReport = new javax.swing.JButton();
+        btnCreditSalesReports5 = new javax.swing.JButton();
+        btnGRNDetailReport = new javax.swing.JButton();
+        btnCreditSalesReports4 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        btnCreditSalesReports = new javax.swing.JButton();
+        btnCashSalesReports = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
         btnDayEndReports = new javax.swing.JButton();
         btnMonthEndReports = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        btnCreditSalesReports2 = new javax.swing.JButton();
+        btnItemMasterFullReport = new javax.swing.JButton();
+        btnInitialStockTakingReport = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        btnSupplierOrdersDetailRpt = new javax.swing.JButton();
+        btnSupplierOrdersSummaryRpt = new javax.swing.JButton();
+        btnSupplierOrderItemWiseRpt = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        btnSearchOrder = new javax.swing.JButton();
+        btnIssueOrder = new javax.swing.JButton();
+
+        jButton2.setText("jButton2");
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        btnItemMasterFullReport.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnItemMasterFullReport.setText("Item Master Full Report");
-        btnItemMasterFullReport.addActionListener(new java.awt.event.ActionListener() {
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "GRN Related Reports", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Open Sans", 0, 14))); // NOI18N
+
+        btnGRNSummaryReport.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnGRNSummaryReport.setText("GRN Summary Reports");
+        btnGRNSummaryReport.setPreferredSize(new java.awt.Dimension(0, 42));
+        btnGRNSummaryReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnItemMasterFullReportActionPerformed(evt);
+                btnGRNSummaryReportActionPerformed(evt);
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/images/under-construction.png"))); // NOI18N
+        btnCreditSalesReports5.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnCreditSalesReports5.setText("GRN Item Wise Reports");
+        btnCreditSalesReports5.setEnabled(false);
+        btnCreditSalesReports5.setPreferredSize(new java.awt.Dimension(0, 42));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lk/ijse/winestores/images/animated-working-on-it.gif"))); // NOI18N
-
-        btnInitialStockTakingReport.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnInitialStockTakingReport.setText("Initial Stock Taking Report");
-        btnInitialStockTakingReport.addActionListener(new java.awt.event.ActionListener() {
+        btnGRNDetailReport.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnGRNDetailReport.setText("GRN Detail Reports");
+        btnGRNDetailReport.setPreferredSize(new java.awt.Dimension(0, 42));
+        btnGRNDetailReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInitialStockTakingReportActionPerformed(evt);
+                btnGRNDetailReportActionPerformed(evt);
             }
         });
 
-        btnSearchOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnSearchOrder.setText("Searching Bills");
-        btnSearchOrder.addActionListener(new java.awt.event.ActionListener() {
+        btnCreditSalesReports4.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnCreditSalesReports4.setText("GRN Empty Bottle Reports");
+        btnCreditSalesReports4.setEnabled(false);
+        btnCreditSalesReports4.setPreferredSize(new java.awt.Dimension(0, 42));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCreditSalesReports4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCreditSalesReports5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnGRNDetailReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnGRNSummaryReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnGRNSummaryReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnGRNDetailReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCreditSalesReports5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCreditSalesReports4, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sales Related Reports", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Open Sans", 0, 14))); // NOI18N
+
+        btnCreditSalesReports.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnCreditSalesReports.setText("Credit Sales Summary Reports");
+        btnCreditSalesReports.setPreferredSize(new java.awt.Dimension(0, 42));
+        btnCreditSalesReports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchOrderActionPerformed(evt);
+                btnCreditSalesReportsActionPerformed(evt);
             }
         });
 
-        btnIssueOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
-        btnIssueOrder.setText("Searching Credit Issues");
-        btnIssueOrder.addActionListener(new java.awt.event.ActionListener() {
+        btnCashSalesReports.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnCashSalesReports.setText("Cash Sales Summary Reports");
+        btnCashSalesReports.setPreferredSize(new java.awt.Dimension(0, 42));
+        btnCashSalesReports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnIssueOrderActionPerformed(evt);
+                btnCashSalesReportsActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCreditSalesReports, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                    .addComponent(btnCashSalesReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnCashSalesReports, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCreditSalesReports, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Finalizing Reports", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Open Sans", 0, 14))); // NOI18N
 
         btnDayEndReports.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         btnDayEndReports.setText("Day End Reports");
+        btnDayEndReports.setPreferredSize(new java.awt.Dimension(0, 42));
         btnDayEndReports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDayEndReportsActionPerformed(evt);
@@ -117,6 +202,165 @@ public class Views extends javax.swing.JPanel {
         btnMonthEndReports.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
         btnMonthEndReports.setText("Month End Reports");
         btnMonthEndReports.setEnabled(false);
+        btnMonthEndReports.setPreferredSize(new java.awt.Dimension(0, 42));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDayEndReports, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                    .addComponent(btnMonthEndReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnDayEndReports, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMonthEndReports, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Stock Related Reports", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Open Sans", 0, 14))); // NOI18N
+
+        btnCreditSalesReports2.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnCreditSalesReports2.setText("Current Stock Report");
+        btnCreditSalesReports2.setEnabled(false);
+        btnCreditSalesReports2.setPreferredSize(new java.awt.Dimension(0, 42));
+
+        btnItemMasterFullReport.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnItemMasterFullReport.setText("Item Master Full Report");
+        btnItemMasterFullReport.setPreferredSize(new java.awt.Dimension(0, 42));
+        btnItemMasterFullReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnItemMasterFullReportActionPerformed(evt);
+            }
+        });
+
+        btnInitialStockTakingReport.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnInitialStockTakingReport.setText("Initial Stock Taking Report");
+        btnInitialStockTakingReport.setPreferredSize(new java.awt.Dimension(0, 42));
+        btnInitialStockTakingReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInitialStockTakingReportActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                    .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCreditSalesReports2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCreditSalesReports2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Supplier Orders Related Reports", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Open Sans", 0, 14))); // NOI18N
+
+        btnSupplierOrdersDetailRpt.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnSupplierOrdersDetailRpt.setText("Supplier Orders Detail Reports ");
+        btnSupplierOrdersDetailRpt.setEnabled(false);
+        btnSupplierOrdersDetailRpt.setPreferredSize(new java.awt.Dimension(0, 42));
+
+        btnSupplierOrdersSummaryRpt.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnSupplierOrdersSummaryRpt.setText("Supplier Orders Summary Reports");
+        btnSupplierOrdersSummaryRpt.setPreferredSize(new java.awt.Dimension(0, 42));
+        btnSupplierOrdersSummaryRpt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSupplierOrdersSummaryRptActionPerformed(evt);
+            }
+        });
+
+        btnSupplierOrderItemWiseRpt.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnSupplierOrderItemWiseRpt.setText("Supplier Orders Item Wise RPTs");
+        btnSupplierOrderItemWiseRpt.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnSupplierOrdersSummaryRpt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSupplierOrdersDetailRpt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSupplierOrderItemWiseRpt, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnSupplierOrdersSummaryRpt, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSupplierOrdersDetailRpt, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSupplierOrderItemWiseRpt, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search Sales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Open Sans", 0, 14))); // NOI18N
+
+        btnSearchOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnSearchOrder.setText("Searching Bills");
+        btnSearchOrder.setPreferredSize(new java.awt.Dimension(191, 42));
+        btnSearchOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchOrderActionPerformed(evt);
+            }
+        });
+
+        btnIssueOrder.setFont(new java.awt.Font("Open Sans", 0, 14)); // NOI18N
+        btnIssueOrder.setText("Searching Credit Issues");
+        btnIssueOrder.setPreferredSize(new java.awt.Dimension(191, 42));
+        btnIssueOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIssueOrderActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSearchOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnSearchOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnIssueOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -125,58 +369,42 @@ public class Views extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel2))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnMonthEndReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnSearchOrder)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnDayEndReports, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(0, 357, Short.MAX_VALUE))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnDayEndReports, btnItemMasterFullReport, btnSearchOrder});
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnInitialStockTakingReport, btnIssueOrder});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jPanel2, jPanel3, jPanel4, jPanel5});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnItemMasterFullReport, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnSearchOrder))
-                    .addComponent(btnDayEndReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnInitialStockTakingReport, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
-                    .addComponent(btnIssueOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnMonthEndReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnItemMasterFullReport, btnSearchOrder});
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnInitialStockTakingReport, btnIssueOrder});
-
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnItemMasterFullReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemMasterFullReportActionPerformed
@@ -289,14 +517,54 @@ public class Views extends javax.swing.JPanel {
         dayEnd.setVisible(true);
     }//GEN-LAST:event_btnDayEndReportsActionPerformed
 
+    private void btnCashSalesReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCashSalesReportsActionPerformed
+        ReportsGenerator frmSalesReportsGenerator = new ReportsGenerator((Frame) SwingUtilities.getWindowAncestor(this), true, "Cash Sales Summary RPT", ReportsGenerator.ReportType.CASH_SALES_SUMMARY);
+        frmSalesReportsGenerator.setVisible(true);
+    }//GEN-LAST:event_btnCashSalesReportsActionPerformed
+
+    private void btnCreditSalesReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreditSalesReportsActionPerformed
+        ReportsGenerator frmSalesReportsGenerator = new ReportsGenerator((Frame) SwingUtilities.getWindowAncestor(this), true, "Credit Sales Summary RPT", ReportsGenerator.ReportType.CREDIT_SALES_SUMMARY);
+        frmSalesReportsGenerator.setVisible(true);
+    }//GEN-LAST:event_btnCreditSalesReportsActionPerformed
+
+    private void btnGRNSummaryReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGRNSummaryReportActionPerformed
+        ReportsGenerator frmSalesReportsGenerator = new ReportsGenerator((Frame) SwingUtilities.getWindowAncestor(this), true, "GRN Summary Report", ReportsGenerator.ReportType.GRN_SUMMARY);
+        frmSalesReportsGenerator.setVisible(true);
+    }//GEN-LAST:event_btnGRNSummaryReportActionPerformed
+
+    private void btnSupplierOrdersSummaryRptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierOrdersSummaryRptActionPerformed
+        ReportsGenerator frmSalesReportsGenerator = new ReportsGenerator((Frame) SwingUtilities.getWindowAncestor(this), true, "Supplier Orders Summary Report", ReportsGenerator.ReportType.SUPPLIER_ORDERS_SUMMARY);
+        frmSalesReportsGenerator.setVisible(true);
+    }//GEN-LAST:event_btnSupplierOrdersSummaryRptActionPerformed
+
+    private void btnGRNDetailReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGRNDetailReportActionPerformed
+        DetailedReportsGenerator frmSalesReportsGenerator = new DetailedReportsGenerator((Frame) SwingUtilities.getWindowAncestor(this), true, "GRN Detailed Report", DetailedReportsGenerator.ReportType.GRN_DETAIL);
+        frmSalesReportsGenerator.setVisible(true);
+    }//GEN-LAST:event_btnGRNDetailReportActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCashSalesReports;
+    private javax.swing.JButton btnCreditSalesReports;
+    private javax.swing.JButton btnCreditSalesReports2;
+    private javax.swing.JButton btnCreditSalesReports4;
+    private javax.swing.JButton btnCreditSalesReports5;
     private javax.swing.JButton btnDayEndReports;
+    private javax.swing.JButton btnGRNDetailReport;
+    private javax.swing.JButton btnGRNSummaryReport;
     private javax.swing.JButton btnInitialStockTakingReport;
     private javax.swing.JButton btnIssueOrder;
     private javax.swing.JButton btnItemMasterFullReport;
     private javax.swing.JButton btnMonthEndReports;
     private javax.swing.JButton btnSearchOrder;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton btnSupplierOrderItemWiseRpt;
+    private javax.swing.JButton btnSupplierOrdersDetailRpt;
+    private javax.swing.JButton btnSupplierOrdersSummaryRpt;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     // End of variables declaration//GEN-END:variables
 }

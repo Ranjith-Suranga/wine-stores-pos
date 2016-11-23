@@ -9,9 +9,12 @@ import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
@@ -20,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.GRNController;
+import lk.ijse.winestores.controller.custom.QueryController;
 import lk.ijse.winestores.controller.custom.SupplierController;
 import lk.ijse.winestores.dao.custom.GrnDAO;
 import lk.ijse.winestores.views.util.FocusHandler;
@@ -474,6 +478,25 @@ public class GRNMaster extends javax.swing.JPanel implements FocusHandler{
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        
+        QueryController ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+        try {
+            if (ctrlQuery.hasDayEndDone(new Date())){
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/close.png"));
+                JOptionPane.showMessageDialog(
+                        SwingUtilities.getWindowAncestor(this),
+                        "Sorry, No more GRN can be added today since the day end has been already done.",
+                        "No more sales for today",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+                return;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         Main m = (Main) SwingUtilities.getWindowAncestor(this);
         m.pnlContainer.removeAll();
@@ -565,6 +588,24 @@ public class GRNMaster extends javax.swing.JPanel implements FocusHandler{
         
         // a liitle hack
         tblGRN.editingCanceled(null);
+        
+        QueryController ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+        try {
+            if (ctrlQuery.hasDayEndDone(new Date())){
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/close.png"));
+                JOptionPane.showMessageDialog(
+                        SwingUtilities.getWindowAncestor(this),
+                        "Sorry, GRN related functions are disabled for today since the day end has been already done.",
+                        "No more sales for today",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+                return;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        }        
         
         GRNController controller = (GRNController) ControllerFactory.getInstance().getController(SuperController.ControllerType.GRN);
         

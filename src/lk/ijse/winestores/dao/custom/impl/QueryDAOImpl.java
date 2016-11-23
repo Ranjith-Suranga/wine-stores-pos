@@ -607,7 +607,7 @@ public class QueryDAOImpl implements QueryDAO {
 
         Connection connection = this.getConnection();
 
-        String sql = "SELECT item_batch_grn_detail.batch_qty FROM grn INNER JOIN batch ON grn.grn_id = batch.grn_id INNER JOIN item_batch_grn_detail ON item_batch_grn_detail.batch_id = batch.batch_id INNER JOIN main_sub_item ON main_sub_item.main_sub_item_id = item_batch_grn_detail.main_sub_item_id WHERE grn_date = ? AND main_sub_item.item_code = ?;";
+        String sql = "SELECT SUM(item_batch_grn_detail.batch_qty) FROM grn INNER JOIN batch ON grn.grn_id = batch.grn_id INNER JOIN item_batch_grn_detail ON item_batch_grn_detail.batch_id = batch.batch_id INNER JOIN main_sub_item ON main_sub_item.main_sub_item_id = item_batch_grn_detail.main_sub_item_id WHERE grn_date = ? AND main_sub_item.item_code = ?;";
         PreparedStatement pstm = connection.prepareStatement(sql);
         pstm.setDate(1, new java.sql.Date(date.getTime()));
         pstm.setString(2, itemCode);
@@ -660,7 +660,7 @@ public class QueryDAOImpl implements QueryDAO {
 
         Connection connection = this.getConnection();
 
-        String sql = "SELECT qty FROM custom_order INNER JOIN order_item_details ON custom_order.order_id = order_item_details.order_id WHERE order_date LIKE ? AND item_code=?;";
+        String sql = "SELECT SUM(qty) FROM custom_order INNER JOIN order_item_details ON custom_order.order_id = order_item_details.order_id WHERE order_date LIKE ? AND item_code=?;";
         PreparedStatement pstm = connection.prepareStatement(sql);
         pstm.setString(1, (new java.sql.Date(date.getTime())).toString() + "%");
         pstm.setString(2, itemCode);

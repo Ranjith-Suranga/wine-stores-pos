@@ -9,6 +9,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -96,7 +97,7 @@ public class Items extends javax.swing.JPanel implements FocusHandler{
             }
 
             for (ItemDetailsDTO itemDetail : itemDetails) {
-                Object[] rowData = {itemDetail.getItemCode(), itemDetail.getItemName(), String.valueOf(itemDetail.getQty()), String.valueOf(itemDetail.getSellingPrice()), String.valueOf(itemDetail.getBuyingPrice())};
+                Object[] rowData = {itemDetail.getItemCode(), itemDetail.getItemName(), String.valueOf(itemDetail.getQty()), formatPrice(itemDetail.getSellingPrice()), formatPrice(itemDetail.getBuyingPrice())};
                 if (!flag) {
                     if (tblItems.getModel().equals(dtmAllItems)) {
                         tblItems.setModel(dtm);
@@ -128,7 +129,7 @@ public class Items extends javax.swing.JPanel implements FocusHandler{
             }
 
             for (ItemDetailsDTO itemDetail : itemDetails) {
-                Object[] rowData = {itemDetail.getItemCode(), itemDetail.getItemName(), String.valueOf(itemDetail.getQty()), String.valueOf(itemDetail.getSellingPrice()), String.valueOf(itemDetail.getBuyingPrice())};
+                Object[] rowData = {itemDetail.getItemCode(), itemDetail.getItemName(), String.valueOf(itemDetail.getQty()), formatPrice(itemDetail.getSellingPrice()), formatPrice(itemDetail.getBuyingPrice())};
                 dtm.addRow(rowData);
             }
 
@@ -174,6 +175,14 @@ public class Items extends javax.swing.JPanel implements FocusHandler{
             }
         });
 
+    }
+    
+    private String formatPrice(double price){
+        NumberFormat nf = NumberFormat.getNumberInstance();
+        nf.setGroupingUsed(false);
+        nf.setMaximumFractionDigits(2);
+        nf.setMinimumFractionDigits(2);
+        return nf.format(price);
     }
 
     private void changeSearchTitle() {

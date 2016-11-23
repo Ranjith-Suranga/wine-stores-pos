@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-23T05:19:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CashSalesSummaryReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b66cc0a3-6ceb-4137-adc0-1c4176731f13">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Wine_Stores"/>
+	<parameter name="txtTo" class="java.sql.Date"/>
+	<parameter name="txtFrom" class="java.sql.Date"/>
+	<queryString>
+		<![CDATA[SELECT wine_stores.custom_order.order_id,
+	wine_stores.custom_order.order_date,
+	wine_stores.custom_order.total,
+	SUM(wine_stores.order_empty_bottle_details.total)
+FROM wine_stores.order_empty_bottle_details
+	RIGHT OUTER JOIN wine_stores.custom_order ON 
+	 wine_stores.order_empty_bottle_details.order_id = wine_stores.custom_order.order_id
+	 WHERE DATE(wine_stores.custom_order.order_date) BETWEEN $P{txtFrom} AND $P{txtTo} GROUP BY wine_stores.custom_order.order_id]]>
+	</queryString>
+	<field name="order_id" class="java.lang.Integer"/>
+	<field name="order_date" class="java.sql.Timestamp"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="SUM(wine_stores.order_empty_bottle_details.total)" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="40" uuid="a069d885-c912-4889-8540-7c0b121e4f00"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAMPELLA WINE STORES
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="20" uuid="ae119183-365a-44d3-a238-35ef7c556e62">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Credit Sales Summary Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="70" width="140" height="20" uuid="a4cde924-9630-4d0e-8341-39ec71b67a43"/>
+				<textElement>
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["From : " + $P{txtFrom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="70" width="140" height="20" uuid="287e8d4f-e86c-4b18-a89f-14eaa635ed78"/>
+				<textElement textAlignment="Right">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["To : " + $P{txtTo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="160" height="30" uuid="c49129b1-334b-44b8-b616-bf387086021f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="0" width="145" height="30" uuid="d4489520-aad0-4e3a-a4f2-757c301dca77"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice Value]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="110" height="30" uuid="bb209f8b-f42f-4d3c-a1e0-1e9a4a2d7bb1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="0" width="140" height="30" uuid="a835d323-c4e6-4dcd-9234-b41b1aa6c936"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bottle Deposit]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="160" height="30" uuid="a90d3a76-cb03-4e7a-b86c-5373da53f567"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="0" width="144" height="30" uuid="c2c6e11e-2672-49c2-a834-fa0e8b1a956d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="110" height="30" uuid="455de1d8-9976-4411-8083-251ba299b4a2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="0" width="140" height="30" uuid="af367cff-4509-459b-ab51-3e1d371589de"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Open Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{SUM(wine_stores.order_empty_bottle_details.total)}==null)? "-" : $F{SUM(wine_stores.order_empty_bottle_details.total)}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
