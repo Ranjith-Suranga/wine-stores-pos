@@ -34,6 +34,7 @@ import lk.ijse.winestores.controller.ControllerFactory;
 import lk.ijse.winestores.controller.SuperController;
 import lk.ijse.winestores.controller.custom.GRNController;
 import lk.ijse.winestores.controller.custom.ItemController;
+import lk.ijse.winestores.controller.custom.QueryController;
 import lk.ijse.winestores.controller.custom.SalesController;
 import lk.ijse.winestores.dao.custom.CustomDAO;
 import lk.ijse.winestores.dao.dto.ChequeDetailsDTO;
@@ -1371,6 +1372,24 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
 
+        QueryController ctrlQuery = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+        try {
+            if (ctrlQuery.hasDayEndDone(new Date())){
+                ImageIcon icon = new ImageIcon(this.getClass().getResource("/lk/ijse/winestores/icons/error_icon.png"));
+                JOptionPane.showMessageDialog(
+                        SwingUtilities.getWindowAncestor(this),
+                        "Sorry, further sales can not be done today since the day end has been already done.",
+                        "No more sales for today",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        icon);
+                return;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CashSales.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         if (!chkChequeDetails.isSelected()) {
             if (cashTenderForm == null) {
                 cashTenderForm = new CashTenderForm(this, finalTotal);
@@ -1500,7 +1519,7 @@ public class CashSales extends javax.swing.JPanel implements CashTendered, Focus
         this.pstProcessor = new KeyEventPostProcessor() {
             @Override
             public boolean postProcessKeyEvent(java.awt.event.KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_END) {
+                if (e.getKeyCode() == KeyEvent.VK_END && e.getID() == java.awt.event.KeyEvent.KEY_PRESSED) {
                     btnPay.doClick();
                 }
                 return false;
