@@ -92,8 +92,12 @@ public class EmptyBottle extends javax.swing.JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                
+                // A little hack for linux
+                while(EmptyBottle.this.getWidth()<=10){}                
 
                 Point p = new Point();
+                System.out.println(pnlContainer.getWidth());
                 p.x = (EmptyBottle.this.getWidth() - pnlContainer.getWidth()) / 2;
                 p.y = (EmptyBottle.this.getHeight() - pnlContainer.getHeight()) / 2;
                 pnlContainer.setLocation(p);

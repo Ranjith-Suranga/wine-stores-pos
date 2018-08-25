@@ -14,7 +14,7 @@ public interface SuperController {
     
     public enum ControllerType{
         MAJOR_CATEGORY, SUB_CATEOGRY, ITEM, SUPPLIER, GRN, SALES, NEW_ITEM, SUPPLIER_ORDER, QUERY, EMPTY_BOTTLE,
-        CUSTOMER, SYSTEM_SETTINGS, DAYEND_REPORTS
+        CUSTOMER, SYSTEM_SETTINGS, DAYEND_REPORTS;
     }
     
 }

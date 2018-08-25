@@ -132,6 +132,9 @@ public class SaveCustomer extends javax.swing.JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                
+                // A little hack for linux
+                while(SaveCustomer.this.getWidth()<=10){}                   
 
                 Point p = new Point();
                 p.x = (SaveCustomer.this.getWidth() - pnlContainer.getWidth()) / 2;

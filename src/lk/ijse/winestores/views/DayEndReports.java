@@ -97,6 +97,9 @@ public class DayEndReports extends javax.swing.JDialog {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                
+                // A little hack for linux
+                while(DayEndReports.this.getWidth()<=10){}
 
                 Point p = new Point();
                 p.x = (DayEndReports.this.getWidth() - pnlContainer.getWidth()) / 2;

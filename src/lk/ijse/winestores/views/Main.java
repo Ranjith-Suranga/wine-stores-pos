@@ -1297,7 +1297,7 @@ public class Main extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
+                if ("GTK+".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     UIManager.put("ToolTip.background", new Color(0, 0, 0, 200));
                     UIManager.put("ToolTip.border", new EmptyBorder(5, 5, 5, 5));

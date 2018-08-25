@@ -52,31 +52,31 @@ public class ManageEmptyBottles extends javax.swing.JFrame {
     public ManageEmptyBottles() {
         initComponents();
 
-        pnlContainer.setVisible(false);
+        //pnlContainer.setVisible(false);
 
-        sbtn = new SuraButton(this);
-        sbtn.convertAllJButtonsToSuraButtons();
-
-        stbl = new SuraTable(tblEmptyBottleType);
-        stbl.setHeaderAlignment(0, SwingConstants.CENTER);
-        stbl.setHeaderAlignment(1, SwingConstants.CENTER);
-        stbl.setColumnAlignment(0, SwingConstants.CENTER);
-        stbl.setColumnAlignment(1, SwingConstants.CENTER);
-
-        dtm = (DefaultTableModel) tblEmptyBottleType.getModel();
-        dtm.addRow(new Object[]{"Bottle Type -1", "100.20"});
-        dtm.addRow(new Object[]{"Bottle Type -2", "100.20"});
-
-        tblEmptyBottleType.setFillsViewportHeight(true);
+//        sbtn = new SuraButton(this);
+//        sbtn.convertAllJButtonsToSuraButtons();
+//
+//        stbl = new SuraTable(tblEmptyBottleType);
+//        stbl.setHeaderAlignment(0, SwingConstants.CENTER);
+//        stbl.setHeaderAlignment(1, SwingConstants.CENTER);
+//        stbl.setColumnAlignment(0, SwingConstants.CENTER);
+//        stbl.setColumnAlignment(1, SwingConstants.CENTER);
+//
+//        dtm = (DefaultTableModel) tblEmptyBottleType.getModel();
+//        dtm.addRow(new Object[]{"Bottle Type -1", "100.20"});
+//        dtm.addRow(new Object[]{"Bottle Type -2", "100.20"});
+//
+//        tblEmptyBottleType.setFillsViewportHeight(true);
 
         setExtendedState(MAXIMIZED_BOTH);
         setBackground(new Color(0, 0, 0, 200));
 
-        queryCtrl = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
-        emptyBottleCtrl = (EmptyBottleController) ControllerFactory.getInstance().getController(SuperController.ControllerType.EMPTY_BOTTLE);
+//        queryCtrl = (QueryController) ControllerFactory.getInstance().getController(SuperController.ControllerType.QUERY);
+//        emptyBottleCtrl = (EmptyBottleController) ControllerFactory.getInstance().getController(SuperController.ControllerType.EMPTY_BOTTLE);
 
         handleEvents();
-        loadData();
+//        loadData();
 
     }
 
@@ -106,6 +106,9 @@ public class ManageEmptyBottles extends javax.swing.JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                
+                // A little hack for linux
+                while(ManageEmptyBottles.this.getWidth()<=10){}                
 
                 Point p = new Point();
                 p.x = (ManageEmptyBottles.this.getWidth() - pnlContainer.getWidth()) / 2;

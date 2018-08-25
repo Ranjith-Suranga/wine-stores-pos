@@ -142,6 +142,9 @@ public class DetailedReportsGenerator extends javax.swing.JDialog {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                
+                // A little hack for linux
+                while(DetailedReportsGenerator.this.getWidth()<=10){}
 
                 Point p = new Point();
                 p.x = (DetailedReportsGenerator.this.getWidth() - pnlContainer.getWidth()) / 2;

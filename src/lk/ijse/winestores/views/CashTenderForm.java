@@ -51,6 +51,11 @@ public class CashTenderForm extends javax.swing.JFrame implements FocusHandler {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                
+                // A little hack for linux
+                while(CashTenderForm.this.getWidth()<=10){}
+                
+                System.out.println(CashTenderForm.this.getWidth());
 
                 Point p = new Point();
                 p.x = (CashTenderForm.this.getWidth() - pnlContainer.getWidth()) / 2;
